@@ -13,28 +13,41 @@
 
 	<style>
 		header { background-color: silver;height: 50px}
-		nav { background-color: lightgray;}
+		nav { background-color: lightgray;float:left;}
+		ul {
+			list-style-type: none;
+			margin: 0px;
+			padding: 0px;
+			width : 200px;
+			float:left;
+			background-color: #f1f1f1;
+			height: 100%; /* Full height */
+			position: fixed; /* Make it stick, even on scroll */
+			overflow: auto; /* Enable scrolling if the sidenav has too much content */
+		}
+
 		footer {
-			clear: both;
-			position: relative;
-			height: 30px;
-			margin-top: -200px;
+			position:absolute;
+			bottom:0;
+			width:99%;
+			height:60px;   /* Height of the footer */
 			background-color: #eaeaea;
 		}
+
 
 	</style>
 
 	<header>
-		<p style="text-align: left;font-size: 28px;text-shadow: 3px 3px darkgray">EdShop
-		<span style="float:right;font-size: 14px;text-shadow:none ">Login/Registrace</span><br>
-			<span style="float:right;font-size: 14px;text-shadow:none ">Přihlášen : Test Účet</span>
+		<p style="text-align: left;font-size: 28px;text-shadow: 3px 3px darkgray"><a style="text-decoration: none;color : black" n:href="Homepage:">EdShop</a>
+			<span style="float:right;font-size: 14px;text-shadow:none ">Login/<a n:href="Registration:new">Registrace</a></span><br>
+			<span style="float:right;font-size: 14px;text-shadow:none ">Přihlášen : ----------</span>
 		</p>
 
 	</header>
 
 	<nav>
 		<div style="float:left; width: 200px;background-color: #f0f0f0;">
-		Produkty :
+		<br>Produkty :<br><br>
 		<ul>
 			<li>Produkt 1</li>
 			<li>Produkt 2</li>
@@ -46,8 +59,9 @@
 		</div>
 	</nav>
 
+	<div style="margin-left:210px">
 	{include content}
-
+	</div>
 
 	<footer>
 		{php $stop_time=microtime(true)}
