@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:style="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
@@ -8,9 +8,51 @@
 </head>
 
 <body>
+	{php $start_time=microtime(true)}
 	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
+	<style>
+		header { background-color: silver;height: 50px}
+		nav { background-color: lightgray;}
+		footer {
+			clear: both;
+			position: relative;
+			height: 30px;
+			margin-top: -200px;
+			background-color: #eaeaea;
+		}
+
+	</style>
+
+	<header>
+		<p style="text-align: left;font-size: 28px;text-shadow: 3px 3px darkgray">EdShop
+		<span style="float:right;font-size: 14px;text-shadow:none ">Login/Registrace</span><br>
+			<span style="float:right;font-size: 14px;text-shadow:none ">Přihlášen : Test Účet</span>
+		</p>
+
+	</header>
+
+	<nav>
+		<div style="float:left; width: 200px;background-color: #f0f0f0;">
+		Produkty :
+		<ul>
+			<li>Produkt 1</li>
+			<li>Produkt 2</li>
+			<li>Produkt 3</li>
+			<li>Produkt 4</li>
+			<li>Produkt 5</li>
+			<li>Produkt 6</li>
+		</ul>
+		</div>
+	</nav>
+
 	{include content}
+
+
+	<footer>
+		{php $stop_time=microtime(true)}
+		<p style="color:silver" align="right">Created on 2019, generated in {php echo sprintf('%f',round(($stop_time - $start_time),5))." sec"}</p>
+	</footer>
 
 	{block scripts}
 	<script src="https://nette.github.io/resources/js/3/netteForms.min.js"></script>
