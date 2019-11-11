@@ -23,10 +23,14 @@ final class RegistrationPresenter extends Nette\Application\UI\Presenter
             ->setRequired("Zadejte registrační email");
 
         $form->addPassword('pass1','Heslo :')
-            ->setRequired("Zadejte heslo");
+            ->setRequired("Zadejte heslo")
+            ->addRule(Form::MIN_LENGTH,'Heslo musí obsahovat minimálně 3 znaky',3)
+        ;
 
         $form->addPassword('pass2','Heslo znovu :')
-            ->setRequired("Zadejte heslo pro potvrzení");
+            ->setRequired("Zadejte heslo pro potvrzení")
+            ->addRule(Form::EQUAL,'Zadaná hesla se neshodují',$form['pass1'])
+        ;
 
         $form->addSubmit('send','Registrovat');
 
