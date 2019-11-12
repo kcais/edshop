@@ -1,9 +1,11 @@
 Nette Web Project - EdShop
 =================
 
-##Edukativní testovací projekt eshopu (php, nette, mysql)
+Edukativní testovací projekt eshopu (php, nette, mysql)
+-------------------------------------------------------
 
-###Vlastnosti:
+Vlastnosti:
+-----------
 Uživatelské účty
 * vytvoření nového uživatelského účtu s ověřením zadaného emailu - **in progress**
 * administrátorská úroveň - editace kategorií, uživatelů, produktů - **in progress**
