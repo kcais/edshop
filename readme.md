@@ -20,6 +20,8 @@ Kategorie a produkty
 * zobrazení a manipulace s produkty v nezávislém gridu (bez nutnosti obnovovat celou stránku) - **in progress**
 * zobrazení detailu produktu - **in progress**
 * možnost přidání produktu do košíku  - **in progress**
+* dokončení objednávky z košíku - **in progress**
+* možnost administrátorké úpravy odeslané objednávky - **in progress** 
 
 Ostatní
 * podpora multijazykového zobrazení (CZ/ENG) - **in progress**
