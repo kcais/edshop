@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: localhost
--- Vytvořeno: Stř 13. lis 2019, 08:26
+-- Vytvořeno: Stř 13. lis 2019, 14:51
 -- Verze serveru: 8.0.17
 -- Verze PHP: 7.3.10
 
@@ -25,6 +25,33 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Struktura tabulky `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` int(11) NOT NULL COMMENT 'Primarni auto_increment key',
+  `name` varchar(255) NOT NULL COMMENT 'Nazev kategorie',
+  `comment` varchar(1024) NOT NULL COMMENT 'Komentar kategorie',
+  `order_id` int(11) NOT NULL COMMENT 'Cislo urcujici poradi kategorie',
+  `parent_cat_id` int(11) DEFAULT NULL COMMENT 'Id nadrazene kategorie, jinak null',
+  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Datum vytvoreni zaznamu',
+  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Datum posledni upravy kategorie',
+  `deleted_on` timestamp NULL DEFAULT NULL COMMENT 'Datum smazani kategorie'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Vypisuji data pro tabulku `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `comment`, `order_id`, `parent_cat_id`, `created_on`, `updated_on`, `deleted_on`) VALUES
+(1, 'Vstupní zařízení', 'Ovládací periferie jako např. myši, klávesnice, joysticky ap.', 1, NULL, '2019-11-13 09:31:19', '2019-11-13 09:31:19', NULL),
+(2, 'Grafické karty', 'Grafické karty a příslušenství', 2, NULL, '2019-11-13 09:32:55', '2019-11-13 09:32:55', NULL),
+(3, 'Monitory', 'Zobrazovací zařízení', 3, NULL, '2019-11-13 09:34:15', '2019-11-13 09:34:15', NULL),
+(4, 'Procesory', 'Výpočetní procesory, CPU, FPU, ASIC ...', 4, NULL, '2019-11-13 09:49:28', '2019-11-13 09:49:28', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabulky `objects`
 --
 
@@ -32,7 +59,11 @@ CREATE TABLE `objects` (
   `id` int(11) NOT NULL COMMENT 'Primarni auto_increment key',
   `name` varchar(1024) NOT NULL COMMENT 'Nazev prodejniho artiklu',
   `description` text COMMENT 'Popis prodejniho artiklu',
-  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-prodejni artikl je dostupny'
+  `is_available` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-prodejni artikl je dostupny',
+  `is_visible` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-prodejni polozka je viditelna ',
+  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Datum vytvoreni objektu',
+  `deleted_on` timestamp NULL DEFAULT NULL COMMENT 'Datum smazani objektu',
+  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Datum posledni aktualizace objektu'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -78,8 +109,8 @@ CREATE TABLE `users` (
   `password_hash` varchar(2048) NOT NULL COMMENT 'Zaheshovane heslo uzivatele pro prihlaseni',
   `email` varchar(1024) NOT NULL COMMENT 'Emai',
   `language` varchar(16) NOT NULL DEFAULT 'CZ' COMMENT 'Jazyk uzivatele',
-  `uuid_registration` varchar(20) DEFAULT NULL COMMENT 'Vygenerovane uuid pro dokonceni registrace',
-  `uuid_lost_password` varchar(20) DEFAULT NULL COMMENT 'Vygenerovane uuid pro obnovu hesla',
+  `uuid_registration` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Vygenerovane uuid pro dokonceni registrace',
+  `uuid_lost_password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Vygenerovane uuid pro obnovu hesla',
   `is_active` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-ucet je aktivni',
   `is_admin` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-ucet systemoveho administratora',
   `registration_mail_sended` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-registracni email byl odeslan',
@@ -89,8 +120,24 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Vypisuji data pro tabulku `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `firstname`, `surname`, `password_hash`, `email`, `language`, `uuid_registration`, `uuid_lost_password`, `is_active`, `is_admin`, `registration_mail_sended`, `created_on`, `deleted_on`, `updated_on`) VALUES
+(23, 'kcais', 'Karel', 'Cais', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'kcais@volny.cz', 'CZ', 'a0db7539-d790-41b0-a4c1-8e3bb728f601', NULL, 1, 0, 0, '2019-11-13 14:19:14', NULL, '2019-11-13 14:19:17'),
+(25, 'ppetr', 'Petr', 'Petrovci', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'p@petr.cz', 'CZ', '981f9116-1bf5-4296-ac1b-0f3a7c74e07d', NULL, 1, 0, 0, '2019-11-13 14:22:01', NULL, '2019-11-13 14:22:15'),
+(26, 'plenkovic', 'Curila', 'Plenkovic', '56b1db8133d9eb398aabd376f07bf8ab5fc584ea0b8bd6a1770200cb613ca005', 'cplenk@ru.ru', 'CZ', 'ae8bea9c-c9e6-4f9c-9757-9d4b72ecafa3', NULL, 0, 0, 0, '2019-11-13 14:23:43', NULL, NULL);
+
+--
 -- Klíče pro exportované tabulky
 --
+
+--
+-- Klíče pro tabulku `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `parent_cat_id` (`parent_cat_id`);
 
 --
 -- Klíče pro tabulku `objects`
@@ -126,6 +173,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT pro tabulku `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT pro tabulku `objects`
 --
 ALTER TABLE `objects`
@@ -147,11 +200,17 @@ ALTER TABLE `order_objects`
 -- AUTO_INCREMENT pro tabulku `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=27;
 
 --
 -- Omezení pro exportované tabulky
 --
+
+--
+-- Omezení pro tabulku `categories`
+--
+ALTER TABLE `categories`
+  ADD CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`parent_cat_id`) REFERENCES `categories` (`id`);
 
 --
 -- Omezení pro tabulku `orders`
