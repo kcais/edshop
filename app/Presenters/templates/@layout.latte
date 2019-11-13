@@ -9,7 +9,7 @@
 
 <body>
 	{php $start_time=microtime(true)}
-	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+	<div style="color: crimson" n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
 	<style>
 		header { background-color: silver;height: 50px}

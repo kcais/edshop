@@ -25,4 +25,5 @@ class CategoryManager
             ->order('name ASC')
             ;
     }
+
 }
