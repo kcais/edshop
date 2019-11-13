@@ -7,7 +7,7 @@ Edukativní testovací projekt eshopu (php, nette, mysql)
 Vlastnosti:
 -----------
 Uživatelské účty
-* vytvoření nového uživatelského účtu s ověřením zadaného emailu - **in progress**
+* vytvoření nového uživatelského účtu s ověřením zadaného emailu - **done**
 * administrátorská úroveň - editace kategorií, uživatelů, produktů - **in progress**
 * možnost přihlášení přes login / heslo - **in progress**
 * test již existujícího loginu / mailu ještě před odesláním registračního formuláře - **in progress**
