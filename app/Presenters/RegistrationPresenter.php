@@ -94,21 +94,23 @@ final class RegistrationPresenter extends Nette\Application\UI\Presenter
             switch($ret_val){
                 case 0:
                     //sestaveni a odeslani mailu pro dokonceni registrace
-/*                    $mail = new Message;
+                    $mail = new Message;
                     $mail->setFrom("edshop@edshop.cz")
                         ->addTo($values['email'])
                         ->setSubject('Dokončení registrace - EdShop')
                         ->setHtmlBody("Dobrý den,<br><br>Vaše registrace na stránky EdShop byla dokončena.
-                        Pro aktivaci účtu klikněte zde : <a href='https://edshop.php5.cz/www/registration/verification?uuid=$uuid'>
+                        Pro aktivaci účtu klikněte zde : <a href='https://edshop.php5.cz/www/registration/verification?uuid=$uuid'>Aktivace</a>
                         <br><br>");
 
                     $mailer = new SendmailMailer;
                     $mailer->send($mail);
-*/
+
                     //mail($values['email'], 'Registrace', 'text mailu registrace');
+                    $this->redirect('success');
+
 
                     //presmerovani na stranku s potvrzenim uspesne registrace
-                    $this->redirect('success',["uuid"=>$uuid]);
+                    //$this->redirect('success',["uuid"=>$uuid]);
                     break;
                 case 1:
                     $this->flashMessage('Zadané uživatelské jméno nebo email již existují ! Zadejte prosím jiné','error');
