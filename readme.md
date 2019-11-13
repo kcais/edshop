@@ -3,6 +3,7 @@ Nette Web Project - EdShop
 
 Edukativní testovací projekt eshopu (php, nette, mysql)
 -------------------------------------------------------
+https://edshop.php5.cz/www
 
 Vlastnosti:
 -----------
