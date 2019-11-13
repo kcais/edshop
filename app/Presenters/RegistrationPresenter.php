@@ -1,8 +1,10 @@
 <?php
 namespace App\Presenters;
 
+use App\Common\Common;
 use Nette;
 use Nette\Application\UI\Form;
+
 
 final class RegistrationPresenter extends Nette\Application\UI\Presenter
 {
@@ -40,8 +42,24 @@ final class RegistrationPresenter extends Nette\Application\UI\Presenter
         $form->onSuccess[] = [$this, 'registrationFormSucceeded'];
 
         return $form;
-
     }
+
+    /** Ulozeni noveho uzivatele
+     * @param Form $form
+     * @param array $values
+     */
+    public function registrationFormSucceeded(Form $form, array $values): void
+    {
+       // try {
+            $this->redirect('success');
+       /* }
+        catch(\Exception $e){
+            $this->redirect('error');
+            throw $e;
+        }*/
+    }
+
+
 }
 
 
