@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.4
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
--- Počítač: localhost:3306
--- Vytvořeno: Ned 10. lis 2019, 16:39
--- Verze serveru: 5.7.27-30-log
--- Verze PHP: 7.3.11-1~deb10u1
+-- Počítač: localhost
+-- Vytvořeno: Stř 13. lis 2019, 08:26
+-- Verze serveru: 8.0.17
+-- Verze PHP: 7.3.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -78,6 +78,8 @@ CREATE TABLE `users` (
   `password_hash` varchar(2048) NOT NULL COMMENT 'Zaheshovane heslo uzivatele pro prihlaseni',
   `email` varchar(1024) NOT NULL COMMENT 'Emai',
   `language` varchar(16) NOT NULL DEFAULT 'CZ' COMMENT 'Jazyk uzivatele',
+  `uuid_registration` varchar(20) DEFAULT NULL COMMENT 'Vygenerovane uuid pro dokonceni registrace',
+  `uuid_lost_password` varchar(20) DEFAULT NULL COMMENT 'Vygenerovane uuid pro obnovu hesla',
   `is_active` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-ucet je aktivni',
   `is_admin` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-ucet systemoveho administratora',
   `registration_mail_sended` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-registracni email byl odeslan',
@@ -155,14 +157,14 @@ ALTER TABLE `users`
 -- Omezení pro tabulku `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Omezení pro tabulku `order_objects`
 --
 ALTER TABLE `order_objects`
-  ADD CONSTRAINT `order_objects_ibfk_1` FOREIGN KEY (`object_id`) REFERENCES `objects` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `order_objects_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `order_objects_ibfk_1` FOREIGN KEY (`object_id`) REFERENCES `objects` (`id`),
+  ADD CONSTRAINT `order_objects_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
