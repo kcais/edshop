@@ -1,3 +1,12 @@
 {block content}
-{php echo $categories->count()}
+
+
+    <table>
+    <tr><td><h2>Kategorie :</h2></td></tr>
+
+{foreach $categories as $category}
+    <tr><td class="cat_td">{$category->name}</td><td class="cat_td_com">{$category->comment}</td></tr>
+{/foreach}
+</table>
+
 {/block}
