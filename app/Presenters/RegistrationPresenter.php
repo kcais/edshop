@@ -6,6 +6,9 @@ use Nette\Application\UI\Form;
 
 final class RegistrationPresenter extends Nette\Application\UI\Presenter
 {
+    /** Registracni formular noveho uzivatele
+     *
+     */
     protected function createComponentRegistrationNewForm() : Form
     {
         $form = new Form;

@@ -13,3 +13,5 @@ session:
 
 services:
 	router: App\Router\RouterFactory::createRouter
+	- App\Model\ObjectManager
+	- App\Model\CategoryManager
