@@ -18,8 +18,9 @@ final class RegistrationPresenter extends Nette\Application\UI\Presenter
         $this->userManager = $userManager;
     }
 
-    public function renderValidation(){
-        if($this->userManager->activateUser($_GET['uuid'])) {
+    public function renderVerification(){
+        $validation = $this->userManager->activateUser($_GET['uuid']);
+        if($validation) {
             $this->redirect("Registration:validated");
         }
         else{

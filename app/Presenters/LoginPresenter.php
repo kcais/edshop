@@ -2,16 +2,20 @@
 
 namespace App\Presenters;
 
+
 use Nette;
 use Nette\Application\UI\Form;
+use App\Model\UserManager;
 
 final class LoginPresenter extends Nette\Application\UI\Presenter
 {
     private $database;
+    private $userManager;
 
-    function __construct(Nette\Database\Context $database)
+    function __construct(Nette\Database\Context $database, UserManager $userManager)
     {
         $this->database = $database;
+        $this->userManager = $userManager;
     }
 
     /** Formular pro prihlaseni
@@ -41,11 +45,21 @@ final class LoginPresenter extends Nette\Application\UI\Presenter
     public function loginFormSucceeded(Form $form, array $values): void
     {
         try {
-            $this->getUser()->login($values["username"], $values["password"]);
-            $this->redirect("Homepage:");
+            $existUsername = $this->userManager->usernameExist($values["username"]);
+
+            if($existUsername && $this->userManager->isUserActivated($values["username"])) {
+                $this->getUser()->login($values["username"], $values["password"]);
+                $this->redirect("Homepage:");
+            }
+            elseif($existUsername){
+                $this->flashMessage('Uživatelský účet ještě nebyl přes email s odkazem aktivován.','warning');
+            }
+            else{
+                $this->flashMessage('Uživatelský účet neexistuje nebo bylo zadáno chybné heslo.','warning');
+            }
         }
         catch(Nette\Security\AuthenticationException $excetion){
-            $this->flashMessage("Chyba při přihlášení : ".$excetion->getMessage().". Zkuste se prosím přihlásit znovu.");
+            $this->flashMessage("Uživatelský účet neexistuje nebo bylo zadáno chybné heslo.",'warning');
         }
 
     }
