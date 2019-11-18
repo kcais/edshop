@@ -58,6 +58,10 @@
 		{/if}
 		{if $user->loggedIn}
 			<span style="float:right;font-size: 14px;text-shadow:none ">Přihlášen : {php echo $user->getIdentity()->username} (<a n:href="Logout:logout">Odhlásit</a>)
+			<br>
+			<br>
+				{php if($user->isInRole("admin"))}<a n:href="Admin:main">Administrátorské rozhraní</a>
+			</span>
 		{else}
 			<span style="float:right;font-size: 14px;text-shadow:none ">Uživatel není přihlášen</span>
 		{/if}

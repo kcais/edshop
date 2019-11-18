@@ -2,7 +2,6 @@
 
 namespace App\Presenters;
 
-//use App\Common\Common;
 use Nette;
 use Nette\Application\UI\Form;
 
