@@ -1,3 +1,25 @@
 {block content}
 
 <h1 n:block=title>Administrátorské rozhraní</h1>
+
+<style>
+    table{
+        border-collapse: collapse;
+    }
+     table,th,td{
+         border: 1px solid black;
+         padding: 10px;
+     }
+
+</style>
+
+<table>
+    <tr><td class="cat_td">Kategorie</td><td class="cat_td_com"><a n:href="Admin:catnew">Nová</a></td><td class="cat_td_com"><a n:href="Admin:catedit">Editovat</a></td></tr>
+    <tr><td class="cat_td">Prodejní položky</td><td class="cat_td_com"><a n:href="Admin:prodnew">Nová</a></td><td class="cat_td_com"><a n:href="Admin:prodedit">Editovat</a></td></tr>
+    <tr><td class="cat_td">Uživatelé</td><td class="cat_td_com"><a n:href="Admin:usernew">Nový</a></td><td class="cat_td_com"><a n:href="Admin:useredit">Editovat</a></td></tr>
+    <tr><td class="cat_td">Objednávky</td><td class="cat_td_com"><a n:href="Admin:orderslist">Seznam</a></td><td class="cat_td_com"><a n:href="Admin:ordersedit">Editovat</a></td></tr>
+</table>
+
+<br><br>
+
+<a n:href="Logout:logout">Odhlásit se</a>
