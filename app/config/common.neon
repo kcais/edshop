@@ -13,6 +13,7 @@ session:
 
 services:
 	router: App\Router\RouterFactory::createRouter
+	authenticator: App\Common\Authenticator
 	- App\Model\ObjectManager
 	- App\Model\CategoryManager
 	- App\Model\UserManager

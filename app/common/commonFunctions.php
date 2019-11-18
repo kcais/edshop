@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Common;
+use Nette;
 /**
  * Class Common
  * Spolecne funkce
@@ -32,6 +33,51 @@ namespace App\Common;
             mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
         );
     }
+
 }
+
+/** Trida resici autentifikaci uzivatele
+ * Class Authenticator
+ * @package App\Common
+ */
+class Authenticator implements Nette\Security\IAuthenticator
+{
+    private $database;
+
+    //private $passwords;
+
+    public function __construct(Nette\Database\Context $database)
+    {
+        $this->database = $database;
+        //$this->passwords = $passwords;
+    }
+
+    /** Autentifikace uzivatele
+     * @param array $credentials
+     * @return Nette\Security\IIdentity
+     * @throws Nette\Security\AuthenticationException
+     */
+    public function authenticate(array $credentials): Nette\Security\IIdentity
+    {
+        [$username, $password] = $credentials;
+
+        $row = $this->database->table('users')
+            ->where('username', $username)->fetch();
+
+        if (!$row) {
+            throw new Nette\Security\AuthenticationException("Uživatel $username nenalezen");
+        }
+
+        if (hash('sha256', $password) != $row->password_hash) {
+            throw new Nette\Security\AuthenticationException('Chybné heslo');
+        }
+
+        $row->is_admin?$role="admin":$role=null;
+
+        return new Nette\Security\Identity($row->id, [$role], ['username' => $row->username]);
+    }
+
+}
+
 
 ?>

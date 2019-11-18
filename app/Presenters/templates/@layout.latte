@@ -52,8 +52,15 @@
 
 	<header>
 		<p style="text-align: left;font-size: 28px;text-shadow: 3px 3px darkgray"><a style="text-decoration: none;color : black" n:href="Homepage:">EdShop</a>
-			<span style="float:right;font-size: 14px;text-shadow:none ">Login/<a n:href="Registration:new">Registrace</a></span><br>
-			<span style="float:right;font-size: 14px;text-shadow:none ">Přihlášen : ----------</span>
+
+		{if !$user->loggedIn}
+			<span style="float:right;font-size: 14px;text-shadow:none "><a n:href="Login:login">Login</a>/<a n:href="Registration:new">Registrace</a></span><br>
+		{/if}
+		{if $user->loggedIn}
+			<span style="float:right;font-size: 14px;text-shadow:none ">Přihlášen : {php echo $user->getIdentity()->username} (<a n:href="Logout:logout">Odhlásit</a>)
+		{else}
+			<span style="float:right;font-size: 14px;text-shadow:none ">Uživatel není přihlášen</span>
+		{/if}
 		</p>
 
 	</header>

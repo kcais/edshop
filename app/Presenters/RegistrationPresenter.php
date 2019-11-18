@@ -63,10 +63,6 @@ final class RegistrationPresenter extends Nette\Application\UI\Presenter
         return $form;
     }
 
-    public function validateUser($uuid){
-        echo "validuju";
-    }
-
     /** Ulozeni noveho uzivatele
      * @param Form $form
      * @param array $values
