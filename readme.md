@@ -12,7 +12,7 @@ Uživatelské účty
 * administrátorská úroveň - editace kategorií, uživatelů, produktů - **in progress**
 * možnost přihlášení přes login / heslo - **done**
 * test již existujícího loginu / mailu ještě před odesláním registračního formuláře - **in progress**
-* vygenerování nového hesla v případě jeho ztráty - **in progress**
+* vygenerování nového hesla v případě jeho ztráty - **done**
 
 Kategorie a produkty
 * možnost vytváření stromové struktury kategorií - **in progress**
