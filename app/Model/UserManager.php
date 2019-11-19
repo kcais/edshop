@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Nette;
+use Nette\Utils\DateTime;
 
 class UserManager
 {
@@ -50,6 +51,8 @@ class UserManager
      */
     public function updateUser(int $userid, array $values) : int
     {
+        //pridani casu updatu pro ulozeni
+        $values['updated_on']=new DateTime();
         return $this->database->table('users')
             ->where('id',$userid)->update($values);
     }
@@ -138,8 +141,6 @@ class UserManager
      */
     public function setUserUUID(int $userId, String $uuid, $column = 'uuid_lost_password') : int
     {
-        return $this->database->table('users')
-            ->where('id',$userId)
-            ->update(["$column"=>$uuid]);
+        return $this->updateUser($userId, [$column => $uuid]);
     }
 }
