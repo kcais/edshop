@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: localhost
--- Vytvořeno: Stř 13. lis 2019, 14:51
+-- Vytvořeno: Úte 19. lis 2019, 11:08
 -- Verze serveru: 8.0.17
 -- Verze PHP: 7.3.10
 
@@ -47,7 +47,9 @@ INSERT INTO `categories` (`id`, `name`, `comment`, `order_id`, `parent_cat_id`, 
 (1, 'Vstupní zařízení', 'Ovládací periferie jako např. myši, klávesnice, joysticky ap.', 1, NULL, '2019-11-13 09:31:19', '2019-11-13 09:31:19', NULL),
 (2, 'Grafické karty', 'Grafické karty a příslušenství', 2, NULL, '2019-11-13 09:32:55', '2019-11-13 09:32:55', NULL),
 (3, 'Monitory', 'Zobrazovací zařízení', 3, NULL, '2019-11-13 09:34:15', '2019-11-13 09:34:15', NULL),
-(4, 'Procesory', 'Výpočetní procesory, CPU, FPU, ASIC ...', 4, NULL, '2019-11-13 09:49:28', '2019-11-13 09:49:28', NULL);
+(4, 'Procesory', 'Výpočetní procesory, CPU, FPU, ASIC ...', 4, NULL, '2019-11-13 09:49:28', '2019-11-13 09:49:28', NULL),
+(5, 'Televizory', 'Televizory LCD/LED/Plasma/OLED', 1, NULL, '2019-11-18 14:33:29', '2019-11-18 14:33:29', NULL),
+(6, 'Diskety', 'Staré typy disket - 3,5 a 5,25 palce', 1, NULL, '2019-11-18 14:34:53', '2019-11-18 14:34:53', NULL);
 
 -- --------------------------------------------------------
 
@@ -106,7 +108,7 @@ CREATE TABLE `users` (
   `username` varchar(255) NOT NULL COMMENT 'Prihlasovaci jmeno uzivatele',
   `firstname` varchar(255) DEFAULT NULL COMMENT 'Jmeno uzivatele',
   `surname` varchar(255) DEFAULT NULL COMMENT 'Prijmeni uzivatele',
-  `password_hash` varchar(2048) NOT NULL COMMENT 'Zaheshovane heslo uzivatele pro prihlaseni',
+  `password_hash` varchar(2048) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Zaheshovane heslo uzivatele pro prihlaseni',
   `email` varchar(1024) NOT NULL COMMENT 'Emai',
   `language` varchar(16) NOT NULL DEFAULT 'CZ' COMMENT 'Jazyk uzivatele',
   `uuid_registration` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'Vygenerovane uuid pro dokonceni registrace',
@@ -124,9 +126,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `firstname`, `surname`, `password_hash`, `email`, `language`, `uuid_registration`, `uuid_lost_password`, `is_active`, `is_admin`, `registration_mail_sended`, `created_on`, `deleted_on`, `updated_on`) VALUES
-(23, 'kcais', 'Karel', 'Cais', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'kcais@volny.cz', 'CZ', 'a0db7539-d790-41b0-a4c1-8e3bb728f601', NULL, 1, 0, 0, '2019-11-13 14:19:14', NULL, '2019-11-13 14:19:17'),
 (25, 'ppetr', 'Petr', 'Petrovci', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'p@petr.cz', 'CZ', '981f9116-1bf5-4296-ac1b-0f3a7c74e07d', NULL, 1, 0, 0, '2019-11-13 14:22:01', NULL, '2019-11-13 14:22:15'),
-(26, 'plenkovic', 'Curila', 'Plenkovic', '56b1db8133d9eb398aabd376f07bf8ab5fc584ea0b8bd6a1770200cb613ca005', 'cplenk@ru.ru', 'CZ', 'ae8bea9c-c9e6-4f9c-9757-9d4b72ecafa3', NULL, 0, 0, 0, '2019-11-13 14:23:43', NULL, NULL);
+(26, 'plenkovic', 'Curila', 'Plenkovic', '56b1db8133d9eb398aabd376f07bf8ab5fc584ea0b8bd6a1770200cb613ca005', 'cplenk@ru.ru', 'CZ', 'ae8bea9c-c9e6-4f9c-9757-9d4b72ecafa3', NULL, 0, 0, 0, '2019-11-13 14:23:43', NULL, NULL),
+(27, 'kcais', 'Karel', 'Cais', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', 'kcais@volny.cz', 'CZ', '1e3e51a7-dccc-4083-b32b-b07505cc86a2', NULL, 1, 1, 0, '2019-11-18 16:02:05', NULL, '2019-11-18 16:08:27');
 
 --
 -- Klíče pro exportované tabulky
@@ -166,7 +168,8 @@ ALTER TABLE `order_objects`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `uuid_registration` (`uuid_registration`,`uuid_lost_password`);
 
 --
 -- AUTO_INCREMENT pro tabulky
@@ -176,7 +179,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pro tabulku `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT pro tabulku `objects`
@@ -200,7 +203,7 @@ ALTER TABLE `order_objects`
 -- AUTO_INCREMENT pro tabulku `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=28;
 
 --
 -- Omezení pro exportované tabulky
