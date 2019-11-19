@@ -43,6 +43,17 @@ class UserManager
         }
     }
 
+    /**
+     * @param int $userid ID uzivatele z tabulky users
+     * @param array $values Hodnoty pro update v poli [klic->hodnota]
+     * @return int Pocet upravenych radek v db
+     */
+    public function updateUser(int $userid, array $values) : int
+    {
+        return $this->database->table('users')
+            ->where('id',$userid)->update($values);
+    }
+
     /** Oznaci uzivatele jako aktivniho na zaklade UUID
      * @param $uuid
      * @return int Vraci pocet zmenenych radku
@@ -91,16 +102,44 @@ class UserManager
     /**Kontrola existence UUID v tabulce users v db
      * @param $uuid Hledane uuid
      * @param string $cell Kde hledat uuid
-     * @return int Vraci 0 pokud nenaslo uuid, jinak 1
+     * @return int Vraci 0 pokud nenaslo uuid, jinak id uzivatele
      */
     public function existUserUUID(String $uuid, $cell='uuid_registration') : int
     {
-        if(count($this->database->table('users')->select('id')->where($cell,$uuid))){
-            return 1;
+        $selection = $this->database->table('users')->select('id')->where($cell,$uuid);
+        if(count($selection)){
+            return $selection->fetch()->id;
         }
         else{
             return 0;
         }
     }
 
+    /** Zjisteni existence registracniho emailu
+     * @param String $email
+     * @return int 0-pokud neexistuje, id-pokud existuje vrati id uzivatele
+     */
+    public function registrationemailExist(String $email) : int
+    {
+        $selection = $this->database->table('users')->select('id')->where('email',$email);
+        if(count($selection)){
+            return $selection->fetch()->id;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    /** Nastavi uuid v tabulce users
+     * @param $userId ID uzivatele z tabulky users
+     * @param $uuid Ukladane uuid
+     * @param string $column Sloupec do ktereho ukladat (uuid_registration, uuid_lost_password ...)
+     * @return int Vraci pocet zmenenych radku
+     */
+    public function setUserUUID(int $userId, String $uuid, $column = 'uuid_lost_password') : int
+    {
+        return $this->database->table('users')
+            ->where('id',$userId)
+            ->update(["$column"=>$uuid]);
+    }
 }
