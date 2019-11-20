@@ -36,7 +36,11 @@
 		<div style="float:left; width: 200px;background-color: #f0f0f0;">
 		<ul>
 			{foreach $categories as $category}
-				<li><a n:href="Homepage:products $category[id]">{$category["name"]}</a></li>
+				{if isset($categoryId) && $category["id"] == $categoryId}
+					<li class="actualChoice"><a class="actualChoice" n:href="Homepage:products $category[id]">{$category["name"]}</a></li>
+				{else}
+					<li><a n:href="Homepage:products $category[id]">{$category["name"]}</a></li>
+				{/if}
 			{/foreach}
 		</ul>
 		</div>

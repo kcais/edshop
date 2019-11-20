@@ -74,3 +74,11 @@ li a:hover:not(.active) {
     background-color: #949492;
     color: white;
 }
+
+.actualChoice{
+    background-color: #949492;
+}
+
+.actualChoice a:visited{
+        color: white;
+}
