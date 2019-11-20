@@ -20,10 +20,9 @@ class CategoryManager
      */
     public function getAllCategories()
     {
-        return $this->database->table('categories')
-            ->where('deleted_on',NULL)
-            ->order('name ASC')
-            ;
+            return $this->database->table('categories')
+                ->where('deleted_on', NULL)
+                ->order('name ASC');
     }
 
     /** Vytvori novou kategorii prodejnich polozek

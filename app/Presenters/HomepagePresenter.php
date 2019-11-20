@@ -10,5 +10,8 @@ use Nette;
 
 final class HomepagePresenter extends BasePresenter
 {
-
+    public function renderProducts($categoryId)
+    {
+        $this->template->id = $categoryId;
+    }
 }
