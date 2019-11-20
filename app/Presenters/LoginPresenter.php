@@ -10,7 +10,7 @@ use App\Model\UserManager;
 use Nette\Mail\Message;
 use Nette\Mail\SendmailMailer;
 
-final class LoginPresenter extends Nette\Application\UI\Presenter
+final class LoginPresenter extends BasePresenter//Nette\Application\UI\Presenter
 {
     private $database;
     private $userManager;

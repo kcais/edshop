@@ -7,7 +7,7 @@ use Nette;
 use Nette\Application\UI\Form;
 
 
-final class AdminPresenter extends Nette\Application\UI\Presenter
+final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
 {
     private $categoryManager;
 

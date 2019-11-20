@@ -8,7 +8,7 @@ use Nette;
  * Class LogoutPresenter
  * @package App\Presenters
  */
-final class LogoutPresenter extends Nette\Application\UI\Presenter
+final class LogoutPresenter extends BasePresenter//Nette\Application\UI\Presenter
 {
     private $user;
 

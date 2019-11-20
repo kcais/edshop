@@ -18,7 +18,7 @@ class CategoryManager
     /** Nacte vsechny kategorie prodejnich polozek ktere nejsou oznaceny jako deleted_on
      * @return Nette\Database\Table\Selection
      */
-    public function getAllCategory()
+    public function getAllCategories()
     {
         return $this->database->table('categories')
             ->where('deleted_on',NULL)
