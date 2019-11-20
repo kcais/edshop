@@ -43,13 +43,15 @@ class ObjectManager
         if(!$objectDeleted) {
             return $this->database->table('objects')
                 ->where('is_visible = ', $objectVisibility)
-                ->where('deleted_on is null')
+                ->where('deleted_on', null)
+                ->where('category_id', $category)
                 ;
         }
         else{
             return $this->database->table('objects')
                 ->where('is_visible = ', $objectVisibility)
-                ->where('deleted_on is not null')
+                ->where('deleted_on NOT',null)
+                ->where('category_id', $category)
                 ;
         }
 
