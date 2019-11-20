@@ -5,91 +5,12 @@
 	<meta name="viewport" content="width=device-width">
 
 	<title>{ifset title}{include title|stripHtml} | {/ifset}EdShop</title>
+    <link rel="stylesheet" type="text/css" href="{$basePath}/style.css">
 </head>
 
 <body>
 	{php $start_time=microtime(true)}
 	<div style="color: crimson" n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
-
-	<style>
-		header { background-color: silver;height: 50px}
-
-		nav { background-color: lightgray;float:left;}
-
-		ul {
-			list-style-type: none;
-			margin: 0px;
-			padding: 0px;
-			width : 200px;
-			float:left;
-			background-color: #f1f1f1;
-			height: 100%; /* Full height */
-			position: fixed; /* Make it stick, even on scroll */
-			overflow: auto; /* Enable scrolling if the sidenav has too much content */
-		}
-
-		footer {
-			position:absolute;
-			bottom:0;
-			width:99%;
-			height:60px;   /* Height of the footer */
-			background-color: #eaeaea;
-		}
-
-		a:link,a:visited {
-			color: mediumblue;
-		}
-
-		.cat_td {
-			background-color: aliceblue;
-			padding: 5px;
-		}
-
-		.cat_td_com {
-			background-color: ghostwhite;
-			padding: 5px;
-		}
-
-		ul {
-			list-style-type: none;
-			margin: 0;
-			padding: 0;
-
-			background-color: #f1f1f1;
-
-		}
-
-		li a {
-			display: block;
-			color: #000;
-			padding: 8px 16px;
-			text-decoration: none;
-		}
-
-		li a:visited{
-			color : #333333;
-		}
-
-		li {
-			text-align: center;
-			border-bottom: 1px solid #555;
-		}
-
-		li:last-child {
-			border-bottom: none;
-		}
-
-		li a.active {
-			background-color: #4CAF50;
-			color: white;
-		}
-
-		li a:hover:not(.active) {
-			background-color: #949492;
-			color: white;
-		}
-
-	</style>
 
 	<header>
 		<p style="text-align: left;font-size: 28px;text-shadow: 3px 3px darkgray"><a style="text-decoration: none;color : black" n:href="Homepage:">EdShop</a>
@@ -116,7 +37,7 @@
 		<br>Kategorie :<br><br>
 		<ul>
 			{foreach $categories as $category}
-				<li><a n:href="Homepage:">{$category["name"]}</a></li>
+				<li><a n:href="Homepage:products?id=$category[id]">{$category["name"]}</a></li>
 			{/foreach}
 		</ul>
 		</div>
