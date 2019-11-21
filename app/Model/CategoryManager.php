@@ -15,6 +15,16 @@ class CategoryManager
         $this->database = $database;
     }
 
+    /**
+     * @param int $id Id kategorie
+     * @return Nette\Database\Table\Selection Vraci selection s daty kategorie
+     */
+    public function getCategory(int $id) : Nette\Database\Table\Selection
+    {
+        return $this->database->table('categories')
+            ->where('id',$id);
+    }
+
     /** Nacte vsechny kategorie prodejnich polozek ktere nejsou oznaceny jako deleted_on
      * @return Nette\Database\Table\Selection
      */

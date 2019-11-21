@@ -1,3 +1,13 @@
+body,p{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
 header { background-color: silver;height: 50px}
 
 nav { background-color: lightgray;float:left;}
@@ -24,6 +34,10 @@ footer {
 
 a:link,a:visited {
     color: mediumblue;
+}
+
+table, th, td {
+    border: 2px solid white;
 }
 
 .cat_td {

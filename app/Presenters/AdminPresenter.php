@@ -50,13 +50,13 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
 
        $form->addText('name','Název')
            ->setRequired('Zadejte jméno produktu')
-           ->setMaxLength(255)
+           ->setMaxLength(1024)
            ->addRule(Form::MIN_LENGTH,'Název musí obsahovat nejméně 3 znaky',3)
        ;
 
        $form->addTextArea('description','Popis')
             ->setRequired('Zadejte popis produktu')
-            ->setMaxLength(255)
+            ->setMaxLength(1024)
        ;
 
        $form->addText('price','Cena(Kč)')

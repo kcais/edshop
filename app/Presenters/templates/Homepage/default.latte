@@ -1,12 +1,11 @@
 {block content}
 
-
     <table>
     <tr><td><h2>Kategorie :</h2></td></tr>
 
-{foreach $categories as $category}
-    <tr><td class="cat_td">{$category->name}</td><td class="cat_td_com">{$category->comment}</td></tr>
-{/foreach}
+    {foreach $categories as $category}
+        <tr><td class="cat_td"><a n:href="Homepage:products?categoryId=$category->id" style="color : black">{$category->name}</a></td><td class="cat_td_com">{$category->comment}</td></tr>
+    {/foreach}
 </table>
 
 {/block}
