@@ -47,7 +47,6 @@ class ObjectManager
             $notDeleted='';
         }
 
-
             return $this->database->table('objects')
                 ->where('is_visible = ', $objectVisibility)
                 ->where("deleted_on $notDeleted", null)
@@ -64,21 +63,18 @@ class ObjectManager
      */
     public function getObjects($category=0,$objectVisibility=true, $objectDeleted=false)
     {
-        if(!$objectDeleted) {
-            return $this->database->table('objects')
-                ->where('is_visible = ', $objectVisibility)
-                ->where('deleted_on', null)
-                ->where('category_id', $category)
-                ;
+        if($objectDeleted){
+            $notDeleted='NOT';
         }
         else{
-            return $this->database->table('objects')
-                ->where('is_visible = ', $objectVisibility)
-                ->where('deleted_on NOT',null)
-                ->where('category_id', $category)
-                ;
+            $notDeleted='';
         }
 
+            return $this->database->table('objects')
+                ->where('is_visible = ', $objectVisibility)
+                ->where("deleted_on $notDeleted", null)
+                ->where('category_id', $category)
+                ;
 
     }
 }
