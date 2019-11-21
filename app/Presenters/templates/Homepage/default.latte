@@ -1,10 +1,10 @@
 {block content}
 
     <table>
-    <tr><td><h2>Kategorie :</h2></td></tr>
+    <tr><td colspan="3"><h2>Kategorie :</h2></td></tr>
 
     {foreach $categories as $category}
-        <tr><td class="cat_td"><a n:href="Homepage:products?categoryId=$category->id" style="color : black">{$category->name}</a></td><td class="cat_td_com">{$category->comment}</td></tr>
+        <tr><td class="cat_td"><a n:href="Homepage:products?categoryId=$category->id" style="color : black">{$category->name}</a></td><td class="cat_td_com">{$category->comment}</td><td>({$objectsInCategoryCount[$category->id]})</td></tr>
     {/foreach}
 </table>
 

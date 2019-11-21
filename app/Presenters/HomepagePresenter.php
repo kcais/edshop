@@ -28,6 +28,16 @@ final class HomepagePresenter extends BasePresenter
         $this->template->categoryName = $this->categoryManager->getCategory((int)$categoryId)->fetch()->name;
     }
 
+    public function renderDefault()
+    {
+        foreach($this->template->categories as $category)
+        {
+            $objectsInCategoryCount["$category[id]"]= $this->objectManager->getObjectsCount($category['id']);
+        }
+
+        $this->template->objectsInCategoryCount = $objectsInCategoryCount;
+    }
+
     /** Komponenta datagridu pro kategorie
      * @return DataGrid
      */

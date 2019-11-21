@@ -32,6 +32,30 @@ class ObjectManager
         ]);
     }
 
+    /**
+     * @param int $category Id kategorie prodejnich polozek
+     * @param bool $objectVisibility Nastaveni zda pocitat pouze viditelne objekty
+     * @param bool $objectDeleted Nastaveni pokud pocitat i smazane objekty
+     * @return int
+     */
+    public function  getObjectsCount(int $category,$objectVisibility=true, $objectDeleted=false) : int
+    {
+        if($objectDeleted){
+            $notDeleted='NOT';
+        }
+        else{
+            $notDeleted='';
+        }
+
+
+            return $this->database->table('objects')
+                ->where('is_visible = ', $objectVisibility)
+                ->where("deleted_on $notDeleted", null)
+                ->where('category_id', $category)
+                ->count('id')
+                ;
+    }
+
     /** Nacte vsechny prodejni polozky podle zadanych kriterii
      * @param bool $objectVisibility 1-nacte pouze objekty oznacene jako viditelne, jinak nacte vsechny
      * @param bool $objectDeleted 1-nacte i objekty oznacene jako smazane
