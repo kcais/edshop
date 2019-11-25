@@ -67,28 +67,13 @@ final class HomepagePresenter extends BasePresenter
         return $grid;
     }
 
-    function renderBasket()
+    /** Handle udalosti pridani zbozi do kosiku
+     * @param int $id ID produktu
+     */
+    function handleToBasket(int $id)
     {
-        $session=$this->getSession();
-        $section = $session->getSection('edshop');
-        if(isset($section->basket)) {
-            $this->template->basket = $section->basket;
-        }
-        else{
-            $this->template->basket = "";
-        }
-
-    }
-
-    function handleToBasket($id)
-    {
-        /*$session=$this->getSession();
-        $section = $session->getSection('edshop');
-        unset($section->basket);
-        exit;*/
-        //pridani do kosiku ulozeneho v databazi
        if($this->user->isLoggedIn()){
-
+            //TODO Implementace kosiku pri prihlaseni (ukladani do DB)
        }
        else{ //pridani do kosiku ulozeneho v session
            $session=$this->getSession();
