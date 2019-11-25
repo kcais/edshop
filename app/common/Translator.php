@@ -47,6 +47,10 @@ class TranslatorCz implements \Nette\Localization\ITranslator
             case "objectsGrid.price":
                 if($this->language == 'CZ') return "Cena";
                 break;
+            case "ublaboo_datagrid.action":
+                if($this->language == 'CZ') return "";
+                break;
+
         }
         return $message;
     }

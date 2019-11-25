@@ -50,10 +50,67 @@ final class HomepagePresenter extends BasePresenter
         $grid->setDataSource($this->objectManager->getObjects($section->categoryId));
         $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
         $grid->addColumnText('description', 'objectsGrid.description');
-        $grid->addColumnText('price', 'objectsGrid.price')->setSortable();
+        $grid->addColumnText('price', 'objectsGrid.price')
+            ->setRenderer(function ($row):String{return "$row->price Kč";})
+            ->setSortable()
+            ->setAlign('center')
+        ;
+
+        $grid->addAction('toBasket','Do košíku','ToBasket!')
+            ->setClass('btn btn-primary')
+        ;
+        //$grid->addColumnLink('id','Do košíku','addToBasket');
+
         $grid->addFilterText('name', 'objectsGrid.name')->setSplitWordsSearch(FALSE);
         $grid->addFilterText('description', 'objectsGrid.description');
         $grid->setTranslator(new \TranslatorCz('CZ'));
         return $grid;
+    }
+
+    function renderBasket()
+    {
+        $session=$this->getSession();
+        $section = $session->getSection('edshop');
+        if(isset($section->basket)) {
+            $this->template->basket = $section->basket;
+        }
+        else{
+            $this->template->basket = "";
+        }
+
+    }
+
+    function handleToBasket($id)
+    {
+        /*$session=$this->getSession();
+        $section = $session->getSection('edshop');
+        unset($section->basket);
+        exit;*/
+        //pridani do kosiku ulozeneho v databazi
+       if($this->user->isLoggedIn()){
+
+       }
+       else{ //pridani do kosiku ulozeneho v session
+           $session=$this->getSession();
+           $section = $session->getSection('edshop');
+           if(isset($section->basket)){
+               $basket = unserialize($section->basket);
+               if(isset($basket[$id])) {
+                   $basket[$id] = $basket[$id]+1;
+               }
+               else{
+                   $basket[$id] = 1;
+               }
+
+               $section->basket = serialize($basket);
+           }
+           else{
+               $basket = [$id => 1];
+           }
+
+           echo print_r($basket);
+
+           $section->basket = serialize($basket);
+       }
     }
 }

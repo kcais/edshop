@@ -96,3 +96,11 @@ li a:hover:not(.active) {
 .actualChoice a:visited{
         color: white;
 }
+
+.col-price{
+    width : 100px;
+}
+
+.col-action{
+    width : 120px;
+}
