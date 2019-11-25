@@ -55,13 +55,13 @@ class ObjectManager
                 ;
     }
 
-    /** Nacte vsechny prodejni polozky podle zadanych kriterii
+    /** Nacte a vrati vsechny prodejni polozky podle zadanych kriterii
      * @param bool $objectVisibility 1-nacte pouze objekty oznacene jako viditelne, jinak nacte vsechny
      * @param bool $objectDeleted 1-nacte i objekty oznacene jako smazane
      * @return Nette\Database\Table\Selection
      * @throws \Exception
      */
-    public function getObjects($category=0,$objectVisibility=true, $objectDeleted=false)
+    public function getObjects($category=0,$objectVisibility=true, $objectDeleted=false) : Nette\Database\Table\Selection
     {
         if($objectDeleted){
             $notDeleted='NOT';
@@ -73,9 +73,21 @@ class ObjectManager
             return $this->database->table('objects')
                 ->where('is_visible = ', $objectVisibility)
                 ->where("deleted_on $notDeleted", null)
-                ->where('category_id', $category)
-                ;
+                ->where('category_id', $category);
 
     }
+
+
+    /** Nacte a vrati prodejni polozky podle id specifikovanych v poli
+     * @param array $ids Pole idcek objektu pro vraceni
+     * @return Nette\Database\Table\Selection
+     */
+    public function getObjectsFromIds(array $ids) : Nette\Database\Table\Selection
+    {
+        return $this->database->table('objects')
+            ->where('id IN ',$ids)
+            ;
+    }
+
 }
 ?>
