@@ -96,7 +96,7 @@ final class HomepagePresenter extends BasePresenter
            $section->basket = serialize($basket);
 
           $basketObj =  new \Basket($this->objectManager);
-          $this->template->basketPrice = $basketObj->calculateBasketPrice($section);
+          $this->template->basketPrice = $basketObj->calculateBasketPriceSession($section);
        }
     }
 

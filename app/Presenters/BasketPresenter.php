@@ -16,29 +16,64 @@ final class BasketPresenter extends BasePresenter
         $this->objectManager = $objectManager;
     }
 
+    /** Zobrazeni obsahu kosiku
+     * @param $name
+     * @return DataGrid
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     */
     protected function createComponentBasketGrid($name) : DataGrid
     {
+        $grid=null;
 
-        $section = $this->getSession()->getSection('edshop');
+        if($this->user->isLoggedIn()){
+            //TODO Implementace kosiku pri prihlaseni (ukladani do DB)
+        }
+        else { //pridani do kosiku ulozeneho v session
 
-        $basketObj = new \Basket($this->objectManager);
+            $section = $this->getSession()->getSection('edshop');
 
-        $grid = new DataGrid($this, $name);
-        $grid->setDataSource($basketObj->getBasketObjectsList($section));
-        $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
-        $grid->addColumnText('description', 'objectsGrid.description');
-        $grid->addColumnText('price', 'objectsGrid.price')
-            ->setRenderer(function ($row): String {
-                return "$row->price Kč";
-            })
-            ->setSortable()
-            ->setAlign('center');
+            $basketObj = new \Basket($this->objectManager);
 
-        $grid->setTranslator(new \TranslatorCz('CZ'));
+            $selection = $basketObj->getBasketObjectsList($section);
+
+            $grid = new DataGrid($this, $name);
+            $grid->setDataSource($selection);
+            $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
+            $grid->addColumnText('description', 'objectsGrid.description');
+            $grid->addColumnText('price', 'objectsGrid.price')
+                ->setRenderer(function ($row): String {
+                    return "$row->price Kč";
+                })
+                ->setSortable()
+                ->setAlign('center');
+
+            $grid->addAction('fromBasket', 'Odebrat', 'FromBasket!')
+                ->setClass('btn btn-primary');
+
+            $grid->setTranslator(new \TranslatorCz('CZ'));
+        }
 
         return $grid;
     }
 
+    function handleFromBasket(int $id)
+    {
+        if($this->user->isLoggedIn()){
+            //TODO Implementace kosiku pri prihlaseni (ukladani do DB)
+        }
+        else { //pridani do kosiku ulozeneho v session
+            $basketObj = new \Basket($this->objectManager);
+            $section = $this->getSession()->getSection('edshop');
+
+            $basketObj->removeFromBasketSession($id,$section);
+            $basketObj->calculateBasketPriceSession($section);
+            $this->redirect("Basket:");
+        }
+    }
+
+    /** Vyprazdneni kosiku
+     * @throws \Nette\Application\AbortException
+     */
     public function renderEmpty()
     {
         $session = $this->getSession();

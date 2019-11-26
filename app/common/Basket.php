@@ -15,12 +15,18 @@ class Basket{
         $this->objectManager = $objectManager;
     }
 
+    /** Vrati obsah kosiku
+     * @param \Nette\Http\SessionSection $section
+     * @return array|\Nette\Database\Table\Selection
+     */
     public function getBasketObjectsList(Nette\Http\SessionSection $section)
     {
         $keyIds = null;
 
-        if(isset($section->basket) && $section->basket) {
-            foreach (unserialize($section->basket) as $basketKey => $basketValue) {
+        $basket = unserialize($section->basket);
+
+        if(isset($section->basket) && $section->basket && is_array($basket) && !empty($basket)) {
+            foreach ($basket as $basketKey => $basketValue) {
                 $keyIds[] = $basketKey;
             }
             $selection = $this->objectManager->getObjectsFromIds($keyIds);
@@ -32,8 +38,22 @@ class Basket{
         return $selection;
     }
 
-    public function calculateBasketPrice(Nette\Http\SessionSection $section) : float
+    /** Vypocet aktualni hodnoty zbozi v kosiku - pro neprihlaseneho uzivatele, nacita kosik ze session
+     * @param \Nette\Http\SessionSection $section
+     * @return float
+     */
+    public function calculateBasketPriceSession(Nette\Http\SessionSection $section) : float
     {
+        if(!isset($section->basket)){
+            $section->basketPrice = 0.0;
+            return 0.0;
+        }
+
+        if(!unserialize($section->basket)){
+            $section->basketPrice = 0.0;
+            return 0.0;
+        }
+
         $basket = unserialize($section->basket);
 
         foreach ($basket as $basketKey => $basketValue) {
@@ -57,6 +77,17 @@ class Basket{
         $section->basketPrice = $totalPrice;
 
         return $totalPrice;
+    }
+
+    /** Odebrani polozky z kosiku
+     * @param int $id
+     * @param \Nette\Http\SessionSection $section
+     */
+    public function removeFromBasketSession(int $id, Nette\Http\SessionSection $section)
+    {
+        $basket = unserialize($section->basket);
+        unset($basket[$id]);
+        $section->basket = serialize($basket);
 
     }
 }
