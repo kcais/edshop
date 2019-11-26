@@ -95,31 +95,9 @@ final class HomepagePresenter extends BasePresenter
            $this->template->basket = $basket;
            $section->basket = serialize($basket);
 
-           $this->calculateBasketPrice();
+          $basketObj =  new \Basket($this->objectManager);
+          $this->template->basketPrice = $basketObj->calculateBasketPrice($section);
        }
-    }
-
-
-    private function calculateBasketPrice()
-    {
-        foreach ($this->template->basket as $basketKey => $basketValue) {
-            $keyIds[] = $basketKey;
-        }
-        $selection = $this->objectManager->getObjectsFromIds($keyIds);
-        $prices = null;
-
-        foreach ($selection as $row){
-            $prices[$row->id]= $row->price;
-        }
-
-        $totalPrice = 0.0;
-
-        foreach ($this->template->basket as $basketKey => $basketValue) {
-            $totalPrice += ($prices[$basketKey] * $basketValue);
-        }
-
-        $this->template->basketPrice = $totalPrice;
-        $this->getSession()->getSection('edshop')->basketPrice = $totalPrice;
     }
 
 }
