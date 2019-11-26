@@ -82,7 +82,6 @@ class Basket{
 
     /** Odebrani polozky z kosiku
      * @param int $id
-     * @param \Nette\Http\SessionSection $section
      */
     public function removeFromBasket(int $id)
     {

@@ -50,19 +50,18 @@ final class BasketPresenter extends BasePresenter
         return $grid;
     }
 
+    /** Obsluha odebrani veci z kosiku
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
     function handleFromBasket(int $id)
     {
-        if($this->user->isLoggedIn()){
-            //TODO Implementace kosiku pri prihlaseni (ukladani do DB)
-        }
-        else { //pridani do kosiku ulozeneho v session
-            $section = $this->getSession()->getSection('edshop');
-            $basketObj = new \Basket($this->objectManager,$this->user, $section);
+        $section = $this->getSession()->getSection('edshop');
+        $basketObj = new \Basket($this->objectManager,$this->user, $section);
 
-            $basketObj->removeFromBasket($id);
-            $basketObj->calculateBasketPrice();
-            $this->redirect("Basket:");
-        }
+        $basketObj->removeFromBasket($id);
+        $basketObj->calculateBasketPrice();
+        $this->redirect("Basket:");
     }
 
     /** Vyprazdneni kosiku
