@@ -25,33 +25,27 @@ final class BasketPresenter extends BasePresenter
     {
         $grid=null;
 
-        if($this->user->isLoggedIn()){
-            //TODO Implementace kosiku pri prihlaseni (ukladani do DB)
-        }
-        else { //pridani do kosiku ulozeneho v session
+        $section = $this->getSession()->getSection('edshop');
 
-            $section = $this->getSession()->getSection('edshop');
+        $basketObj = new \Basket($this->objectManager,$this->user,$section);
 
-            $basketObj = new \Basket($this->objectManager);
+        $selection = $basketObj->getBasketObjectsList();
 
-            $selection = $basketObj->getBasketObjectsList($section);
+        $grid = new DataGrid($this, $name);
+        $grid->setDataSource($selection);
+        $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
+        $grid->addColumnText('description', 'objectsGrid.description');
+        $grid->addColumnText('price', 'objectsGrid.price')
+            ->setRenderer(function ($row): String {
+                return "$row->price Kč";
+            })
+            ->setSortable()
+            ->setAlign('center');
 
-            $grid = new DataGrid($this, $name);
-            $grid->setDataSource($selection);
-            $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
-            $grid->addColumnText('description', 'objectsGrid.description');
-            $grid->addColumnText('price', 'objectsGrid.price')
-                ->setRenderer(function ($row): String {
-                    return "$row->price Kč";
-                })
-                ->setSortable()
-                ->setAlign('center');
+        $grid->addAction('fromBasket', 'Odebrat', 'FromBasket!')
+            ->setClass('btn btn-primary');
 
-            $grid->addAction('fromBasket', 'Odebrat', 'FromBasket!')
-                ->setClass('btn btn-primary');
-
-            $grid->setTranslator(new \TranslatorCz('CZ'));
-        }
+        $grid->setTranslator(new \TranslatorCz('CZ'));
 
         return $grid;
     }
@@ -62,11 +56,11 @@ final class BasketPresenter extends BasePresenter
             //TODO Implementace kosiku pri prihlaseni (ukladani do DB)
         }
         else { //pridani do kosiku ulozeneho v session
-            $basketObj = new \Basket($this->objectManager);
             $section = $this->getSession()->getSection('edshop');
+            $basketObj = new \Basket($this->objectManager,$this->user, $section);
 
-            $basketObj->removeFromBasketSession($id,$section);
-            $basketObj->calculateBasketPriceSession($section);
+            $basketObj->removeFromBasket($id);
+            $basketObj->calculateBasketPrice();
             $this->redirect("Basket:");
         }
     }

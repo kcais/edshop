@@ -9,23 +9,26 @@ use App\Model\ObjectManager;
 class Basket{
 
     private $objectManager;
+    private $user;
+    private $section;
 
-    public function __construct(\App\Model\ObjectManager $objectManager)
+    public function __construct(\App\Model\ObjectManager $objectManager, Nette\Security\User $user, Nette\Http\SessionSection $section)
     {
         $this->objectManager = $objectManager;
+        $this->user = $user;
+        $this->section = $section;
     }
 
     /** Vrati obsah kosiku
-     * @param \Nette\Http\SessionSection $section
      * @return array|\Nette\Database\Table\Selection
      */
-    public function getBasketObjectsList(Nette\Http\SessionSection $section)
+    public function getBasketObjectsList()
     {
         $keyIds = null;
 
-        $basket = unserialize($section->basket);
+        $basket = unserialize($this->section->basket);
 
-        if(isset($section->basket) && $section->basket && is_array($basket) && !empty($basket)) {
+        if(isset($this->section->basket) && $this->section->basket && is_array($basket) && !empty($basket)) {
             foreach ($basket as $basketKey => $basketValue) {
                 $keyIds[] = $basketKey;
             }
@@ -39,22 +42,21 @@ class Basket{
     }
 
     /** Vypocet aktualni hodnoty zbozi v kosiku - pro neprihlaseneho uzivatele, nacita kosik ze session
-     * @param \Nette\Http\SessionSection $section
      * @return float
      */
-    public function calculateBasketPriceSession(Nette\Http\SessionSection $section) : float
+    public function calculateBasketPrice() : float
     {
-        if(!isset($section->basket)){
-            $section->basketPrice = 0.0;
+        if(!isset($this->section->basket)){
+            $this->section->basketPrice = 0.0;
             return 0.0;
         }
 
-        if(!unserialize($section->basket)){
-            $section->basketPrice = 0.0;
+        if(!unserialize($this->section->basket)){
+            $this->section->basketPrice = 0.0;
             return 0.0;
         }
 
-        $basket = unserialize($section->basket);
+        $basket = unserialize($this->section->basket);
 
         foreach ($basket as $basketKey => $basketValue) {
             $keyIds[] = $basketKey;
@@ -73,8 +75,7 @@ class Basket{
             $totalPrice += ($prices[$basketKey] * $basketValue);
         }
 
-
-        $section->basketPrice = $totalPrice;
+        $this->section->basketPrice = $totalPrice;
 
         return $totalPrice;
     }
@@ -83,12 +84,11 @@ class Basket{
      * @param int $id
      * @param \Nette\Http\SessionSection $section
      */
-    public function removeFromBasketSession(int $id, Nette\Http\SessionSection $section)
+    public function removeFromBasket(int $id)
     {
-        $basket = unserialize($section->basket);
+        $basket = unserialize($this->section->basket);
         unset($basket[$id]);
-        $section->basket = serialize($basket);
-
+        $this->section->basket = serialize($basket);
     }
 }
 

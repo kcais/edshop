@@ -71,10 +71,6 @@ final class HomepagePresenter extends BasePresenter
      */
     function handleToBasket(int $id)
     {
-       if($this->user->isLoggedIn()){
-            //TODO Implementace kosiku pri prihlaseni (ukladani do DB)
-       }
-       else{ //pridani do kosiku ulozeneho v session
            $session=$this->getSession();
            $section = $session->getSection('edshop');
            if(isset($section->basket)){
@@ -95,9 +91,9 @@ final class HomepagePresenter extends BasePresenter
            $this->template->basket = $basket;
            $section->basket = serialize($basket);
 
-          $basketObj =  new \Basket($this->objectManager);
-          $this->template->basketPrice = $basketObj->calculateBasketPriceSession($section);
-       }
+          $basketObj =  new \Basket($this->objectManager,$this->user, $section);
+          $this->template->basketPrice = $basketObj->calculateBasketPrice();
+
     }
 
 }
