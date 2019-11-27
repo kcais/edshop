@@ -11,44 +11,81 @@ class Basket{
     private $objectManager;
     private $user;
     private $section;
+    private $presenter;
 
-    public function __construct(\App\Model\ObjectManager $objectManager, Nette\Security\User $user, Nette\Http\SessionSection $section)
+    public function __construct(\App\Model\ObjectManager $objectManager, Nette\Application\UI\Presenter &$presenter)
     {
         $this->objectManager = $objectManager;
-        $this->user = $user;
-        $this->section = $section;
+        $this->user = $presenter->user;
+        $this->presenter = $presenter;
+        $this->section = $presenter->getSession()->getSection(\App\Common\Common::getSelectionName());
     }
 
     /** Vrati obsah kosiku
-     * @return array|\Nette\Database\Table\Selection
+     * @return array
      */
     public function getBasketObjectsList()
     {
-        $keyIds = null;
-        $objectCount = null;
+        //uzivatel neni prihlasen, pouzivaji se data ze session
+        if(!$this->user->isLoggedIn()) {
+            $keyIds = null;
+            $objectCount = null;
 
-        $basket = unserialize($this->section->basket);
+            $basket = unserialize($this->section->basket);
 
-        if(isset($this->section->basket) && $this->section->basket && is_array($basket) && !empty($basket)) {
-            foreach ($basket as $basketKey => $basketValue) {
-                $keyIds[] = $basketKey;
+            if (isset($this->section->basket) && $this->section->basket && is_array($basket) && !empty($basket)) {
+                foreach ($basket as $basketKey => $basketValue) {
+                    $keyIds[] = $basketKey;
+                }
+
+                $selection = $this->objectManager->getObjectsFromIds($keyIds);
+
+                $selectionArr = null;
+
+                foreach ($selection as $row) {
+                    $selectionArr[] = ['id' => $row->id, 'name' => "$row->name", 'description' => "$row->description", 'price' => "$row->price", 'pcs' => $basket[$row->id], 'totalPrice' => $basket[$row->id] * $row->price];
+                }
+
+                $selection = $selectionArr;
+
+            } else {
+                $selection = [];
             }
+
+            return $selection;
+        }
+        else{ //uzivatel je prihlasen, pouzivaji se data z databaze
+            $orderId = $this->objectManager->getOpenOrderId($this->user->getId());
+            if($orderId == 0){
+                return [];
+            }
+            elseif($orderId == -1){
+                die('<h2>Pri zpracovani kosiku doslo k chybe !</h2>');
+            }
+
+            $orderList = $this->objectManager->getOrderObjectsList($orderId);
+
+            $objectsArr = null;
+            $keyIds = null;
+
+            foreach($orderList as $orderObject){
+                $objectsArr[$orderObject->id] = $orderObject->pcs;
+                $keyIds[] = $orderObject->id;
+            }
+
             $selection = $this->objectManager->getObjectsFromIds($keyIds);
 
-            $selectionArr=null;
+            $selectionArr = null;
 
-            foreach($selection as $row){
-                $selectionArr[]=['id' => $row->id, 'name' => "$row->name", 'description' => "$row->description", 'price' => "$row->price", 'pcs' => $basket[$row->id], 'totalPrice' => $basket[$row->id] * $row->price];
+            foreach ($selection as $row) {
+                $selectionArr[] = ['id' => $row->id, 'name' => "$row->name", 'description' => "$row->description", 'price' => "$row->price", 'pcs' => $objectsArr[$row->id], 'totalPrice' => $objectsArr[$row->id] * $row->price];
             }
 
             $selection = $selectionArr;
 
-        }
-        else{
-            $selection = [];
-        }
+            return $selection;
 
-        return $selection;
+        }
     }
 
     /** Vypocet aktualni hodnoty zbozi v kosiku - pro neprihlaseneho uzivatele, nacita kosik ze session
@@ -86,8 +123,35 @@ class Basket{
         }
 
         $this->section->basketPrice = $totalPrice;
+        $this->presenter->template->basketPrice = $totalPrice;
 
         return $totalPrice;
+    }
+
+    /** Pridani polozky do kosiku
+     * @param int $id
+     * @param float $pcs
+     */
+    public function AddToBasket(int $id, float $pcs=1.0)
+    {
+        //uzivatel neni prihlasen, pouziva se session
+         if(!$this->user->isLoggedIn()) {
+             if (isset($this->section->basket)) {
+                $basket = unserialize($this->section->basket);
+                 if (isset($basket[$id])) {
+                    $basket[$id] = $basket[$id] + 1;
+                } else {
+                    $basket[$id] = 1;
+                }
+
+                $this->section->basket = serialize($basket);
+            } else {
+                $basket = ["$id" => 1];
+            }
+
+            $this->presenter->template->basket = $basket;
+            $this->section->basket = serialize($basket);
+        }
     }
 
     /** Odebrani polozky z kosiku

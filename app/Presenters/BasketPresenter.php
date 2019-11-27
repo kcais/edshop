@@ -27,7 +27,7 @@ final class BasketPresenter extends BasePresenter
 
         $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
 
-        $basketObj = new \Basket($this->objectManager,$this->user,$section);
+        $basketObj = new \Basket($this->objectManager,$this, $section);
 
         $selection = $basketObj->getBasketObjectsList();
 
@@ -41,7 +41,7 @@ final class BasketPresenter extends BasePresenter
         $grid->addColumnText('description', 'objectsGrid.description');
         $grid->addColumnText('price', 'objectsGrid.pricePerPcs')
             ->setRenderer(function ($row): String {
-                return "$row[price]";
+                return "$row[price] Kč";
             })
             ->setSortable()
             ->setAlign('center');
@@ -49,6 +49,10 @@ final class BasketPresenter extends BasePresenter
         $grid->addColumnText('pcs', 'objectsGrid.pcs');
 
         $grid->addColumnText('totalPrice', 'objectsGrid.totalPrice')
+            ->setRenderer(function ($row): String {
+                return "$row[totalPrice] Kč";
+            })
+        ->setSortable()
         ->setAlign('center');
 
         $grid->addAction('fromBasket', 'Odebrat', 'FromBasket!')
@@ -66,7 +70,7 @@ final class BasketPresenter extends BasePresenter
     function handleFromBasket(int $id)
     {
         $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
-        $basketObj = new \Basket($this->objectManager,$this->user, $section);
+        $basketObj = new \Basket($this->objectManager,$this, $section);
 
         $basketObj->removeFromBasket($id);
         $basketObj->calculateBasketPrice();
@@ -89,6 +93,4 @@ final class BasketPresenter extends BasePresenter
 
         $this->redirect("Basket:");
     }
-
-
 }

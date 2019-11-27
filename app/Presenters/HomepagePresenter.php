@@ -19,6 +19,9 @@ final class HomepagePresenter extends BasePresenter
         $this->categoryManager = $categoryManager;
     }
 
+    /** Zobrazeni kategorie produktu
+     * @param $categoryId
+     */
     public function renderProducts($categoryId)
     {
         $this->template->categoryId = $categoryId;
@@ -28,6 +31,9 @@ final class HomepagePresenter extends BasePresenter
         $this->template->categoryName = $this->categoryManager->getCategory((int)$categoryId)->fetch()->name;
     }
 
+    /**
+     *  Zobrazeni seznamu kategorii
+     */
     public function renderDefault()
     {
         foreach($this->template->categories as $category)
@@ -71,28 +77,12 @@ final class HomepagePresenter extends BasePresenter
      */
     function handleToBasket(int $id)
     {
-           $session=$this->getSession();
-           $section = $session->getSection(\App\Common\Common::getSelectionName());
-           if(isset($section->basket)){
-               $basket = unserialize($section->basket);
-               if(isset($basket[$id])) {
-                   $basket[$id] = $basket[$id]+1;
-               }
-               else{
-                   $basket[$id] = 1;
-               }
+            $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
 
-               $section->basket = serialize($basket);
-           }
-           else{
-               $basket = [$id => 1];
-           }
+            $basketObj = new \Basket($this->objectManager, $this);
+            $basketObj->AddToBasket($id);
+            $basketObj->calculateBasketPrice();
 
-           $this->template->basket = $basket;
-           $section->basket = serialize($basket);
-
-          $basketObj =  new \Basket($this->objectManager,$this->user, $section);
-          $this->template->basketPrice = $basketObj->calculateBasketPrice();
 
     }
 
