@@ -98,11 +98,11 @@ final class RegistrationPresenter extends BasePresenter//Nette\Application\UI\Pr
                 case 0:
                     //sestaveni a odeslani mailu pro dokonceni registrace
                     $mail = new Message;
-                    $mail->setFrom("edshop@edshop.cz")
+                    $mail->setFrom(\App\Common\Common::getEmailFrom())
                         ->addTo($values['email'])
                         ->setSubject('Dokončení registrace - EdShop')
                         ->setHtmlBody("Dobrý den,<br><br>Vaše registrace na stránky EdShop byla dokončena.
-                        Pro aktivaci účtu klikněte zde : <a href='https://edshop.php5.cz/www/registration/verification?uuid=$uuid'>Aktivace</a>
+                        Pro aktivaci účtu klikněte zde : <a href=\"".\App\Common\Common::getEshopUrl()."registration/verification?uuid=$uuid\">Aktivace</a>
                         <br><br>");
 
                     $mailer = new SendmailMailer;

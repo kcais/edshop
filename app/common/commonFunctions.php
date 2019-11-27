@@ -2,6 +2,8 @@
 
 namespace App\Common;
 use Nette;
+use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
+
 /**
  * Class Common
  * Spolecne funkce
@@ -34,6 +36,29 @@ use Nette;
         );
     }
 
+     /** Vrati nazev selection v session - pro pouziti na vice mistech s pripadnou zmenou na jednom
+      * @return String
+      */
+    static public function getSelectionName() : String
+    {
+        return 'edshop';
+    }
+
+     /** Vrati email, z ktereho jsou odesilany registracni / potvrzovaci / objednavkove maily
+      * @return String
+      */
+    static public function getEmailFrom() : String
+    {
+        return 'edshop@edshop.cz';
+    }
+
+     /** Vrati url eshopu
+      * @return string
+      */
+    static public function getEshopUrl()
+    {
+        return 'https://edshop.php5.cz/www/';
+    }
 }
 
 /** Trida resici autentifikaci uzivatele

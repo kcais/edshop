@@ -25,7 +25,7 @@ final class BasketPresenter extends BasePresenter
     {
         $grid=null;
 
-        $section = $this->getSession()->getSection('edshop');
+        $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
 
         $basketObj = new \Basket($this->objectManager,$this->user,$section);
 
@@ -56,7 +56,7 @@ final class BasketPresenter extends BasePresenter
      */
     function handleFromBasket(int $id)
     {
-        $section = $this->getSession()->getSection('edshop');
+        $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
         $basketObj = new \Basket($this->objectManager,$this->user, $section);
 
         $basketObj->removeFromBasket($id);
@@ -70,13 +70,13 @@ final class BasketPresenter extends BasePresenter
     public function renderEmpty()
     {
         $session = $this->getSession();
-        $section = $session->getSection('edshop');
+        $section = $session->getSection(\App\Common\Common::getSelectionName());
 
         unset($this->template->basket);
         unset($section->basket);
 
         unset($this->template->basketPrice);
-        unset($this->getSession()->getSection('edshop')->basketPrice);
+        unset($this->getSession()->getSection(\App\Common\Common::getSelectionName())->basketPrice);
 
         $this->redirect("Basket:");
     }

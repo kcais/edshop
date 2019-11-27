@@ -23,7 +23,7 @@ final class HomepagePresenter extends BasePresenter
     {
         $this->template->categoryId = $categoryId;
         $session = $this->getSession();
-        $section = $session->getSection('edshop');
+        $section = $session->getSection(\App\Common\Common::getSelectionName());
         $section->categoryId = $categoryId;
         $this->template->categoryName = $this->categoryManager->getCategory((int)$categoryId)->fetch()->name;
     }
@@ -45,7 +45,7 @@ final class HomepagePresenter extends BasePresenter
     {
 
         $session = $this->getSession();
-        $section = $session->getSection('edshop');
+        $section = $session->getSection(\App\Common\Common::getSelectionName());
         $grid = new DataGrid($this,$name);
         $grid->setDataSource($this->objectManager->getObjects($section->categoryId));
         $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
@@ -72,7 +72,7 @@ final class HomepagePresenter extends BasePresenter
     function handleToBasket(int $id)
     {
            $session=$this->getSession();
-           $section = $session->getSection('edshop');
+           $section = $session->getSection(\App\Common\Common::getSelectionName());
            if(isset($section->basket)){
                $basket = unserialize($section->basket);
                if(isset($basket[$id])) {

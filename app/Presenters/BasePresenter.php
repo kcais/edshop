@@ -12,7 +12,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     protected function startup()
     {
         parent::startup();
-        $this->template->basketPrice = $this->getSession()->getSection('edshop')->basketPrice;
+        $this->template->basketPrice = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->basketPrice;
     }
 
     public function injectCategoryManager(CategoryManager $categoryManager)
