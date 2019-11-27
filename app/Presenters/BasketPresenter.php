@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace App\Presenters;
 
 use App\Model\ObjectManager;
+use App\Model\OrderManager;
 use Ublaboo\DataGrid\DataGrid;
 
 final class BasketPresenter extends BasePresenter
 {
     private $objectManager;
+    private $orderManager;
 
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(ObjectManager $objectManager, OrderManager $orderManager)
     {
         $this->objectManager = $objectManager;
+        $this->orderManager = $orderManager;
     }
 
     /** Zobrazeni obsahu kosiku
@@ -27,7 +30,7 @@ final class BasketPresenter extends BasePresenter
 
         $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
 
-        $basketObj = new \Basket($this->objectManager,$this, $section);
+        $basketObj = new \Basket($this, $this->objectManager, $this->orderManager);
 
         $selection = $basketObj->getBasketObjectsList();
 
@@ -70,7 +73,7 @@ final class BasketPresenter extends BasePresenter
     function handleFromBasket(int $id)
     {
         $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
-        $basketObj = new \Basket($this->objectManager,$this, $section);
+        $basketObj = new \Basket($this, $this->objectManager, $this->orderManager);
 
         $basketObj->removeFromBasket($id);
         $basketObj->calculateBasketPrice();

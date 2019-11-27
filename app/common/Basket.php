@@ -9,11 +9,12 @@ use App\Model\ObjectManager;
 class Basket{
 
     private $objectManager;
+    private $orderManager;
     private $user;
     private $section;
     private $presenter;
 
-    public function __construct(\App\Model\ObjectManager $objectManager, Nette\Application\UI\Presenter &$presenter)
+    public function __construct(Nette\Application\UI\Presenter &$presenter, \App\Model\ObjectManager $objectManager, \App\Model\OrderManager $orderManager)
     {
         $this->objectManager = $objectManager;
         $this->user = $presenter->user;
@@ -63,7 +64,7 @@ class Basket{
                 die('<h2>Pri zpracovani kosiku doslo k chybe !</h2>');
             }
 
-            $orderList = $this->objectManager->getOrderObjectsList($orderId);
+            $orderList = $this->orderManager->getOrderObjectsList($orderId);
 
             $objectsArr = null;
             $keyIds = null;
@@ -151,6 +152,10 @@ class Basket{
 
             $this->presenter->template->basket = $basket;
             $this->section->basket = serialize($basket);
+        }
+        //uzivatel je prihlasen, pouziva se databaze
+        else{
+
         }
     }
 

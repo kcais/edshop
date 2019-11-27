@@ -88,42 +88,5 @@ class ObjectManager
             ;
     }
 
-    /** Zjisteni otevrene objednavky u uzivatele
-     * @param int $userId
-     * @return int Vraci -1 - pokud vice nez jedna otevrena(aktualne chyba), 0-pokud zadna otevrena, id_order - id otevrene objednavky
-     */
-    public function getOpenOrderId(int $userId):int
-    {
-        $orderRow = $this->database->table('orders')
-            ->where('user_id',$userId)
-            ->where('is_closed',0)
-            ->select('id');
-
-        if($orderRow->count()==0){
-            return 0;
-        }
-        elseif($orderRow->count()>1){
-            return -1;
-        }
-        else{
-            return $orderRow->fetch()->id;
-        }
-    }
-
-    /** Vraci selection s id a pocty kusu objektu z objednavky
-     * @param int $orderId
-     * @return Nette\Database\Table\Selection
-     */
-    public function getOrderObjectsList(int $orderId)
-    {
-        $selection = $this->database->table('order_objects')
-            ->where('order_id',$orderId)
-            ->where('deleted_on',null)
-            ->select('object_id,pcs')
-        ;
-
-        return $selection;
-    }
-
 }
 ?>

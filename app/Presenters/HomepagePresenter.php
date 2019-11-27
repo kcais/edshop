@@ -6,16 +6,19 @@ namespace App\Presenters;
 
 use App\Model\CategoryManager;
 use App\Model\ObjectManager;
+use App\Model\OrderManager;
 use Ublaboo\DataGrid\DataGrid;
 
 final class HomepagePresenter extends BasePresenter
 {
     private $objectManager;
+    private $orderManager;
     private $categoryManager;
 
-    function __construct(ObjectManager $objectManager, CategoryManager $categoryManager)
+    function __construct(ObjectManager $objectManager, CategoryManager $categoryManager, OrderManager $orderManager)
     {
         $this->objectManager = $objectManager;
+        $this->orderManager = $orderManager;
         $this->categoryManager = $categoryManager;
     }
 
@@ -79,10 +82,9 @@ final class HomepagePresenter extends BasePresenter
     {
             $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
 
-            $basketObj = new \Basket($this->objectManager, $this);
+            $basketObj = new \Basket($this, $this->objectManager, $this->orderManager);
             $basketObj->AddToBasket($id);
             $basketObj->calculateBasketPrice();
-
 
     }
 

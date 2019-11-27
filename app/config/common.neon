@@ -17,3 +17,4 @@ services:
 	- App\Model\ObjectManager
 	- App\Model\CategoryManager
 	- App\Model\UserManager
+	- App\Model\OrderManager
