@@ -85,15 +85,8 @@ final class BasketPresenter extends BasePresenter
      */
     public function renderEmpty()
     {
-        $session = $this->getSession();
-        $section = $session->getSection(\App\Common\Common::getSelectionName());
-
-        unset($this->template->basket);
-        unset($section->basket);
-
-        unset($this->template->basketPrice);
-        unset($this->getSession()->getSection(\App\Common\Common::getSelectionName())->basketPrice);
-
+        $basket = new \Basket($this, $this->objectManager, $this->orderManager);
+        $basket->empty();
         $this->redirect("Basket:");
     }
 }
