@@ -101,6 +101,10 @@ li a:hover:not(.active) {
     width : 100px;
 }
 
+.col-totalPrice{
+    width : 120px;
+}
+
 .col-action{
     width : 120px;
 }

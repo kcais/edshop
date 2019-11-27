@@ -33,14 +33,23 @@ final class BasketPresenter extends BasePresenter
 
         $grid = new DataGrid($this, $name);
         $grid->setDataSource($selection);
+
+        $grid->addColumnNumber('id', 'objectsGrid.name')
+            ->setDefaultHide();
+
         $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
         $grid->addColumnText('description', 'objectsGrid.description');
-        $grid->addColumnText('price', 'objectsGrid.price')
+        $grid->addColumnText('price', 'objectsGrid.pricePerPcs')
             ->setRenderer(function ($row): String {
-                return "$row->price Kč";
+                return "$row[price]";
             })
             ->setSortable()
             ->setAlign('center');
+
+        $grid->addColumnText('pcs', 'objectsGrid.pcs');
+
+        $grid->addColumnText('totalPrice', 'objectsGrid.totalPrice')
+        ->setAlign('center');
 
         $grid->addAction('fromBasket', 'Odebrat', 'FromBasket!')
             ->setClass('btn btn-primary');

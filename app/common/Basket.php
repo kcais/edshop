@@ -25,6 +25,7 @@ class Basket{
     public function getBasketObjectsList()
     {
         $keyIds = null;
+        $objectCount = null;
 
         $basket = unserialize($this->section->basket);
 
@@ -33,6 +34,15 @@ class Basket{
                 $keyIds[] = $basketKey;
             }
             $selection = $this->objectManager->getObjectsFromIds($keyIds);
+
+            $selectionArr=null;
+
+            foreach($selection as $row){
+                $selectionArr[]=['id' => $row->id, 'name' => "$row->name", 'description' => "$row->description", 'price' => "$row->price", 'pcs' => $basket[$row->id], 'totalPrice' => $basket[$row->id] * $row->price];
+            }
+
+            $selection = $selectionArr;
+
         }
         else{
             $selection = [];
