@@ -132,44 +132,29 @@ class OrderManager
         return $selection;
     }
 
-    /** Vraci celkovou hodnotu objedvanky
-     * @param int $orderId Id objednavky
-     * @return float Celkova hodnota objednavky
+    /** Vrati celkovou hodnotu objednavky
+     * @param int $orderId
+     * @return float
      */
-    public function getOrderPrice(int $orderId) : float
+    public function getOrderPrice2(int $orderId) : float
     {
         $selectionObjects = $this->database->table('order_objects')
-            ->where('order_id',$orderId)
-            ->where('deleted_on', null)
-            ->select('object_id, pcs');
+            ->select('order_objects.object_id')
+            ->select( 'order_objects.pcs')
+            ->select('object.price')
+            ->where('order_objects.order_id',$orderId)
+            ->where('order_objects.deleted_on', null)
+        ;
+
 
         if($selectionObjects->count()==0){ //objednavka nema zadne polozky
             return 0.0;
         }
 
-        $objectsPcsArr = null;
-        $objectIdsArr = null;
-
-        foreach($selectionObjects as $selectionObject){
-            $objectIdsArr[] = $selectionObject->object_id;
-            $objectsPcsArr[$selectionObject->object_id] =  $selectionObject->pcs;
-        }
-
-        $selectionPrices = $this->database->table('objects')
-            ->select('id, price')
-            ->where('id IN',$objectIdsArr)
-            ;
-
-        $objectPricesArr = null;
-
-        foreach($selectionPrices as $selectionPrice){
-            $objectPricesArr[$selectionPrice->id] = $selectionPrice->price;
-        }
-
         $totalPrice = 0.0;
 
-        foreach($objectsPcsArr as $key => $value){
-            $totalPrice += $value * $objectPricesArr[$key];
+        foreach($selectionObjects as $selectionObject){
+            $totalPrice += $selectionObject->pcs * $selectionObject->price;
         }
 
         return $totalPrice;
