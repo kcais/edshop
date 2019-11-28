@@ -143,4 +143,18 @@ class UserManager
     {
         return $this->updateUser($userId, [$column => $uuid]);
     }
+
+
+    public function getUser(int $userId) : array
+    {
+        $userData = $this->database->table('users')->get($userId);
+
+        if($userData){
+            return ['firstname'=>$userData->firstname, 'surname'=>$userData->surname, 'email'=>$userData->email];
+        }
+        else{
+            return [];
+        }
+
+    }
 }
