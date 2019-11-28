@@ -186,6 +186,19 @@ class Basket{
     }
 
     /**
+     * Dokonceni objednavky
+     * - v pripade prihlaseneho uzivatele oznaci objednavku jako closed
+     * - dale vyprazdni kosik
+     */
+    public function orderDone()
+    {
+        if($this->user->isLoggedIn()){
+            $this->orderManager->setOrderClose($this->orderManager->getOpenOrderId($this->user->getId()));
+        }
+        $this->empty();
+    }
+
+    /**
      * Vyprazdneni kosiku
      */
     public function empty()

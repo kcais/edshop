@@ -183,4 +183,15 @@ class OrderManager
             ->delete();
     }
 
+    /** Nastaveni stavu objednavky is_closed
+     * @param int $orderId Id objednavky
+     * @param bool $setClose Nastaveni set_closed
+     */
+    public function setOrderClose(int $orderId, $setClose = true)
+    {
+        $this->database->table('orders')
+            ->where('id',$orderId)
+            ->update(['is_closed'=>$setClose]);
+    }
+
 }

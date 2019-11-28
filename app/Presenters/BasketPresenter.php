@@ -9,6 +9,8 @@ use App\Model\OrderManager;
 use App\Model\UserManager;
 use Nette\Application\UI\Form;
 use Nette\ComponentModel\IComponent;
+use Nette\Mail\Message;
+use Nette\Mail\SendmailMailer;
 use Ublaboo\DataGrid\DataGrid;
 
 final class BasketPresenter extends BasePresenter
@@ -41,7 +43,61 @@ final class BasketPresenter extends BasePresenter
      */
     public function orderDataSucceeded(Form $form, array $values)
     {
-        //TODO
+        //vytvoreni a odeslani emailu
+        $totalPrice=0.0;
+
+        $basket = new \Basket($this, $this->objectManager, $this->orderManager);
+
+        $emailBody = "<style>table {
+                        border-collapse: collapse;
+                    }
+
+                    table, th, td {
+                    border: 1px solid black;
+                    }
+                    </style>
+                    <h1>Objednávka z EdShopu</h1><table cellpadding='5' cellspacing='5'>
+                    <tr><td>Název</td><td>Popis</td><td>Cena/ks</td><td>Ks</td><td>Cena celkem</td></tr>";
+
+        $basketOrderList = $basket->getBasketObjectsList();
+
+        foreach($basketOrderList as $basketOrderRow) {
+            $emailBody .= "<tr><td>{$basketOrderRow['name']}</td>
+            <td>{$basketOrderRow['description']}</td>
+            <td>{$basketOrderRow['price']} Kč</td>
+            <td>{$basketOrderRow['pcs']}</td>";
+
+            $price = $basketOrderRow['price'] * $basketOrderRow['pcs'];
+            $totalPrice += $price;
+
+            $emailBody .= "<td>$price Kč</td></tr>";
+        }
+
+        $emailBody.="<tr><td colspan=\"5\" align=\"right\"><strong>Celková cena : {$totalPrice} Kč&nbsp;&nbsp;</strong></td></table>";
+
+        $emailBody .= "<br>
+                        <h3>Doručovací údaje</h3>
+                        <table cellpadding='5' cellspacing='5'>
+                        <tr><td>Jméno : </td><td>$values[name]</td></tr>
+                        <tr><td>Příjmení : </td><td>$values[surname]</td></tr>
+                        <tr><td>Email : </td><td>$values[email]</td></tr>
+                        <tr><td>Adresa : </td><td>$values[address]</td></tr>
+                        </table>
+                        ";
+
+        $basket->orderDone();
+
+        //sestaveni a odeslani mailu
+        $mail = new Message;
+        $mail->setFrom(\App\Common\Common::getEmailFrom())
+            ->addTo($values['email'])
+            ->setSubject('Povrzení objednávky')
+            ->setHtmlBody($emailBody);
+
+        $mailer = new SendmailMailer;
+        $mailer->send($mail);
+
+        $this->redirect('Basket:ordercompleted');
     }
 
     /** Formular pro zobrazeni dorucovacich udaju
@@ -65,15 +121,20 @@ final class BasketPresenter extends BasePresenter
 
         $form->addText('name','Jméno :')
             ->setDefaultValue($userName)
+            ->setRequired('Zadejte jméno')
         ;
         $form->addText('surname','Příjmení :')
             ->setDefaultValue($userSurname)
+            ->setRequired('Zadejte příjmení')
         ;
         $form->addText('email','E-mail :')
             ->setDefaultValue($userEmail)
+            ->setRequired('Zadejte email')
         ;
 
-        $form->addText('address','Adresa :');
+        $form->addText('address','Adresa :')
+            ->setRequired('Zadejte doručovací adresu')
+        ;
 
         $form->onSuccess[] = [$this, 'orderDataSucceeded'];
 
