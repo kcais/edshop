@@ -130,7 +130,7 @@ class Basket{
         }
         else{ //provadi se pokud je uzivatel prihlasen
             $orderId = $this->orderManager->getOpenOrderId($this->user->getId());
-            $totalPrice = $this->orderManager->getOrderPrice2($orderId);
+            $totalPrice = $this->orderManager->getOrderPrice($orderId);
         }
 
         $this->section->basketPrice = $totalPrice;

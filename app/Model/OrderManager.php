@@ -133,10 +133,10 @@ class OrderManager
     }
 
     /** Vrati celkovou hodnotu objednavky
-     * @param int $orderId
-     * @return float
+     * @param int $orderId Id objednavky
+     * @return float Celkova hodnota objednavky
      */
-    public function getOrderPrice2(int $orderId) : float
+    public function getOrderPrice(int $orderId) : float
     {
         $selectionObjects = $this->database->table('order_objects')
             ->select('order_objects.object_id')
@@ -145,7 +145,6 @@ class OrderManager
             ->where('order_objects.order_id',$orderId)
             ->where('order_objects.deleted_on', null)
         ;
-
 
         if($selectionObjects->count()==0){ //objednavka nema zadne polozky
             return 0.0;
