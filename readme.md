@@ -18,13 +18,14 @@ Kategorie a produkty
 * možnost vytváření stromové struktury kategorií - **in progress**
 * určení pořadí zobrazení kategorií - **in progress**
 * zobrazení kategorií v nezávislém menu - **in progress**
-* zobrazení a manipulace s produkty v nezávislém gridu (bez nutnosti obnovovat celou stránku) - **in progress**
+* zobrazení a manipulace s produkty v nezávislém gridu (bez nutnosti obnovovat celou stránku) - **done**
 * zobrazení detailu produktu - **in progress**
-* možnost přidání produktu do košíku  - **in progress**
-* dokončení objednávky z košíku - **in progress**
+* možnost přidání produktu do košíku  - **done**
+* dokončení objednávky z košíku - **done**
 * možnost administrátorké úpravy odeslané objednávky - **in progress** 
 
 Ostatní
 * podpora multijazykového zobrazení (CZ/ENG) - **in progress**
 * vyhledávání v názvech produktů pomocí našeptávání (AJAX) - **in progress** 
-* objednávkový košík - v případě nepřihlášení pomocí SESSIONS/COOKIES, v případě přihlášení ukládáním do DB - **in progress**  
+* objednávkový košík - v případě nepřihlášení pomocí SESSIONS/COOKIES, v případě přihlášení ukládáním do DB - **done**
+* možnost přidání ilustračních obrázků k produktům - **in progress**
