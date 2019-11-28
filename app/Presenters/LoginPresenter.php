@@ -4,6 +4,8 @@ namespace App\Presenters;
 
 
 use App\Common\Common;
+use App\Model\ObjectManager;
+use App\Model\OrderManager;
 use Nette;
 use Nette\Application\UI\Form;
 use App\Model\UserManager;
@@ -14,11 +16,15 @@ final class LoginPresenter extends BasePresenter//Nette\Application\UI\Presenter
 {
     private $database;
     private $userManager;
+    private $objectManager;
+    private $orderManager;
 
-    function __construct(Nette\Database\Context $database, UserManager $userManager)
+    function __construct(Nette\Database\Context $database, UserManager $userManager, ObjectManager $objectManager, OrderManager $orderManager)
     {
         $this->database = $database;
         $this->userManager = $userManager;
+        $this->objectManager = $objectManager;
+        $this->orderManager = $orderManager;
     }
 
     public function renderForgottengen()
@@ -59,6 +65,11 @@ final class LoginPresenter extends BasePresenter//Nette\Application\UI\Presenter
 
             if($existUsername && $this->userManager->isUserActivated($values["username"])) {
                 $this->getUser()->login($values["username"], $values["password"]);
+
+                $basket = New \Basket($this, $this->objectManager, $this->orderManager);
+                $basket->fromSessionToDb();
+                $this->template->basketPrice = $basket->calculateBasketPrice();
+
                 $this->redirect("Homepage:");
             }
             elseif($existUsername){
@@ -90,8 +101,6 @@ final class LoginPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setRequired('Zadejte znovu nové heslo')
             ->addRule(Form::EQUAL,'Zadaná hesla se neshodují',$form['pass1'])
         ;
-
-        //if(isset($_GET['uuid']))$form->addHidden('uuid',$_GET['uuid']);
 
         if(isset($_GET['uuid'])) {
             $session = $this->getSession();

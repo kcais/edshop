@@ -83,7 +83,7 @@ final class HomepagePresenter extends BasePresenter
             $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
 
             $basketObj = new \Basket($this, $this->objectManager, $this->orderManager);
-            $basketObj->AddToBasket($id);
+            $basketObj->addToBasket($id);
             $basketObj->calculateBasketPrice();
 
     }

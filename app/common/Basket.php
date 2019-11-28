@@ -143,7 +143,7 @@ class Basket{
      * @param int $id Id polozky
      * @param float $pcs
      */
-    public function AddToBasket(int $objectId, float $pcs=1.0)
+    public function addToBasket(int $objectId, float $pcs=1.0)
     {
         //uzivatel neni prihlasen, pouziva se session
          if(!$this->user->isLoggedIn()) {
@@ -165,7 +165,7 @@ class Basket{
         }
         //uzivatel je prihlasen, pouziva se databaze
         else{
-            $this->orderManager->createUpdateOrderObject($this->user->getId(), $objectId);
+            $this->orderManager->createUpdateOrderObject($this->user->getId(), $objectId, $pcs);
         }
     }
 
@@ -200,6 +200,22 @@ class Basket{
 
         unset($this->presenter->template->basketPrice);
         unset($this->section->basketPrice);
+    }
+
+    /**
+     *  Prevedeni ulozeni kosiku ze session do databaze
+     */
+    public function fromSessionToDb()
+    {
+        if($this->presenter->user->isLoggedIn()){
+            if(isset($this->section->basket)){
+                $basket = unserialize($this->section->basket);
+                foreach ($basket as $key => $value){
+                    $this->addToBasket($key, $value);
+                }
+                unset($this->section->basket);
+            }
+        }
     }
 }
 
