@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use App\Model\CategoryManager;
 use App\Model\Database\Entity\Category;
+use App\Model\Database\Entity\Product;
 use App\Model\ObjectManager;
 use Nette;
 use Nette\Application\UI\Form;
@@ -46,9 +47,12 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $form = new Form;
         $categories = [];
 
-        $selections = $this->categoryManager->getAllCategories();
-        foreach ($selections as $selection) {
-            $categories[$selection['id']] = $selection['name'];
+        //$selections = $this->categoryManager->getAllCategories();
+
+        $catObjArr = $this->em->getCategoryRepository()->findBy(['deleted_on' => null]);
+
+        foreach ($catObjArr as $catObj) {
+            $categories[$catObj->getId()] = $catObj->getName();
         }
         $form->addSelect('category_id', 'Kategorie', $categories);
 
@@ -76,9 +80,29 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
     /** Ulozeni noveho produktu
      * @param Form $form
      * @param array $values
-     * @throws Nette\Application\AbortException
+     * @throws \Exception
      */
     public function adminProdnewFormSucceeded(Form $form, array $values): void
+    {
+        try{
+            $category = $this->em->getCategoryRepository()->find($values['category_id']);
+            //$category = new Category();
+            //$category->setId($values['category_id']);
+            $product = new Product($category, $values['name'], $values['description'], $values['price']);
+            $this->em->persist($product);
+            $this->em->flush();
+            $this->redirect("Admin:newsuccess");
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /** Ulozeni noveho produktu - old
+     * @param Form $form
+     * @param array $values
+     * @throws Nette\Application\AbortException
+     */
+    public function adminProdnewFormSucceededOld(Form $form, array $values): void
     {
         if ($this->objectManager->createNewObject($values['category_id'], $values['name'], $values['description'], $values['price'])) {
             $this->redirect("Admin:newsuccess");

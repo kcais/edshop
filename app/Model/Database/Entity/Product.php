@@ -13,7 +13,7 @@ use LogicException;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  **/
-class Object
+class Product
 {
     use Id;
 
@@ -31,7 +31,7 @@ class Object
 
     /**
      * @var Category
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="category")
+     * @ORM\ManyToOne(targetEntity="Category", cascade={"persist"})
      * @ORM\JoinColumn(nullable=FALSE)
      */
     private $category;
@@ -55,33 +55,37 @@ class Object
     private $is_visible;
 
     /**
-     * @ORM\Column(type="DateTime")
+     * @ORM\Column(type="datetime")
      */
     private $created_on;
 
     /**
-     * @ORM\Column(type="DateTime")
+     * @ORM\Column(type="datetime")
      */
     private $updated_on;
 
     /**
-     * @ORM\Column(type="DateTime", nullable = true)
+     * @ORM\Column(type="datetime", nullable = true)
      */
     private $deleted_on;
 
     /**
-     * Object constructor.
-     * @param int $category_id
+     * Product constructor.
+     * @param Category $category
      * @param String $name
      * @param String $description
      * @param float $price
+     * @param bool $is_available
+     * @param bool $is_visible
      */
-    public function __construct(int $category_id, String $name, String $description, float $price)
+    public function __construct(Category $category, String $name, String $description, float $price, bool $is_available = true, bool $is_visible = true )
     {
-        $this->category = $category_id;
+        $this->category = $category;
         $this->name = $name;
         $this->description = $description;
         $this->price = $price;
+        $this->is_available = $is_available;
+        $this->is_visible = $is_visible;
     }
 
     /**
@@ -233,7 +237,7 @@ class Object
      */
     public function setDeletedOn(\DateTime $deletedOn): void
     {
-        $this->deleted_on = $deletedOn->format('Y-m-d H:i:s');
+        $this->deleted_on = $deletedOn;//->format('Y-m-d H:i:s');
     }
 
     /**
@@ -243,8 +247,10 @@ class Object
     {
 
         $dateTime = new \DateTime("now");
-        $this->created_on = $dateTime->format('Y-m-d H:i:s');
-        $this->updated_on = $dateTime->format('Y-m-d H:i:s');
+        //$this->created_on = $dateTime->format('Y-m-d H:i:s');
+        //$this->updated_on = $dateTime->format('Y-m-d H:i:s');
+        $this->created_on = $dateTime;
+        $this->updated_on = $dateTime;
 
         if ($this->id !== NULL) {
             throw new LogicException("Entity id field should be null during prePersistEvent");
@@ -257,7 +263,8 @@ class Object
     public function onPreUpdate()
     {
         $dateTime = new \DateTime("now");
-        $this->updated_on = $dateTime->format('Y-m-d H:i:s');
+        //$this->updated_on = $dateTime->format('Y-m-d H:i:s');
+        $this->updated_on = $dateTime;
     }
 
 }

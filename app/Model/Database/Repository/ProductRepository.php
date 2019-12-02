@@ -6,7 +6,7 @@ namespace App\Model\Database\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-final class CategoryRepository extends EntityRepository
+final class ProductRepository extends EntityRepository
 {
 
 }

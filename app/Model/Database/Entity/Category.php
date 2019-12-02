@@ -43,17 +43,17 @@ class Category
     private $parent_cat;
 
     /**
-     * @ORM\Column(type="DateTime")
+     * @ORM\Column(type="datetime")
      */
     private $created_on;
 
     /**
-     * @ORM\Column(type="DateTime")
+     * @ORM\Column(type="datetime")
      */
     private $updated_on;
 
     /**
-     * @ORM\Column(type="DateTime", nullable = true)
+     * @ORM\Column(type="datetime", nullable = true)
      */
     private $deleted_on;
 
@@ -147,7 +147,8 @@ class Category
      */
     public function setDeletedOn(\DateTime $dateTime) : void
     {
-        $this->deleted_on = $dateTime->format('Y-m-d H:i:s');
+        //$this->deleted_on = $dateTime->format('Y-m-d H:i:s');
+        $this->deleted_on = $dateTime;
     }
 
     /**
@@ -157,8 +158,10 @@ class Category
     {
 
         $dateTime = new \DateTime("now");
-        $this->created_on = $dateTime->format('Y-m-d H:i:s');
-        $this->updated_on = $dateTime->format('Y-m-d H:i:s');
+        //$this->created_on = $dateTime->format('Y-m-d H:i:s');
+        //$this->updated_on = $dateTime->format('Y-m-d H:i:s');
+        $this->created_on = $dateTime;
+        $this->updated_on = $dateTime;
 
         if ($this->id !== NULL) {
             throw new LogicException("Entity id field should be null during prePersistEvent");
@@ -171,7 +174,8 @@ class Category
     public function onPreUpdate()
     {
         $dateTime = new \DateTime("now");
-        $this->updated_on = $dateTime->format('Y-m-d H:i:s');
+        //$this->updated_on = $dateTime->format('Y-m-d H:i:s');
+        $this->updated_on = $dateTime;
     }
 
 
