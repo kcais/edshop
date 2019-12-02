@@ -181,7 +181,9 @@ final class BasketPresenter extends BasePresenter
         ->setAlign('center');
 
         $grid->addAction('fromBasket', 'Odebrat', 'FromBasket!')
-            ->setClass('btn btn-primary');
+            ->setClass('btn btn-primary')
+            ->setAlign('center')
+        ;
 
         $grid->setTranslator(new \TranslatorCz('CZ'));
 

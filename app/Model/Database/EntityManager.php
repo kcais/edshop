@@ -10,7 +10,6 @@ use Nettrine\ORM\EntityManagerDecorator as NettrineEntityManagerDecorator;
 
 final class EntityManagerDecorator extends NettrineEntityManagerDecorator
 {
-    //use TRepositories;
     public function getCategoryRepository()
     {
         return $this->getRepository(Category::class);

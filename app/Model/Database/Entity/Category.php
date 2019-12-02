@@ -62,7 +62,7 @@ class Category
      * @param String $name
      * @param String|null $description
      */
-    public function __construct(String $name, String $description = null, int $order = null, int $parentCatId = null)
+    public function __construct(String $name = null, String $description = null, int $order = null, int $parentCatId = null)
     {
         $this->name = $name;
         $this->description = $description;
@@ -76,6 +76,14 @@ class Category
     public function getId() : int
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id Id kategorie
+     */
+    public function setId(int $id) : void
+    {
+        $this->id = $id;
     }
 
     /**
@@ -135,6 +143,14 @@ class Category
     }
 
     /**
+     * @param \DateTime $dateTime
+     */
+    public function setDeletedOn(\DateTime $dateTime) : void
+    {
+        $this->deleted_on = $dateTime->format('Y-m-d H:i:s');
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function onPrePersist()
@@ -154,7 +170,8 @@ class Category
      */
     public function onPreUpdate()
     {
-        $this->updated_on = new \DateTime();
+        $dateTime = new \DateTime("now");
+        $this->updated_on = $dateTime->format('Y-m-d H:i:s');
     }
 
 
