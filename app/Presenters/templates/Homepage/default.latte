@@ -6,26 +6,19 @@
         {foreach $category2 as $category}
             <tr>
                 <td class="cat_td">
-                    <a n:href="Homepage:products?categoryId={$category->getId()}" style="color : black">
-                        {$category->getName()}
+                    <a n:href="Homepage:products?categoryId=$category[id]" style="color : black">
+                        {$category["name"]}
                     </a>
                 </td>
                 <td class="cat_td_com">
-                    {$category->getDescription()}
+                    {$category["description"]}
                 </td>
                 <td>
-                    (xxx)
+                    ({$objectsInCategoryCount[$category[id]]})
                 </td>
             </tr>
         {/foreach}
     </table>
 
-
-    <table>
-    <tr><td colspan="3"><h2>Kategorie :</h2></td></tr>
-    {foreach $categories as $category}
-        <tr><td class="cat_td"><a n:href="Homepage:products?categoryId=$category->id" style="color : black">{$category->name}</a></td><td class="cat_td_com">{$category->comment}</td><td>({$objectsInCategoryCount[$category->id]})</td></tr>
-    {/foreach}
-    </table>
 
 {/block}

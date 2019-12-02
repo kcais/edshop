@@ -19,13 +19,20 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->basketPrice = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->basketPrice;
 
         $categoryRepository = $this->em->getCategoryRepository();
-        $this->template->category2 = $categoryRepository->findby([],['name' => 'ASC']);
+        $catObjArr = $categoryRepository->findby([],['name' => 'ASC']);
+        $category2 = null;
+        foreach ($catObjArr as $catObj){
+            $category2[]=['id' => $catObj->getId(), 'name' => $catObj->getName(), 'description' => $catObj->getDescription()];
+        }
+
+        $this->template->category2 = $category2;
+        $this->template->categories = $category2;
     }
 
     public function injectCategoryManager(CategoryManager $categoryManager)
     {
         $this->categoryManager = $categoryManager;
-        $this->template->categories = $this->categoryManager->getAllCategories();
+        //$this->template->categories = $this->categoryManager->getAllCategories();
     }
 }
 

@@ -46,13 +46,16 @@
 	<nav>
 		<div style="float:left; width: 200px;background-color: #f0f0f0;">
 		<ul>
-			{foreach $categories as $category}
-				{if isset($categoryId) && $category["id"] == $categoryId}
-					<li class="actualChoice"><a class="actualChoice" n:href="Homepage:products $category[id]">{$category["name"]}</a></li>
+			{foreach $category2 as $category}
+				{php $categoryObjId = $category['id']; $categotyObjName = $category['name']}
+				{if isset($categoryId) && $categoryObjId== $categoryId}
+					<li class="actualChoice"><a class="actualChoice" n:href="Homepage:products $categoryObjId">{$categotyObjName}</a></li>
 				{else}
-					<li><a n:href="Homepage:products $category[id]">{$category["name"]}</a></li>
+					<li><a n:href="Homepage:products $categoryObjId">{$categotyObjName}</a></li>
 				{/if}
 			{/foreach}
+
+
 		</ul>
 		</div>
 	</nav>

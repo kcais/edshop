@@ -31,7 +31,8 @@ final class HomepagePresenter extends BasePresenter
         $session = $this->getSession();
         $section = $session->getSection(\App\Common\Common::getSelectionName());
         $section->categoryId = $categoryId;
-        $this->template->categoryName = $this->categoryManager->getCategory((int)$categoryId)->fetch()->name;
+        //$this->template->categoryName = $this->categoryManager->getCategory((int)$categoryId)->fetch()->name;
+        $this->template->categoryName = $this->em->getCategoryRepository()->find($categoryId)->getName();
     }
 
     /**
@@ -41,7 +42,9 @@ final class HomepagePresenter extends BasePresenter
     {
         foreach($this->template->categories as $category)
         {
-            $objectsInCategoryCount["$category[id]"]= $this->objectManager->getObjectsCount($category['id']);
+            //$objectsInCategoryCount["$category[id]"]= $this->objectManager->getObjectsCount($category['id']);
+           $objCount = sizeof($this->em->getProductRepository()->findBy(['category' => $category['id']]));
+            $objectsInCategoryCount["$category[id]"]=$objCount;
         }
 
         $this->template->objectsInCategoryCount = $objectsInCategoryCount;
@@ -52,15 +55,25 @@ final class HomepagePresenter extends BasePresenter
      */
     protected function createComponentObjectsGrid($name) : DataGrid
     {
-
         $session = $this->getSession();
         $section = $session->getSection(\App\Common\Common::getSelectionName());
+
+        $prodObjArr = $this->em->getProductRepository()->findBy(['category' => $section->categoryId]);
+        $prodArr = null;
+
+        foreach($prodObjArr as $prodObj){
+            $prodArr[] = ['id' => $prodObj->getId(), 'name' => $prodObj->getName(), 'description' => $prodObj->getDescription(), 'price' => $prodObj->getPrice()];
+        }
+
+        if(!$prodArr)$prodArr = [];
+
         $grid = new DataGrid($this,$name);
-        $grid->setDataSource($this->objectManager->getObjects($section->categoryId));
+        //$grid->setDataSource($this->objectManager->getObjects($section->categoryId));
+        $grid->setDataSource($prodArr);
         $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
         $grid->addColumnText('description', 'objectsGrid.description');
         $grid->addColumnText('price', 'objectsGrid.price')
-            ->setRenderer(function ($row):String{return "$row->price Kč";})
+            ->setRenderer(function ($row):String{return "$row[price] Kč";})
             ->setSortable()
             ->setAlign('center')
         ;
