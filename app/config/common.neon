@@ -29,7 +29,7 @@ dbal:
 		host: 127.0.0.1
 		user: root
 		password: password
-		dbname: edshop2
+		dbname: edshop
 		driver: mysqli
 
 orm:

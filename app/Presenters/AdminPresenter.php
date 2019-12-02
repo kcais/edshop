@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Model\CategoryManager;
+use App\Model\Database\Entity\Category;
 use App\Model\ObjectManager;
 use Nette;
 use Nette\Application\UI\Form;
@@ -108,14 +109,17 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
 
     public function adminCatnewFormSucceeded(Form $form, array $values) : void
     {
-        if(!$values['order'])$values['order']=1;
-        if(!$values['parent_cat_id'])$values['parent_cat_id']=null;
+        if (!$values['order']) $values['order'] = 1;
+        if (!$values['parent_cat_id']) $values['parent_cat_id'] = null;
 
-        if($this->categoryManager->createNewCategory($values["name"],$values["comment"],$values["order"], $values["parent_cat_id"])){
+        try {
+            $category = new Category($values["name"], $values["description"], $values["order"], $values["parent_cat_id"]);
+            $this->em->persist($category);
+            $this->em->flush();
             $this->redirect("Admin:newsuccess");
-        }
-        else{
-            $this->redirect("Admin:newerror");
+        } catch (\Exception $e) {
+            throw $e;
+            //$this->redirect("Admin:newerror");
         }
     }
 }

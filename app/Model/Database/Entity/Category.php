@@ -43,29 +43,39 @@ class Category
     private $parent_cat;
 
     /**
-     * @ORM\Column(type="string")
-     * @var string
+     * @ORM\Column(type="DateTime")
      */
     private $created_on;
 
     /**
-     * @ORM\Column(type="string")
-     * @var string
+     * @ORM\Column(type="DateTime")
      */
     private $updated_on;
 
     /**
-     * @ORM\Column(type="string", nullable = true)
-     * @var string
+     * @ORM\Column(type="DateTime", nullable = true)
      */
     private $deleted_on;
 
     /**
-     * Category constructor
+     * Category constructor.
+     * @param String $name
+     * @param String|null $description
      */
-    public function __construct()
+    public function __construct(String $name, String $description = null, int $order = null, int $parentCatId = null)
     {
+        $this->name = $name;
+        $this->description = $description;
+        $this->order_id = $order;
+        $this->parent_cat = $parentCatId;
+    }
 
+    /**
+     * @return int Id kategorie
+     */
+    public function getId() : int
+    {
+        return $this->id;
     }
 
     /**
@@ -129,22 +139,13 @@ class Category
      */
     public function onPrePersist()
     {
-        $this->created_on = $this->getCurrentDate();
+
+        $dateTime = new \DateTime("now");
+        $this->created_on = $dateTime->format('Y-m-d H:i:s');
+        $this->updated_on = $dateTime->format('Y-m-d H:i:s');
 
         if ($this->id !== NULL) {
             throw new LogicException("Entity id field should be null during prePersistEvent");
-        }
-    }
-
-    /**
-     * @ORM\PostPersist()
-     * @param LifecycleEventArgs $args
-     */
-    public function onPostPersist(LifecycleEventArgs $args)
-    {
-        // $args->getEntity() and $this are pointers to the same objects
-        if ($args->getEntity()->getId() === NULL) {
-            throw new LogicException("Entity id field should be already filled during prePersistEvent");
         }
     }
 
@@ -153,7 +154,7 @@ class Category
      */
     public function onPreUpdate()
     {
-        $this->updated_on = $this->getCurrentDate();
+        $this->updated_on = new \DateTime();
     }
 
 
