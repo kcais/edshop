@@ -14,22 +14,30 @@ use LogicException;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  **/
-class Order
+class OrderProduct
 {
+
     use Id;
 
     /**
-     * @var User
+     * @var Order
+     * @ORM\OneToOne(targetEntity="Category", inversedBy="category")
+     * @ORM\JoinColumn(nullable=FALSE)
+    */
+    private $order;
+
+    /**
+     * @var Product
      * @ORM\OneToOne(targetEntity="Category", inversedBy="category")
      * @ORM\JoinColumn(nullable=FALSE)
      */
-    private $user;
+    private  $product;
 
     /**
-     * @ORM\Column(type="boolean")
-     * @var bool
+     * @ORM\Column(type="float")
+     * @var float
      */
-    private $is_closed;
+    private $pcs;
 
     /**
      * @ORM\Column(type="datetime")
@@ -67,35 +75,51 @@ class Order
     }
 
     /**
-     * @return User
+     * @return Order
      */
-    public function getUser(): User
+    public function getOrder(): Order
     {
-        return $this->user;
+        return $this->order;
     }
 
     /**
-     * @param User $user
+     * @param Order $order
      */
-    public function setUser(User $user): void
+    public function setOrder(Order $order): void
     {
-        $this->user = $user;
+        $this->order = $order;
     }
 
     /**
-     * @return bool
+     * @return Product
      */
-    public function isIsClosed(): bool
+    public function getProduct(): Product
     {
-        return $this->is_closed;
+        return $this->product;
     }
 
     /**
-     * @param bool $is_closed
+     * @param Product $product
      */
-    public function setIsClosed(bool $is_closed): void
+    public function setProduct(Product $product): void
     {
-        $this->is_closed = $is_closed;
+        $this->product = $product;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPcs(): float
+    {
+        return $this->pcs;
+    }
+
+    /**
+     * @param float $pcs
+     */
+    public function setPcs(float $pcs): void
+    {
+        $this->pcs = $pcs;
     }
 
     /**

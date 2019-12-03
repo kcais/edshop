@@ -31,7 +31,7 @@ class Product
 
     /**
      * @var Category
-     * @ORM\ManyToOne(targetEntity="Category", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Category", cascade={"persist"})
      * @ORM\JoinColumn(nullable=FALSE)
      */
     private $category;
@@ -221,7 +221,7 @@ class Product
      */
     public function setUpdatedOn(\DateTime $updated_on): void
     {
-        $this->updated_on = $updated_on->format('Y-m-d H:i:s');
+        $this->updated_on = $updated_on;
     }
 
     /**
@@ -237,8 +237,12 @@ class Product
      */
     public function setDeletedOn(\DateTime $deletedOn): void
     {
-        $this->deleted_on = $deletedOn;//->format('Y-m-d H:i:s');
+        $this->deleted_on = $deletedOn;
     }
+
+    ///////////////////////////////////
+    /// functions
+    ///////////////////////////////////
 
     /**
      * @ORM\PrePersist
@@ -247,8 +251,6 @@ class Product
     {
 
         $dateTime = new \DateTime("now");
-        //$this->created_on = $dateTime->format('Y-m-d H:i:s');
-        //$this->updated_on = $dateTime->format('Y-m-d H:i:s');
         $this->created_on = $dateTime;
         $this->updated_on = $dateTime;
 
@@ -263,7 +265,6 @@ class Product
     public function onPreUpdate()
     {
         $dateTime = new \DateTime("now");
-        //$this->updated_on = $dateTime->format('Y-m-d H:i:s');
         $this->updated_on = $dateTime;
     }
 

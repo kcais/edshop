@@ -37,7 +37,7 @@ class Category
 
     /**
      * @var Category
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="category")
+     * @ORM\OneToOne(targetEntity="Category", inversedBy="category")
      * @ORM\JoinColumn(nullable=FALSE)
      */
     private $parent_cat;
@@ -150,6 +150,10 @@ class Category
         //$this->deleted_on = $dateTime->format('Y-m-d H:i:s');
         $this->deleted_on = $dateTime;
     }
+
+    ///////////////////////////////////
+    /// functions
+    ///////////////////////////////////
 
     /**
      * @ORM\PrePersist
