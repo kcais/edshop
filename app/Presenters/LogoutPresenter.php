@@ -29,7 +29,7 @@ final class LogoutPresenter extends BasePresenter//Nette\Application\UI\Presente
     public function renderLogout() :void
     {
         $this->user->logOut();
-        $basket = new \Basket($this, $this->objectManager, $this->orderManager);
+        $basket = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
         $this->template->basketPrice = $basket->calculateBasketPrice();
     }
 }

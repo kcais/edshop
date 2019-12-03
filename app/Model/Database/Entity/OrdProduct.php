@@ -14,24 +14,24 @@ use LogicException;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  **/
-class OrderProduct
+class OrdProduct
 {
 
     use Id;
 
     /**
-     * @var Order
-     * @ORM\OneToOne(targetEntity="Category", inversedBy="category")
+     * @var Ord
+     * @ORM\ManyToOne(targetEntity="Ord", inversedBy="ord")
      * @ORM\JoinColumn(nullable=FALSE)
     */
-    private $order;
+    private $ord;
 
     /**
      * @var Product
-     * @ORM\OneToOne(targetEntity="Category", inversedBy="category")
+     * @ORM\ManyToOne(targetEntity="Product", inversedBy="product")
      * @ORM\JoinColumn(nullable=FALSE)
      */
-    private  $product;
+    private $product;
 
     /**
      * @ORM\Column(type="float")
@@ -75,17 +75,17 @@ class OrderProduct
     }
 
     /**
-     * @return Order
+     * @return Ord
      */
-    public function getOrder(): Order
+    public function getOrd(): Ord
     {
-        return $this->order;
+        return $this->ord;
     }
 
     /**
-     * @param Order $order
+     * @param Ord $order
      */
-    public function setOrder(Order $order): void
+    public function setOrd(Ord $order): void
     {
         $this->order = $order;
     }

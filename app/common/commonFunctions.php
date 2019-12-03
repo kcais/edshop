@@ -69,12 +69,9 @@ class Authenticator implements Nette\Security\IAuthenticator
 {
     private $database;
 
-    //private $passwords;
-
     public function __construct(Nette\Database\Context $database)
     {
         $this->database = $database;
-        //$this->passwords = $passwords;
     }
 
     /** Autentifikace uzivatele
@@ -86,7 +83,7 @@ class Authenticator implements Nette\Security\IAuthenticator
     {
         [$username, $password] = $credentials;
 
-        $row = $this->database->table('users')
+        $row = $this->database->table('user')
             ->where('username', $username)->fetch();
 
         if (!$row) {

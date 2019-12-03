@@ -31,7 +31,7 @@ final class BasketPresenter extends BasePresenter
      */
     public function renderOrderconfirm()
     {
-        $basket = new \Basket($this, $this->objectManager, $this->orderManager);
+        $basket = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
         $this->template->basketOrderList = $basket->getBasketObjectsList();
         if(!$this->template->basketPrice)$this->redirect('Homepage:');
 
@@ -46,7 +46,7 @@ final class BasketPresenter extends BasePresenter
         //vytvoreni a odeslani emailu
         $totalPrice=0.0;
 
-        $basket = new \Basket($this, $this->objectManager, $this->orderManager);
+        $basket = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
 
         $emailBody = "<style>table {
                         border-collapse: collapse;
@@ -152,7 +152,7 @@ final class BasketPresenter extends BasePresenter
 
         $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
 
-        $basketObj = new \Basket($this, $this->objectManager, $this->orderManager);
+        $basketObj = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
 
         $selection = $basketObj->getBasketObjectsList();
 
@@ -197,7 +197,7 @@ final class BasketPresenter extends BasePresenter
     function handleFromBasket(int $id)
     {
         $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
-        $basketObj = new \Basket($this, $this->objectManager, $this->orderManager);
+        $basketObj = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
 
         $basketObj->removeFromBasket($id);
         $basketObj->calculateBasketPrice();
@@ -209,7 +209,7 @@ final class BasketPresenter extends BasePresenter
      */
     public function renderEmpty()
     {
-        $basket = new \Basket($this, $this->objectManager, $this->orderManager);
+        $basket = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
         $basket->empty();
         $this->redirect("Basket:");
     }

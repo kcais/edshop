@@ -246,7 +246,7 @@ class User
     /**
      * @return bool
      */
-    public function isIsActive(): bool
+    public function isActive(): bool
     {
         return $this->is_active;
     }

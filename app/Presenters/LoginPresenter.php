@@ -61,12 +61,18 @@ final class LoginPresenter extends BasePresenter//Nette\Application\UI\Presenter
     public function loginFormSucceeded(Form $form, array $values): void
     {
         try {
-            $existUsername = $this->userManager->usernameExist($values["username"]);
 
-            if($existUsername && $this->userManager->isUserActivated($values["username"])) {
+            $user = $this->em->getUserRepository()->findBy(['username' => $values['username']]);
+
+            sizeof($user) == 1?$existUsername = 1:$existUsername = 0;
+
+            //$existUsername = $this->userManager->usernameExist($values["username"]);
+
+            //if($existUsername && $this->userManager->isUserActivated($values["username"])) {
+            if($existUsername && $user[0]->isActive()) {
                 $this->getUser()->login($values["username"], $values["password"]);
 
-                $basket = New \Basket($this, $this->objectManager, $this->orderManager);
+                $basket = New \Basket($this, $this->objectManager, $this->orderManager, $this->em);
                 $basket->fromSessionToDb();
                 $this->template->basketPrice = $basket->calculateBasketPrice();
 

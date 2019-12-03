@@ -14,13 +14,13 @@ use LogicException;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  **/
-class Order
+class Ord
 {
     use Id;
 
     /**
      * @var User
-     * @ORM\OneToOne(targetEntity="Category", inversedBy="category")
+     * @ORM\OneToOne(targetEntity="User")
      * @ORM\JoinColumn(nullable=FALSE)
      */
     private $user;
