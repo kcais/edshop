@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: localhost
--- Vytvořeno: Stř 27. lis 2019, 15:36
+-- Vytvořeno: Stř 04. pro 2019, 13:11
 -- Verze serveru: 8.0.17
 -- Verze PHP: 7.3.10
 
@@ -25,13 +25,13 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `categories`
+-- Struktura tabulky `category`
 --
 
-CREATE TABLE `categories` (
+CREATE TABLE `category` (
   `id` int(11) NOT NULL COMMENT 'Primarni auto_increment key',
   `name` varchar(255) NOT NULL COMMENT 'Nazev kategorie',
-  `comment` varchar(1024) NOT NULL COMMENT 'Komentar kategorie',
+  `description` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'Komentar kategorie',
   `order_id` int(11) NOT NULL COMMENT 'Cislo urcujici poradi kategorie',
   `parent_cat_id` int(11) DEFAULT NULL COMMENT 'Id nadrazene kategorie, jinak null',
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Datum vytvoreni zaznamu',
@@ -40,10 +40,10 @@ CREATE TABLE `categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Vypisuji data pro tabulku `categories`
+-- Vypisuji data pro tabulku `category`
 --
 
-INSERT INTO `categories` (`id`, `name`, `comment`, `order_id`, `parent_cat_id`, `created_on`, `updated_on`, `deleted_on`) VALUES
+INSERT INTO `category` (`id`, `name`, `description`, `order_id`, `parent_cat_id`, `created_on`, `updated_on`, `deleted_on`) VALUES
 (1, 'Vstupní zařízení', 'Ovládací periferie jako např. myši, klávesnice, joysticky ap.', 1, NULL, '2019-11-13 09:31:19', '2019-11-13 09:31:19', NULL),
 (2, 'Grafické karty', 'Grafické karty a příslušenství', 2, NULL, '2019-11-13 09:32:55', '2019-11-13 09:32:55', NULL),
 (3, 'Monitory', 'Zobrazovací zařízení', 3, NULL, '2019-11-13 09:34:15', '2019-11-13 09:34:15', NULL),
@@ -56,10 +56,75 @@ INSERT INTO `categories` (`id`, `name`, `comment`, `order_id`, `parent_cat_id`, 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `objects`
+-- Struktura tabulky `ord`
 --
 
-CREATE TABLE `objects` (
+CREATE TABLE `ord` (
+  `id` int(11) NOT NULL COMMENT 'Primarni auto_increment key',
+  `user_id` int(11) NOT NULL COMMENT 'Cizi klic z tabulky users',
+  `is_closed` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-objednavka jiz dokoncena',
+  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Datum vytvoreni objednavky',
+  `updated_on` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Datum upravy objednavky',
+  `deleted_on` timestamp NULL DEFAULT NULL COMMENT 'Datum smazani objednavky'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Vypisuji data pro tabulku `ord`
+--
+
+INSERT INTO `ord` (`id`, `user_id`, `is_closed`, `updated_on`, `deleted_on`) VALUES
+(20, 27, 1, '2019-11-28 10:44:08', NULL),
+(21, 27, 1, '2019-11-28 13:10:34', NULL),
+(22, 26, 1, '2019-11-28 13:12:45', NULL),
+(25, 27, 1, '2019-12-04 10:08:25', NULL),
+(26, 27, 1, '2019-12-04 11:30:36', NULL),
+(27, 27, 1, '2019-12-04 11:33:54', NULL),
+(28, 27, 1, '2019-12-04 11:52:23', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `ord_product`
+--
+
+CREATE TABLE `ord_product` (
+  `id` int(11) NOT NULL COMMENT 'Primarni auto_increment key',
+  `ord_id` int(11) NOT NULL COMMENT 'Cizi klic z orders',
+  `product_id` int(11) NOT NULL COMMENT 'Cizi klic z objects',
+  `pcs` float NOT NULL COMMENT 'Pocet kusu objednaneho zbozi',
+  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Datum vytvoreni objednaneho objektu',
+  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Datum upravy objednaneho objektu',
+  `deleted_on` timestamp NULL DEFAULT NULL COMMENT 'Datum smazani objednaneho objektu'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Vypisuji data pro tabulku `ord_product`
+--
+
+INSERT INTO `ord_product` (`id`, `ord_id`, `product_id`, `pcs`, `created_on`, `updated_on`, `deleted_on`) VALUES
+(39, 20, 18, 3, '2019-11-28 10:49:05', '2019-11-28 10:49:05', NULL),
+(40, 20, 3, 1, '2019-11-28 11:14:51', '2019-11-28 11:14:51', NULL),
+(41, 21, 8, 3, '2019-11-28 13:10:34', '2019-11-28 13:10:34', NULL),
+(42, 21, 9, 2, '2019-11-28 13:10:35', '2019-11-28 13:10:35', NULL),
+(43, 21, 10, 1, '2019-11-28 13:10:37', '2019-11-28 13:10:37', NULL),
+(44, 22, 6, 1, '2019-11-28 13:12:45', '2019-11-28 13:12:45', NULL),
+(45, 22, 7, 2, '2019-11-28 13:12:46', '2019-11-28 13:12:46', NULL),
+(64, 25, 3, 1, '2019-12-04 10:00:51', '2019-12-04 10:00:51', NULL),
+(65, 25, 4, 2, '2019-12-04 10:00:52', '2019-12-04 10:00:52', NULL),
+(66, 25, 5, 1, '2019-12-04 10:00:53', '2019-12-04 10:00:53', NULL),
+(73, 26, 3, 1, '2019-12-04 11:30:26', '2019-12-04 11:30:26', NULL),
+(74, 26, 4, 1, '2019-12-04 11:30:26', '2019-12-04 11:30:26', NULL),
+(75, 27, 4, 1, '2019-12-04 11:33:47', '2019-12-04 11:33:47', NULL),
+(76, 27, 3, 1, '2019-12-04 11:33:48', '2019-12-04 11:33:48', NULL),
+(79, 28, 3, 1, '2019-12-04 11:52:11', '2019-12-04 11:52:11', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `product`
+--
+
+CREATE TABLE `product` (
   `id` int(11) NOT NULL COMMENT 'Primarni auto_increment key',
   `name` varchar(1024) NOT NULL COMMENT 'Nazev prodejniho artiklu',
   `description` text COMMENT 'Popis prodejniho artiklu',
@@ -73,10 +138,10 @@ CREATE TABLE `objects` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Vypisuji data pro tabulku `objects`
+-- Vypisuji data pro tabulku `product`
 --
 
-INSERT INTO `objects` (`id`, `name`, `description`, `category_id`, `price`, `is_available`, `is_visible`, `created_on`, `deleted_on`, `updated_on`) VALUES
+INSERT INTO `product` (`id`, `name`, `description`, `category_id`, `price`, `is_available`, `is_visible`, `created_on`, `deleted_on`, `updated_on`) VALUES
 (3, 'MSI Radeon RX 580 ARMOR 8G OC, 8GB GDDR5', 'Výkonná herní grafická karta společnosti MSI, PCIe 3.0, frekvence 1366 MHz, 8 GB GDDR5 paměti s frekvencí 8000 MHz, 256-bit sběrnice, 1x DVI-D, 2x HDMI, 2x DisplayPort, OpenGL 4.5, DirectX 12, AMD Eyefinity, AMD CrossFire, MSI Afterburner.', 2, 5800, 1, 1, '2019-11-20 12:13:30', NULL, '2019-11-20 12:13:30'),
 (4, 'Zotac GeForce RTX 2080 GAMING, 8GB GDDR6', 'Extrémně výkonná herní grafická karta v podání Zotac, rozhraní PCIe 3.0 x16, architektura Turing, frekvence 1710 MHz (boost), 8 GB GDDR6 paměti, 256-bit sběrnice, 1x HDMI, 3x DisplayPort, 1x USB typ-C, OpenGL 4.5, DirectX 12, VR Ready, NVIDIA: Ansel, NVLi', 2, 21500, 1, 1, '2019-11-20 13:27:23', NULL, '2019-11-20 13:27:23'),
 (5, 'MSI GeForce RTX 2070 SUPER GAMING X TRIO, 8GB GDDR6', 'Extrémně výkonná herní grafická karta v podání MSI, rozhraní PCIe 3.0 x16, architektura Turing, frekvence 1800 MHz (boost), 8 GB GDDR6 paměti, 256-bit sběrnice, 1x HDMI, 3x DisplayPort, OpenGL 4.5, DirectX 12, VR Ready, MSI Afterburner, NVIDIA: Ansel, NVL', 2, 15490, 1, 1, '2019-11-20 15:04:07', NULL, '2019-11-20 15:04:07'),
@@ -92,53 +157,18 @@ INSERT INTO `objects` (`id`, `name`, `description`, `category_id`, `price`, `is_
 (15, 'Disketa 8', 'Disketa 8 popis', 6, 8, 1, 1, '2019-11-20 15:07:30', NULL, '2019-11-20 15:07:30'),
 (16, 'Disketa 9', 'Disketa 9 popis', 6, 9, 1, 1, '2019-11-20 15:07:39', NULL, '2019-11-20 15:07:39'),
 (17, 'Disketa 10', 'Disketa 10 popis', 6, 10, 1, 1, '2019-11-20 15:07:54', NULL, '2019-11-20 15:07:54'),
-(18, 'Disketa 11', 'Disketa 11 popis', 6, 11, 1, 1, '2019-11-20 15:08:05', NULL, '2019-11-20 15:08:05');
+(18, 'Disketa 11', 'Disketa 11 popis', 6, 11, 1, 1, '2019-11-20 15:08:05', NULL, '2019-11-20 15:08:05'),
+(19, 'Disketa 12', 'Disketa 12 popis', 6, 12, 1, 1, '2019-12-04 12:59:09', NULL, '2019-12-04 12:59:09'),
+(20, 'Disketa 13', 'Disketa 13 popis', 6, 13, 1, 1, '2019-12-04 12:59:25', NULL, '2019-12-04 12:59:25'),
+(21, 'Disketa 14', 'Disketa 14 popis', 6, 14, 1, 1, '2019-12-04 12:59:39', NULL, '2019-12-04 12:59:39');
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `orders`
+-- Struktura tabulky `user`
 --
 
-CREATE TABLE `orders` (
-  `id` int(11) NOT NULL COMMENT 'Primarni auto_increment key',
-  `user_id` int(11) NOT NULL COMMENT 'Cizi klic z tabulky users',
-  `is_closed` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1-objednavka jiz dokoncena',
-  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Datum vytvoreni objednavky',
-  `updated_on` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Datum upravy objednavky',
-  `deleted_on` timestamp NULL DEFAULT NULL COMMENT 'Datum smazani objednavky'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Vypisuji data pro tabulku `orders`
---
-
-INSERT INTO `orders` (`id`, `user_id`, `is_closed`, `updated_on`, `deleted_on`) VALUES
-(15, 27, 0, '2019-11-27 15:20:44', NULL);
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `order_objects`
---
-
-CREATE TABLE `order_objects` (
-  `id` int(11) NOT NULL COMMENT 'Primarni auto_increment key',
-  `order_id` int(11) NOT NULL COMMENT 'Cizi klic z orders',
-  `object_id` int(11) NOT NULL COMMENT 'Cizi klic z objects',
-  `pcs` float NOT NULL COMMENT 'Pocet kusu objednaneho zbozi',
-  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Datum vytvoreni objednaneho objektu',
-  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Datum upravy objednaneho objektu',
-  `deleted_on` timestamp NULL DEFAULT NULL COMMENT 'Datum smazani objednaneho objektu'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struktura tabulky `users`
---
-
-CREATE TABLE `users` (
+CREATE TABLE `user` (
   `id` int(11) NOT NULL COMMENT 'Primarni auto_increment key',
   `username` varchar(255) NOT NULL COMMENT 'Prihlasovaci jmeno uzivatele',
   `firstname` varchar(255) DEFAULT NULL COMMENT 'Jmeno uzivatele',
@@ -157,50 +187,50 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Vypisuji data pro tabulku `users`
+-- Vypisuji data pro tabulku `user`
 --
 
-INSERT INTO `users` (`id`, `username`, `firstname`, `surname`, `password_hash`, `email`, `language`, `uuid_registration`, `uuid_lost_password`, `is_active`, `is_admin`, `registration_mail_sended`, `created_on`, `deleted_on`, `updated_on`) VALUES
-(26, 'plenkovic', 'Curila', 'Plenkovic', '56b1db8133d9eb398aabd376f07bf8ab5fc584ea0b8bd6a1770200cb613ca005', 'cplenk@ru.ru', 'CZ', 'ae8bea9c-c9e6-4f9c-9757-9d4b72ecafa3', NULL, 0, 0, 0, '2019-11-13 14:23:43', NULL, NULL),
-(27, 'kcais', 'Karel', 'Cais', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'kcais@volny.cz', 'CZ', '1e3e51a7-dccc-4083-b32b-b07505cc86a2', NULL, 1, 1, 0, '2019-11-18 16:02:05', NULL, '2019-11-19 12:02:11');
+INSERT INTO `user` (`id`, `username`, `firstname`, `surname`, `password_hash`, `email`, `language`, `uuid_registration`, `uuid_lost_password`, `is_active`, `is_admin`, `registration_mail_sended`, `created_on`, `deleted_on`, `updated_on`) VALUES
+(26, 'plenkovic', 'Curila', 'Plenkovic', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'cplenk@ru.ru', 'CZ', 'ae8bea9c-c9e6-4f9c-9757-9d4b72ecafa3', NULL, 1, 0, 0, '2019-11-13 14:23:43', NULL, NULL),
+(27, 'kcais', 'Karel', 'Cais', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'kcais@volny.cz', 'CZ', '1e3e51a7-dccc-4083-b32b-b07505cc86a2', NULL, 1, 1, 0, '2019-11-18 16:02:05', NULL, '2019-12-04 11:17:28');
 
 --
 -- Klíče pro exportované tabulky
 --
 
 --
--- Klíče pro tabulku `categories`
+-- Klíče pro tabulku `category`
 --
-ALTER TABLE `categories`
+ALTER TABLE `category`
   ADD PRIMARY KEY (`id`),
   ADD KEY `parent_cat_id` (`parent_cat_id`);
 
 --
--- Klíče pro tabulku `objects`
+-- Klíče pro tabulku `ord`
 --
-ALTER TABLE `objects`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `category_id` (`category_id`);
-
---
--- Klíče pro tabulku `orders`
---
-ALTER TABLE `orders`
+ALTER TABLE `ord`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
--- Klíče pro tabulku `order_objects`
+-- Klíče pro tabulku `ord_product`
 --
-ALTER TABLE `order_objects`
+ALTER TABLE `ord_product`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `object_id` (`object_id`) USING BTREE;
+  ADD KEY `ord_id` (`ord_id`) USING BTREE,
+  ADD KEY `product_id` (`product_id`) USING BTREE;
 
 --
--- Klíče pro tabulku `users`
+-- Klíče pro tabulku `product`
 --
-ALTER TABLE `users`
+ALTER TABLE `product`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category_id` (`category_id`);
+
+--
+-- Klíče pro tabulku `user`
+--
+ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`),
   ADD UNIQUE KEY `email` (`email`),
@@ -211,63 +241,63 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT pro tabulku `categories`
+-- AUTO_INCREMENT pro tabulku `category`
 --
-ALTER TABLE `categories`
+ALTER TABLE `category`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT pro tabulku `objects`
+-- AUTO_INCREMENT pro tabulku `ord`
 --
-ALTER TABLE `objects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=19;
+ALTER TABLE `ord`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=29;
 
 --
--- AUTO_INCREMENT pro tabulku `orders`
+-- AUTO_INCREMENT pro tabulku `ord_product`
 --
-ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=16;
+ALTER TABLE `ord_product`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=80;
 
 --
--- AUTO_INCREMENT pro tabulku `order_objects`
+-- AUTO_INCREMENT pro tabulku `product`
 --
-ALTER TABLE `order_objects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=27;
+ALTER TABLE `product`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT pro tabulku `users`
+-- AUTO_INCREMENT pro tabulku `user`
 --
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=28;
+ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primarni auto_increment key', AUTO_INCREMENT=34;
 
 --
 -- Omezení pro exportované tabulky
 --
 
 --
--- Omezení pro tabulku `categories`
+-- Omezení pro tabulku `category`
 --
-ALTER TABLE `categories`
-  ADD CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`parent_cat_id`) REFERENCES `categories` (`id`);
+ALTER TABLE `category`
+  ADD CONSTRAINT `category_ibfk_1` FOREIGN KEY (`parent_cat_id`) REFERENCES `category` (`id`);
 
 --
--- Omezení pro tabulku `objects`
+-- Omezení pro tabulku `ord`
 --
-ALTER TABLE `objects`
-  ADD CONSTRAINT `objects_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
+ALTER TABLE `ord`
+  ADD CONSTRAINT `ord_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
--- Omezení pro tabulku `orders`
+-- Omezení pro tabulku `ord_product`
 --
-ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+ALTER TABLE `ord_product`
+  ADD CONSTRAINT `ord_product_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+  ADD CONSTRAINT `ord_product_ibfk_2` FOREIGN KEY (`ord_id`) REFERENCES `ord` (`id`);
 
 --
--- Omezení pro tabulku `order_objects`
+-- Omezení pro tabulku `product`
 --
-ALTER TABLE `order_objects`
-  ADD CONSTRAINT `order_objects_ibfk_1` FOREIGN KEY (`object_id`) REFERENCES `objects` (`id`),
-  ADD CONSTRAINT `order_objects_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
+ALTER TABLE `product`
+  ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
