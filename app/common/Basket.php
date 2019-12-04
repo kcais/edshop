@@ -9,8 +9,6 @@ use App\Model\ObjectManager;
  */
 class Basket{
 
-    //private $objectManager;
-    //private $orderManager;
     private $user;
     private $section;
     private $presenter;
@@ -19,8 +17,6 @@ class Basket{
 
     public function __construct(Nette\Application\UI\Presenter &$presenter, EntityManagerDecorator &$em)
     {
-        //$this->objectManager = $objectManager;
-        //$this->orderManager = $orderManager;
         $this->user = $presenter->user;
         $this->presenter = $presenter;
         $this->section = $presenter->getSession()->getSection(\App\Common\Common::getSelectionName());

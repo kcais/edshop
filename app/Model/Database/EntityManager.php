@@ -140,7 +140,6 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
      */
     public function emptyOrderProduct(Ord $orderObj)
     {
-        $dateTime = new \DateTime();
         $q = $this->createQuery("delete from App\Model\Database\Entity\OrdProduct op where op.ord=".$orderObj->getId());
         $q->execute();
     }
@@ -235,7 +234,6 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
         $orderProductObjArr = $this->getRepository(OrdProduct::class)->findBy(['ord' => $order, 'deleted_on' => null]);
 
         $totalPrice = 0.0;
-        $orderList = [];
         $priceList = null;
 
         foreach($orderProductObjArr as $orderProductObj){

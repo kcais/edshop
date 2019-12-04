@@ -12,10 +12,6 @@ use Ublaboo\DataGrid\DataGrid;
 
 final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
 {
-    function __construct()
-    {
-        parent::__construct();
-    }
 
     /** Metoda volana pri vytvoreni presenteru, slouzi k overeni zda prihlaseny uzivatel ma admin roli
      * @throws Nette\Application\AbortException
