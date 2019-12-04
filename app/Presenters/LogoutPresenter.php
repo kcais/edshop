@@ -2,8 +2,6 @@
 
 namespace App\Presenters;
 
-use App\Model\ObjectManager;
-use App\Model\OrderManager;
 use Nette;
 
 /** Trida resici odhlaseni uzivatele
@@ -13,14 +11,11 @@ use Nette;
 final class LogoutPresenter extends BasePresenter//Nette\Application\UI\Presenter
 {
     private $user;
-    private $objectManager;
-    private $orderManager;
 
-    function __construct( Nette\Security\User $user, ObjectManager $objectManager, OrderManager $orderManager)
+    function __construct( Nette\Security\User $user)
     {
+        parent::__construct();
         $this->user = $user;
-        $this->objectManager = $objectManager;
-        $this->orderManager = $orderManager;
     }
 
     /**
@@ -29,7 +24,7 @@ final class LogoutPresenter extends BasePresenter//Nette\Application\UI\Presente
     public function renderLogout() :void
     {
         $this->user->logOut();
-        $basket = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
+        $basket = new \Basket($this, $this->em);
         $this->template->basketPrice = $basket->calculateBasketPrice();
     }
 }

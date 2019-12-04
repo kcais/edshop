@@ -2,7 +2,6 @@
 
 namespace App\Presenters;
 
-use App\Model\CategoryManager;
 use App\Model\Database\EntityManagerDecorator;
 use Nette;
 
@@ -10,8 +9,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
     /** @var EntityManagerDecorator @inject */
     public $em;
-
-    private $categoryManager;
 
     protected function startup()
     {
@@ -29,10 +26,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->categories = $category2;
     }
 
-    public function injectCategoryManager(CategoryManager $categoryManager)
-    {
-        $this->categoryManager = $categoryManager;
-    }
 }
 
 ?>

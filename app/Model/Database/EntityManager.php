@@ -50,6 +50,70 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
         return $this->getRepository(User::class);
     }
 
+    /**Kontrola existence UUID v tabulce users v db
+     * @param String $uuid Hledane uuid
+     * @param string $cell Kde hledat uuid
+     * @return int Vraci 0 pokud nenaslo uuid, jinak id uzivatele
+     */
+    public function existUserUUID(String $uuid, $cell='uuid_registration') : int
+    {
+        $userObjArr = $this->getUserRepository()->findBy([$cell => $uuid]);
+        if(sizeof($userObjArr)>0){
+            return $userObjArr[0]->getId();
+        }
+        else{
+            return 0;
+        }
+    }
+
+    /** Oznaci uzivatele jako aktivniho na zaklade UUID
+     * @param $uuid
+     * @return int Vraci pocet zmenenych radku
+     */
+    public function activateUser($uuid)
+    {
+        $q = $this->createQuery("update App\Model\Database\Entity\User user set user.is_active = 1 where user.uuid_registration='$uuid'");
+        return $q->execute();
+    }
+
+
+    /** Vytvoreni noveho uzivatelskeho uctu
+     * @param String $username Uzivatelske jmeno zakaznika
+     * @param String $firstname Jmeno zakaznika
+     * @param String $surname Prijmeni zakaznika
+     * @param String $password Heslo v ciste forme
+     * @param String $email Email zakaznika
+     * @param String $uuid_registration
+     * @return int Pocet vlozenych radku
+     */
+    public function createUser(String $username,String $firstname,String $surname,String $password, String $email, $uuid_registration=null)
+    {
+        $query = $this->createQuery("select user from App\Model\Database\Entity\User user where user.username = '$username' or user.email = '$email'");
+        $userObjArr = $query->getResult();
+
+        if(sizeof($userObjArr) == 0){
+            $newUserObj = new User();
+            $newUserObj->setUsername($username);
+            $newUserObj->setFirstname($firstname);
+            $newUserObj->setSurname($surname);
+            $newUserObj->setPasswordHash(hash('sha256', $password));
+            $newUserObj->setEmail($email);
+            $newUserObj->setUuidRegistration($uuid_registration);
+            $newUserObj->setLanguage('CZ');
+            $newUserObj->setIsActive(false);
+            $newUserObj->setIsAdmin(false);
+            $newUserObj->setRegistrationMailSended(false);
+
+            $this->persist($newUserObj);
+            $this->flush();
+
+            return 0;
+        }
+        else{
+            return 1; //zadane uzivatelske jmeno jiz existuje
+        }
+    }
+
     ///////////////////////////
     /// OrderProduct part
     ///////////////////////////

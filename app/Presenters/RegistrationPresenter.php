@@ -2,7 +2,6 @@
 namespace App\Presenters;
 
 use App\Common\Common;
-use App\Model\UserManager;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Mail\Message;
@@ -11,15 +10,9 @@ use Nette\Mail\SendmailMailer;
 final class RegistrationPresenter extends BasePresenter//Nette\Application\UI\Presenter
 {
 
-    private $userManager;
-
-    public function __construct(UserManager $userManager)
-    {
-        $this->userManager = $userManager;
-    }
-
     public function renderVerification(){
-        $validation = $this->userManager->activateUser($_GET['uuid']);
+        //$validation = $this->userManager->activateUser($_GET['uuid']);
+        $validation = $this->em->activateUser($_GET['uuid']);
         if($validation) {
             $this->redirect("Registration:validated");
         }
@@ -79,13 +72,13 @@ final class RegistrationPresenter extends BasePresenter//Nette\Application\UI\Pr
             //osetreni unikatnosti UUID, pokud jiz existuje vygeneruje nove - pokud se nepovede ani na 10 pokus, pokracuje - dale spadne na vyjimku unikatnosti klice
             for($a=0;$a<10;$a++){
                 $uuid = Common::generateUUID();
-                if(!$this->userManager->existUserUUID($uuid)){
+                if(!$this->em->existUserUUID($uuid)){
                    break;
                 }
             }
 
             //vytvoreni noveho uzivatelskeho uctu pres model
-            $ret_val = $this->userManager->createUser(
+            $ret_val = $this->em->createUser(
                 $values['username'],
                 $values['firstname'],
                 $values['lastname'],
@@ -108,10 +101,17 @@ final class RegistrationPresenter extends BasePresenter//Nette\Application\UI\Pr
                     $mailer = new SendmailMailer;
                     $mailer->send($mail);
 
-                    $this->redirect('success');
-
+                    //nastaveni priznaku odeslani registracniho emailu
+                    $userObjArr = $this->em->getUserRepository()->findby(['username' => $values['username']]);
+                    if(sizeof($userObjArr)==1){
+                        $userObjArr[0]->setRegistrationMailSended(true);
+                        $this->em->merge($userObjArr[0]);
+                        $this->em->flush();
+                    }
 
                     //presmerovani na stranku s potvrzenim uspesne registrace
+                    $this->redirect('success');
+
                     break;
                 case 1:
                     $this->flashMessage('Zadané uživatelské jméno nebo email již existují ! Zadejte prosím jiné','error');

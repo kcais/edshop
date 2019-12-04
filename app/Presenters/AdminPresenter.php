@@ -2,10 +2,8 @@
 
 namespace App\Presenters;
 
-use App\Model\CategoryManager;
 use App\Model\Database\Entity\Category;
 use App\Model\Database\Entity\Product;
-use App\Model\ObjectManager;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\ComponentModel\IComponent;
@@ -14,14 +12,9 @@ use Ublaboo\DataGrid\DataGrid;
 
 final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
 {
-    private $categoryManager;
-    private $objectManager;
-
-    function __construct(CategoryManager $categoryManager, ObjectManager $objectManager)
+    function __construct()
     {
         parent::__construct();
-        $this->categoryManager = $categoryManager;
-        $this->objectManager = $objectManager;
     }
 
     /** Metoda volana pri vytvoreni presenteru, slouzi k overeni zda prihlaseny uzivatel ma admin roli

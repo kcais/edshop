@@ -14,23 +14,11 @@ session:
 services:
 	router: App\Router\RouterFactory::createRouter
 	authenticator: App\Common\Authenticator
-	- App\Model\ObjectManager
-	- App\Model\CategoryManager
-	- App\Model\UserManager
-	- App\Model\OrderManager
 
 extensions:
 	dbal: Nettrine\DBAL\DI\DbalExtension
 	orm: Nettrine\ORM\DI\OrmExtension
 	orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
-
-dbal:
-	connection:
-		host: 127.0.0.1
-		user: root
-		password: password
-		dbname: edshop
-		driver: mysqli
 
 orm:
 	entityManagerDecoratorClass: App\Model\Database\EntityManagerDecorator

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Common;
+use App\Model\Database\EntityManagerDecorator;
 use Nette;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 
@@ -67,11 +68,16 @@ use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
  */
 class Authenticator implements Nette\Security\IAuthenticator
 {
-    private $database;
+    //private $database;
+    private $em;
 
-    public function __construct(Nette\Database\Context $database)
+    /*public function __construct(Nette\Database\Context $database)
     {
         $this->database = $database;
+    }*/
+    public function __construct(EntityManagerDecorator $em)
+    {
+        $this->em = $em;
     }
 
     /** Autentifikace uzivatele
@@ -83,20 +89,19 @@ class Authenticator implements Nette\Security\IAuthenticator
     {
         [$username, $password] = $credentials;
 
-        $row = $this->database->table('user')
-            ->where('username', $username)->fetch();
+        $userObjArr = $this->em->getUserRepository()->findBy(['username' => $username]);
 
-        if (!$row) {
+        if (!sizeof($userObjArr)) {
             throw new Nette\Security\AuthenticationException("Uživatel $username nenalezen");
         }
 
-        if (hash('sha256', $password) != $row->password_hash) {
+        if (hash('sha256', $password) != $userObjArr[0]->getPasswordHash()) {
             throw new Nette\Security\AuthenticationException('Chybné heslo');
         }
 
-        $row->is_admin?$role="admin":$role=null;
+        $userObjArr[0]->isAdmin()?$role="admin":$role=null;
 
-        return new Nette\Security\Identity($row->id, [$role], ['username' => $row->username]);
+        return new Nette\Security\Identity($userObjArr[0]->getId(), [$role], ['username' => $username]);
     }
 
 }

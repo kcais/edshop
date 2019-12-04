@@ -222,7 +222,7 @@ class User
     /**
      * @param string $uuid_registration
      */
-    public function setUuidRegistration(string $uuid_registration): void
+    public function setUuidRegistration(?string $uuid_registration): void
     {
         $this->uuid_registration = $uuid_registration;
     }
@@ -238,7 +238,7 @@ class User
     /**
      * @param string $uuid_lost_password
      */
-    public function setUuidLostPassword(string $uuid_lost_password): void
+    public function setUuidLostPassword(?string $uuid_lost_password): void
     {
         $this->uuid_lost_password = $uuid_lost_password;
     }
@@ -262,7 +262,7 @@ class User
     /**
      * @return bool
      */
-    public function isIsAdmin(): bool
+    public function isAdmin(): bool
     {
         return $this->is_admin;
     }

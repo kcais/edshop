@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
-use App\Model\ObjectManager;
-use App\Model\OrderManager;
-use App\Model\UserManager;
 use Nette\Application\UI\Form;
 use Nette\ComponentModel\IComponent;
 use Nette\Mail\Message;
@@ -15,23 +12,13 @@ use Ublaboo\DataGrid\DataGrid;
 
 final class BasketPresenter extends BasePresenter
 {
-    private $objectManager;
-    private $orderManager;
-    private $userManager;
-
-    public function __construct(ObjectManager $objectManager, OrderManager $orderManager, UserManager $userManager)
-    {
-        $this->objectManager = $objectManager;
-        $this->orderManager = $orderManager;
-        $this->userManager = $userManager;
-    }
 
     /** Souhrn objednavanych polozek a daplneni kontaktu
      * @throws \Nette\Application\AbortException
      */
     public function renderOrderconfirm()
     {
-        $basket = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
+        $basket = new \Basket($this, $this->em);
         $this->template->basketOrderList = $basket->getBasketObjectsList();
         if(!$this->template->basketPrice)$this->redirect('Homepage:');
 
@@ -46,7 +33,7 @@ final class BasketPresenter extends BasePresenter
         //vytvoreni a odeslani emailu
         $totalPrice=0.0;
 
-        $basket = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
+        $basket = new \Basket($this, $this->em);
 
         $emailBody = "<style>table {
                         border-collapse: collapse;
@@ -150,7 +137,7 @@ final class BasketPresenter extends BasePresenter
     {
         $grid=null;
 
-        $basketObj = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
+        $basketObj = new \Basket($this, $this->em);
 
         $selection = $basketObj->getBasketObjectsList();
 
@@ -194,7 +181,7 @@ final class BasketPresenter extends BasePresenter
      */
     function handleFromBasket(int $id)
     {
-        $basketObj = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
+        $basketObj = new \Basket($this, $this->em);
 
         $basketObj->removeFromBasket($id);
         $basketObj->calculateBasketPrice();
@@ -206,7 +193,7 @@ final class BasketPresenter extends BasePresenter
      */
     public function renderEmpty()
     {
-        $basket = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
+        $basket = new \Basket($this, $this->em);
         $basket->empty();
         $this->redirect("Basket:");
     }

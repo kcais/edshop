@@ -4,32 +4,16 @@ namespace App\Presenters;
 
 
 use App\Common\Common;
-use App\Model\ObjectManager;
-use App\Model\OrderManager;
 use Nette;
 use Nette\Application\UI\Form;
-use App\Model\UserManager;
 use Nette\Mail\Message;
 use Nette\Mail\SendmailMailer;
 
-final class LoginPresenter extends BasePresenter//Nette\Application\UI\Presenter
+final class LoginPresenter extends BasePresenter
 {
-    private $database;
-    private $userManager;
-    private $objectManager;
-    private $orderManager;
-
-    function __construct(Nette\Database\Context $database, UserManager $userManager, ObjectManager $objectManager, OrderManager $orderManager)
-    {
-        $this->database = $database;
-        $this->userManager = $userManager;
-        $this->objectManager = $objectManager;
-        $this->orderManager = $orderManager;
-    }
-
     public function renderForgottengen()
     {
-        if(!isset($_GET["uuid"]) || !$this->userManager->existUserUUID($_GET["uuid"], 'uuid_lost_password')){
+        if(!isset($_GET["uuid"]) || sizeof($this->em->getUserRepository()->findBy(['uuid_lost_password' => $_GET["uuid"]])) == 0 ){
             $this->redirect("Homepage:");
         }
     }
@@ -69,7 +53,7 @@ final class LoginPresenter extends BasePresenter//Nette\Application\UI\Presenter
             if($existUsername && $user[0]->isActive()) {
                 $this->getUser()->login($values["username"], $values["password"]);
 
-                $basket = New \Basket($this, $this->objectManager, $this->orderManager, $this->em);
+                $basket = New \Basket($this, $this->em);
                 $basket->fromSessionToDb();
                 $this->template->basketPrice = $basket->calculateBasketPrice();
 
@@ -122,10 +106,15 @@ final class LoginPresenter extends BasePresenter//Nette\Application\UI\Presenter
     {
         $session = $this->getSession();
         $section = $session->getSection('edshop');
-        $userid = $this->userManager->existUserUUID($section->uuid,'uuid_lost_password');
+        $userObjArr = $this->em->getUserRepository()->findBy(['uuid_lost_password' => $section->uuid]);
+
+        $userObjArr[0]->setUuidLostPassword(null);
+        $userObjArr[0]->setPasswordHash(hash('sha256',$values['pass1']));
+
+        $this->em->merge($userObjArr[0]);
+        $this->em->flush();
 
         //nastaveni noveho hesla a smazani uuid pro ztracene heslo
-        $this->userManager->updateUser($userid,['password_hash'=>hash('sha256',$values['pass1']), 'uuid_lost_password'=>null]);
 
         $this->flashMessage('Heslo bylo změněno. Nyní se můžete přihlásit pomocí nového hesla.');
         $this->redirect("Login:login");
@@ -155,19 +144,21 @@ final class LoginPresenter extends BasePresenter//Nette\Application\UI\Presenter
      */
     public function forgottenFormSucceeded(Form $form, array $values) : void
     {
-        $userId = $this->userManager->registrationemailExist($values["email"]);
+        $userObjArr = $this->em->getUserRepository()->findBy(['email' => $values["email"]]);
 
-        if($userId){
+        if(sizeof($userObjArr)){
             //osetreni unikatnosti UUID, pokud jiz existuje vygeneruje nove - pokud se nepovede ani na 10 pokus, pokracuje - dale spadne na vyjimku unikatnosti klice
             for($a=0;$a<10;$a++){
                 $uuid = Common::generateUUID();
-                if(!$this->userManager->existUserUUID($uuid,'uuid_lost_password')){
+                if(!$this->em->existUserUUID($uuid,'uuid_lost_password')){
                     break;
                 }
             }
 
             //nastaveni noveho uuid pro obnovu hesla
-            $this->userManager->setUserUUID($userId,$uuid);
+            $userObjArr[0]->setUuidLostPassword($uuid);
+            $this->em->merge($userObjArr[0]);
+            $this->em->flush();
 
             //sestaveni a odeslani mailu pro obnovu hesla
             $mail = new Message;

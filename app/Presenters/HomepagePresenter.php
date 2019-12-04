@@ -4,23 +4,10 @@ declare(strict_types=1);
 
 namespace App\Presenters;
 
-use App\Model\CategoryManager;
-use App\Model\ObjectManager;
-use App\Model\OrderManager;
 use Ublaboo\DataGrid\DataGrid;
 
 final class HomepagePresenter extends BasePresenter
 {
-    private $objectManager;
-    private $orderManager;
-    private $categoryManager;
-
-    function __construct(ObjectManager $objectManager, CategoryManager $categoryManager, OrderManager $orderManager)
-    {
-        $this->objectManager = $objectManager;
-        $this->orderManager = $orderManager;
-        $this->categoryManager = $categoryManager;
-    }
 
     /** Zobrazeni kategorie produktu
      * @param $categoryId
@@ -91,7 +78,7 @@ final class HomepagePresenter extends BasePresenter
      */
     function handleToBasket(int $id)
     {
-            $basketObj = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
+            $basketObj = new \Basket($this, $this->em);
             $basketObj->addToBasket($id);
             $basketObj->calculateBasketPrice();
 
