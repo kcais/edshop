@@ -66,9 +66,6 @@ final class LoginPresenter extends BasePresenter//Nette\Application\UI\Presenter
 
             sizeof($user) == 1?$existUsername = 1:$existUsername = 0;
 
-            //$existUsername = $this->userManager->usernameExist($values["username"]);
-
-            //if($existUsername && $this->userManager->isUserActivated($values["username"])) {
             if($existUsername && $user[0]->isActive()) {
                 $this->getUser()->login($values["username"], $values["password"]);
 

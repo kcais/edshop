@@ -112,11 +112,11 @@ final class BasketPresenter extends BasePresenter
         $userEmail='';
 
         if($this->user->isLoggedIn()){
-            $userData = $this->userManager->getUser($this->user->getId());
+            $userObj = $this->em->getUserRepository()->find($this->user->getId());
 
-            $userName = $userData['firstname'];
-            $userSurname = $userData['surname'];
-            $userEmail = $userData['email'];
+            $userName = $userObj->getFirstname();
+            $userSurname = $userObj->getSurname();
+            $userEmail = $userObj->getEmail();
         }
 
         $form->addText('name','Jméno :')
@@ -149,8 +149,6 @@ final class BasketPresenter extends BasePresenter
     protected function createComponentBasketGrid($name) : DataGrid
     {
         $grid=null;
-
-        $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
 
         $basketObj = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
 
@@ -196,7 +194,6 @@ final class BasketPresenter extends BasePresenter
      */
     function handleFromBasket(int $id)
     {
-        $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
         $basketObj = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
 
         $basketObj->removeFromBasket($id);

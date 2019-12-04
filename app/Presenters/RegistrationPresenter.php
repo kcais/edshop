@@ -108,12 +108,10 @@ final class RegistrationPresenter extends BasePresenter//Nette\Application\UI\Pr
                     $mailer = new SendmailMailer;
                     $mailer->send($mail);
 
-                    //mail($values['email'], 'Registrace', 'text mailu registrace');
                     $this->redirect('success');
 
 
                     //presmerovani na stranku s potvrzenim uspesne registrace
-                    //$this->redirect('success',["uuid"=>$uuid]);
                     break;
                 case 1:
                     $this->flashMessage('Zadané uživatelské jméno nebo email již existují ! Zadejte prosím jiné','error');

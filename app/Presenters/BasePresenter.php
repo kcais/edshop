@@ -32,7 +32,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     public function injectCategoryManager(CategoryManager $categoryManager)
     {
         $this->categoryManager = $categoryManager;
-        //$this->template->categories = $this->categoryManager->getAllCategories();
     }
 }
 

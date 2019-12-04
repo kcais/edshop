@@ -31,7 +31,6 @@ final class HomepagePresenter extends BasePresenter
         $session = $this->getSession();
         $section = $session->getSection(\App\Common\Common::getSelectionName());
         $section->categoryId = $categoryId;
-        //$this->template->categoryName = $this->categoryManager->getCategory((int)$categoryId)->fetch()->name;
         $this->template->categoryName = $this->em->getCategoryRepository()->find($categoryId)->getName();
     }
 
@@ -42,8 +41,7 @@ final class HomepagePresenter extends BasePresenter
     {
         foreach($this->template->categories as $category)
         {
-            //$objectsInCategoryCount["$category[id]"]= $this->objectManager->getObjectsCount($category['id']);
-           $objCount = sizeof($this->em->getProductRepository()->findBy(['category' => $category['id']]));
+            $objCount = sizeof($this->em->getProductRepository()->findBy(['category' => $category['id']]));
             $objectsInCategoryCount["$category[id]"]=$objCount;
         }
 
@@ -68,7 +66,7 @@ final class HomepagePresenter extends BasePresenter
         if(!$prodArr)$prodArr = [];
 
         $grid = new DataGrid($this,$name);
-        //$grid->setDataSource($this->objectManager->getObjects($section->categoryId));
+
         $grid->setDataSource($prodArr);
         $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
         $grid->addColumnText('description', 'objectsGrid.description');
@@ -93,8 +91,6 @@ final class HomepagePresenter extends BasePresenter
      */
     function handleToBasket(int $id)
     {
-            $section = $this->getSession()->getSection(\App\Common\Common::getSelectionName());
-
             $basketObj = new \Basket($this, $this->objectManager, $this->orderManager, $this->em);
             $basketObj->addToBasket($id);
             $basketObj->calculateBasketPrice();

@@ -47,8 +47,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $form = new Form;
         $categories = [];
 
-        //$selections = $this->categoryManager->getAllCategories();
-
         $catObjArr = $this->em->getCategoryRepository()->findBy(['deleted_on' => null]);
 
         foreach ($catObjArr as $catObj) {
@@ -86,8 +84,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
     {
         try{
             $category = $this->em->getCategoryRepository()->find($values['category_id']);
-            //$category = new Category();
-            //$category->setId($values['category_id']);
             $product = new Product($category, $values['name'], $values['description'], $values['price']);
             $this->em->persist($product);
             $this->em->flush();

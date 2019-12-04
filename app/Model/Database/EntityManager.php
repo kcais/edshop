@@ -54,7 +54,39 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
     /// OrderProduct part
     ///////////////////////////
 
-    public function createNewOrder($user, bool $isClosed=false)
+    /** Odebrani produktu z objednavky
+     * @param Ord $orderObj
+     * @param Product $productObj
+     */
+    public function deleteProductFromOrder(Ord $orderObj, Product $productObj)
+    {
+        $orderProductObj = $this->getOrderProductRepository()->findBy(['ord' => $orderObj, 'product' => $productObj]);
+
+        if(sizeof($orderProductObj) == 1)
+        {
+            $this->remove($orderProductObj[0]);
+            $this->flush();
+        }
+
+    }
+
+    /** Vyprazdneni cele objednavky
+     * @param Ord $orderObj
+     * @throws \Exception
+     */
+    public function emptyOrderProduct(Ord $orderObj)
+    {
+        $dateTime = new \DateTime();
+        $q = $this->createQuery("delete from App\Model\Database\Entity\OrdProduct op where op.ord=".$orderObj->getId());
+        $q->execute();
+    }
+
+    /** Vytvoreni nove objednavky
+     * @param User $user
+     * @param bool $isClosed
+     * @return Ord
+     */
+    public function createNewOrder(User $user, bool $isClosed=false)
     {
         $orderNew = new Ord();
         $orderNew->setUser($user);
@@ -65,12 +97,21 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
         return $orderNew;
     }
 
+    /**
+     * @return \Doctrine\Common\Persistence\ObjectRepository
+     */
     public function getOrderProductRepository()
     {
         return $this->getRepository(OrdProduct::class);
     }
 
-    private function insertUpdateProductInOrder($order, $product, $pcs=1.0)
+    /** Vlozeni nebo update poctu kusu produktu
+     * @param Ord $order
+     * @param $product
+     * @param float $pcs
+     * @return int
+     */
+    private function insertUpdateProductInOrder(Ord $order, $product, $pcs=1.0)
     {
         $ordProductObjArr = $this->getOrderProductRepository()->findBy(['ord' => $order, 'product' => $product]);
 
@@ -89,6 +130,12 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
         }
     }
 
+    /** Vytvoreni objednavky pokud existuje + vlozeni nebo update poctu kusu produktu
+     * @param int $userId
+     * @param int $productId
+     * @param float $pcs
+     * @return int
+     */
     public function createUpdateOrderProduct(int $userId, int $productId, float $pcs=1.0)
     {
         $openOrderObj = $this->getOrderOpen($userId);

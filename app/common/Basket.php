@@ -47,17 +47,11 @@ class Basket{
 
                 $selObjArr = $this->em->getProductRepository()->findBy(['id' => $keyIds]);
 
-                //$selection = $this->objectManager->getObjectsFromIds($keyIds);
-
                 $selectionArr = null;
 
                 foreach ($selObjArr as $selObj) {
                     $selectionArr[] = ['id' => $selObj->getId(), 'name' => $selObj->getName(), 'description' => $selObj->getDescription(), 'price' => $selObj->getPrice(), 'pcs' => $basket[$selObj->getId()], 'totalPrice' => $basket[$selObj->getId()] * $selObj->getPrice()];
                 }
-
-                //foreach ($selection as $row) {
-                //    $selectionArr[] = ['id' => $row->id, 'name' => "$row->name", 'description' => "$row->description", 'price' => "$row->price", 'pcs' => $basket[$row->id], 'totalPrice' => $basket[$row->id] * $row->price];
-                //}
 
                 $selection = $selectionArr;
 
@@ -70,7 +64,6 @@ class Basket{
         else{ //uzivatel je prihlasen, pouzivaji se data z databaze
 
             $order = $this->em->getOrderOpen($this->user->getId());
-            //$orderId = $this->orderManager->getOpenOrderId($this->user->getId());
 
             if(is_numeric($order) && $order == 0){
                 return [];
@@ -79,15 +72,7 @@ class Basket{
                 die('<h2>Pri zpracovani kosiku doslo k chybe !</h2>');
             }
 
-            echo "order_id=".$order->getId();
-
-            $orderListArr = $this->em->getOrderProductRepository()->findby(['ord' => $order]);
-
-            //echo $orderListArr[0]->getProduct()->getId();
-            //$orderList = $this->orderManager->getOrderObjectsList($orderId);
-
-
-            //die();
+            $orderListArr = $this->em->getOrderProductRepository()->findby(['ord' => $order,'deleted_on' => null]);
 
             if(sizeof($orderListArr)!=0) { //objednavka ma polozky
                 $objectsArr = null;
@@ -97,8 +82,6 @@ class Basket{
                     $objectsArr[$orderObject->getProduct()->getId()] = $orderObject->getPcs();
                     $keyIds[] = $orderObject->getProduct()->getId();
                 }
-
-                //$selection = $this->objectManager->getObjectsFromIds($keyIds);
 
                 $ordObjArr = $this->em->getProductRepository()->findBy(['id' => $keyIds]);
 
@@ -144,8 +127,6 @@ class Basket{
                 $keyIds[] = $basketKey;
             }
 
-            //$selection = $this->objectManager->getObjectsFromIds($keyIds);
-
             $selObjArr = $this->em->getProductRepository()->findBy(['id' => $keyIds]);
 
             $prices = null;
@@ -154,10 +135,6 @@ class Basket{
                 $prices[$selObj->getId()] = $selObj->getPrice();
             }
 
-            //foreach ($selection as $row) {
-            //    $prices[$row->id] = $row->price;
-            //}
-
             foreach ($basket as $basketKey => $basketValue) {
                 $totalPrice += ($prices[$basketKey] * $basketValue);
             }
@@ -165,8 +142,6 @@ class Basket{
         else{ //provadi se pokud je uzivatel prihlasen
             $order = $this->em->getOrderOpen($this->user->getId());
             $totalPrice = $this->em->getOrderPrice($order);
-            //$orderId = $this->orderManager->getOpenOrderId($this->user->getId());
-            //$totalPrice = $this->orderManager->getOrderPrice($orderId);
         }
 
         $this->section->basketPrice = $totalPrice;
@@ -201,7 +176,6 @@ class Basket{
         }
         //uzivatel je prihlasen, pouziva se databaze
         else{
-            //$this->orderManager->createUpdateOrderObject($this->user->getId(), $objectId, $pcs);
             $this->em->createUpdateOrderProduct($this->user->getId(), $objectId, $pcs);
         }
     }
@@ -209,16 +183,19 @@ class Basket{
     /** Odebrani polozky z kosiku
      * @param int $id
      */
-    public function removeFromBasket(int $objectId)
+    public function removeFromBasket(int $productId)
     {
         if(!$this->user->isLoggedIn()) { //uzivatel neni prihlasen, odebiram ze session
             $basket = unserialize($this->section->basket);
-            unset($basket[$objectId]);
+            unset($basket[$productId]);
             $this->section->basket = serialize($basket);
         }
         else{ //uzivatel je prihlasen, odebiram z db
-            $orderId = $this->orderManager->getOpenOrderId($this->user->getId());
-            $this->orderManager->deleteObjectFromOrder($orderId,$objectId);
+            $orderObj = $this->em->getOrderOpen($this->user->getId());
+            if(!is_numeric($orderObj)) {
+                $productObj = $this->em->getProductRepository()->find($productId);
+                $this->em->deleteProductFromOrder($orderObj, $productObj);
+            }
         }
     }
 
@@ -230,7 +207,13 @@ class Basket{
     public function orderDone()
     {
         if($this->user->isLoggedIn()){
-            $this->orderManager->setOrderClose($this->orderManager->getOpenOrderId($this->user->getId()));
+            $openOrdObj = $this->em->getOrderOpen($this->user->getId());
+            if(!is_numeric($openOrdObj)){
+                $openOrdObj->setIsClosed(true);
+                $this->em->merge($openOrdObj);
+                $this->em->flush();
+            }
+
         }
         $this->empty();
     }
@@ -245,7 +228,10 @@ class Basket{
             unset($this->section->basket);
         }
         else{ //uzivatel je prihlasen, pouzit databazi
-            $this->orderManager->emptyOrder($this->orderManager->getOpenOrderId($this->user->getId()));
+            $openOrderObj = $this->em->getOrderOpen($this->user->getId());
+            if(!is_numeric($openOrderObj)) {
+                $this->em->emptyOrderProduct($openOrderObj);
+            }
         }
 
         unset($this->presenter->template->basketPrice);
