@@ -175,6 +175,18 @@ class OrdProduct
     ///////////////////////////////////
 
     /**
+     * OrdProduct constructor.
+     * @param null $order
+     * @param null $product
+     */
+    public function __construct($order = null, $product = null, $pcs = 1.0)
+    {
+        $this->ord = $order;
+        $this->product = $product;
+        $this->pcs = $pcs;
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function onPrePersist()

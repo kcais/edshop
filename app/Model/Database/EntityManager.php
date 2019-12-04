@@ -62,6 +62,7 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
 
         $this->persist($orderNew);
         $this->flush();
+        return $orderNew;
     }
 
     public function getOrderProductRepository()
@@ -69,21 +70,42 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
         return $this->getRepository(OrdProduct::class);
     }
 
-    public function createUpdateOrderProduct(int $userId, int $objectId, float $pcs=1.0)
+    private function insertUpdateProductInOrder($order, $product, $pcs=1.0)
     {
-        $openOrder = $this->getOrderOpen($userId);
+        $ordProductObjArr = $this->getOrderProductRepository()->findBy(['ord' => $order, 'product' => $product]);
+
+        if(sizeof($ordProductObjArr)==0) { //vkladam novy zaznam
+            $newOrdProdObj = new OrdProduct($order, $product, $pcs=1.0);
+            $this->persist($newOrdProdObj);
+            $this->flush();
+            return 1;
+        }
+        else{ //updatuju stavajici zaznam
+            $ordProductObjArr[0]->setPcs($ordProductObjArr[0]->getPcs() + $pcs);
+            $this->merge($ordProductObjArr[0]);
+            $this->flush();
+
+            return 0;
+        }
+    }
+
+    public function createUpdateOrderProduct(int $userId, int $productId, float $pcs=1.0)
+    {
+        $openOrderObj = $this->getOrderOpen($userId);
+        $productObj = $this->getProductRepository()->find($productId);
 
         //chyba pri zjisteni id otevrene objednavky uzivatele
-        if($openOrder == -1)return -1;
+        if(is_numeric($openOrderObj) && $openOrderObj == -1)return -1;
 
         //uzivatel nema zadnou otevrenou objednavku, vytvorit
-        if($openOrder == 0){
-            $openOrderId = $this->createNewOrder($userId, false);
-            $createOrderObject = $this->insertUpdateObjectInOrder($openOrderId, $objectId, $pcs);
+        if(is_numeric($openOrderObj) && $openOrderObj == 0){
+            $userObj = $this->getUserRepository()->find($userId);
+            $openOrder = $this->createNewOrder($userObj, false);
+            $this->insertUpdateProductInOrder($openOrder, $productObj, $pcs);
             return 1;
         }
         else{ //uzivatel jiz ma otevrenou objednavku, editovat
-            $this->insertUpdateObjectInOrder($openOrderId, $objectId, $pcs);
+            $this->insertUpdateProductInOrder($openOrderObj, $productObj, $pcs);
             return 0;
         }
 
@@ -106,13 +128,7 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
         $priceList = null;
 
         foreach($orderProductObjArr as $orderProductObj){
-            $productId = $orderProductObj->getId();
-            $orderList[$productId] = $orderProductObj->getPcs();
-            $priceList[$productId] = $this->getRepository(Product::class)->find($productId)->getPrice();
-        }
-
-        foreach($orderList as $keyId => $pcs){
-            $totalPrice += $pcs * $priceList[$keyId];
+            $totalPrice += $orderProductObj->getProduct()->getPrice() * $orderProductObj->getPcs();
         }
 
         return $totalPrice;
