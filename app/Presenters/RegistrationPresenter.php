@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Presenters;
 
 use App\Common\Common;
@@ -7,7 +8,7 @@ use Nette\Application\UI\Form;
 use Nette\Mail\Message;
 use Nette\Mail\SendmailMailer;
 
-final class RegistrationPresenter extends BasePresenter//Nette\Application\UI\Presenter
+final class RegistrationPresenter extends BasePresenter
 {
 
     public function renderVerification(){

@@ -7,6 +7,36 @@
 	<title>{ifset title}{include title|stripHtml} | {/ifset}EdShop</title>
 	<link rel="stylesheet" type="text/css" href="{$basePath}/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="{$basePath}/style.css">
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<link href="{$basePath}/js/select2/dist/css/select2.css" rel="stylesheet" />
+
+	<script src="{$basePath}/js/select2/dist/js/select2.full.min.js"></script>
+
+	<link rel="shortcut icon" href="#">
+
+	<script>
+		$(document).ready(function() {
+			$('.select2-find').select2({
+				width: 'resolve',
+
+				ajax: {
+							url: './search',
+							dataType: 'json',
+							data: function (params) {
+								var query = {
+									search: params.term,
+								};
+								return query;
+							},
+						}
+						,
+				minimumInputLength: 2
+					}
+			);
+		});
+	</script>
+
 </head>
 
 <body>
@@ -32,7 +62,11 @@
 		</span>
 		<br>
 				<span style="text-align:right;float:right;font-size: 14px;text-shadow:none; width: 100%; background: #dadada">
-					Vyhledat : <input type="text" > &nbsp;&nbsp; <a n:href="Basket:">Košík</a> (
+					Vyhledat :
+					<select class="select2-find" name="find" style="width:140px">
+					</select>
+
+					<a n:href="Basket:">Košík</a> (
 					{ifset $basketPrice}
 						{$basketPrice}
 					{else}
