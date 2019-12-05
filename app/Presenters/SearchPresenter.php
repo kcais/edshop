@@ -30,11 +30,12 @@ final class SearchPresenter extends BasePresenter
 
         $searchRes = null;
 
+        if(sizeof($catObjArr) > 0) {
+            $searchRes[] = ['id' => 'categories', 'text' => 'Kategorie', 'disabled' => true];
 
-        $searchRes[] = ['id' => 'categories', 'text' => 'Kategorie_________________________________________________', 'disabled' => true];
-
-        foreach($catObjArr as $catObj){
-            $searchRes[] =  ['id' => "/homepage/products?categoryId=".$catObj->getId(), 'text' => $catObj->getName()];
+            foreach ($catObjArr as $catObj) {
+                $searchRes[] = ['id' => "/homepage/products?categoryId=" . $catObj->getId(), 'text' => $catObj->getName()];
+            }
         }
 
         //produkty
@@ -43,15 +44,14 @@ final class SearchPresenter extends BasePresenter
         ;
         $prodObjArr = $q->execute();
 
-        $searchRes[] = ['id' => 'products', 'text' => 'Produkty', 'disabled' => true];
-        foreach($prodObjArr as $prodObj){
-            $searchRes[] =  ['id' => "/homepage/products?id=".$prodObj->getId(), 'text' => $prodObj->getName()];
+        if(sizeof($prodObjArr) > 0) {
+            $searchRes[] = ['id' => 'products', 'text' => 'Produkty', 'disabled' => true];
+            foreach ($prodObjArr as $prodObj) {
+                $searchRes[] = ['id' => "/homepage/products?id=" . $prodObj->getId(), 'text' => $prodObj->getName()];
+            }
         }
 
-
-        //echo Json::Encode(['results'=>[['id' => 'AK', 'text' => 'hodnota']]]);
         echo Json::Encode(['results'=>$searchRes]);
-        //echo '{"results" : {{"id" : 1 , "text" : "hodnota"}}}';
         die();
     }
 }

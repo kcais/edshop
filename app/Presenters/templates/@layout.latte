@@ -9,7 +9,8 @@
 	<link rel="stylesheet" type="text/css" href="{$basePath}/style.css">
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<link href="{$basePath}/js/select2/dist/css/select2.css" rel="stylesheet" />
+
+    <link href="{$basePath}/js/select2/dist/css/select2.css" rel="stylesheet" />
 
 	<script src="{$basePath}/js/select2/dist/js/select2.full.min.js"></script>
 
@@ -18,10 +19,12 @@
 	<script>
 		$(document).ready(function() {
 			$('.select2-find').select2({
-				width: 'resolve',
+                width: '220px',
+
+                dropdownAutoWidth : true,
 
 				ajax: {
-							url: './search',
+							url: {$basePath} + "/search",
 							dataType: 'json',
 							data: function (params) {
 								var query = {
@@ -62,9 +65,10 @@
 		</span>
 		<br>
 				<span style="text-align:right;float:right;font-size: 14px;text-shadow:none; width: 100%; background: #dadada">
-					Vyhledat :
-					<select class="select2-find" name="find" style="width:140px">
-					</select>
+                Vyhledat :
+
+				<select class="select2-find" name="find">
+                </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 					<a n:href="Basket:">Košík</a> (
 					{ifset $basketPrice}
@@ -79,7 +83,7 @@
 
 	<nav>
 		<div style="float:left; width: 200px;background-color: #f0f0f0;">
-		<ul>
+		<ul class="left-menu">
 			{foreach $category2 as $category}
 				{php $categoryObjId = $category['id']; $categotyObjName = $category['name']}
 				{if isset($categoryId) && $categoryObjId== $categoryId}

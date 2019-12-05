@@ -12,7 +12,7 @@ header { background-color: silver;height: 68px}
 
 nav { background-color: lightgray;float:left;}
 
-ul {
+.left-menu {
     list-style-type: none;
     margin: 0px;
     padding: 0px;
@@ -110,6 +110,3 @@ li a:hover:not(.active) {
     width : 200px;
 }
 
-.bigdropdown{
-    width : 600px;
-}
