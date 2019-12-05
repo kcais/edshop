@@ -37,6 +37,9 @@
 				minimumInputLength: 2
 					}
 			);
+			$('.select2-find').on("select2:select", function(e) {
+				window.location.href = {$basePath} +  e.params.data.id;
+			});
 		});
 	</script>
 

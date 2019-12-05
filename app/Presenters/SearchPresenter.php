@@ -29,14 +29,17 @@ final class SearchPresenter extends BasePresenter
         $catObjArr = $q->execute();
 
         $searchRes = null;
+        $searchResFinal = null;
 
         if(sizeof($catObjArr) > 0) {
-            $searchRes[] = ['id' => 'categories', 'text' => 'Kategorie', 'disabled' => true];
 
             foreach ($catObjArr as $catObj) {
                 $searchRes[] = ['id' => "/homepage/products?categoryId=" . $catObj->getId(), 'text' => $catObj->getName()];
             }
+            $searchResFinal[] = ['text' => 'Kategorie', 'children' => $searchRes];
         }
+
+
 
         //produkty
         $q = $this->em->createQuery("select prod from \App\Model\Database\Entity\Product prod where prod.name like :searchterm or prod.description like :searchterm")
@@ -45,13 +48,15 @@ final class SearchPresenter extends BasePresenter
         $prodObjArr = $q->execute();
 
         if(sizeof($prodObjArr) > 0) {
-            $searchRes[] = ['id' => 'products', 'text' => 'Produkty', 'disabled' => true];
+            $searchRes = null;
+
             foreach ($prodObjArr as $prodObj) {
                 $searchRes[] = ['id' => "/homepage/products?id=" . $prodObj->getId(), 'text' => $prodObj->getName()];
             }
+            $searchResFinal[] = ['text' => 'Produkty', 'children' => $searchRes];
         }
 
-        echo Json::Encode(['results'=>$searchRes]);
+        echo Json::Encode(['results'=>$searchResFinal]);
         die();
     }
 }
