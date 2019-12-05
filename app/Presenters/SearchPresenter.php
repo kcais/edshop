@@ -51,7 +51,7 @@ final class SearchPresenter extends BasePresenter
             $searchRes = null;
 
             foreach ($prodObjArr as $prodObj) {
-                $searchRes[] = ['id' => "/homepage/products?id=" . $prodObj->getId(), 'text' => $prodObj->getName()];
+                $searchRes[] = ['id' => "/homepage/detail/" . $prodObj->getId(), 'text' => $prodObj->getName()];
             }
             $searchResFinal[] = ['text' => 'Produkty', 'children' => $searchRes];
         }

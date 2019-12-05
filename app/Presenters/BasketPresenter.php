@@ -147,7 +147,8 @@ final class BasketPresenter extends BasePresenter
         $grid->addColumnNumber('id', 'objectsGrid.name')
             ->setDefaultHide();
 
-        $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
+        //$grid->addColumnText('name', 'objectsGrid.name')->setSortable();
+        $grid->addColumnLink('name', 'objectsGrid.name','Homepage:detail')->setSortable();
         $grid->addColumnText('description', 'objectsGrid.description');
         $grid->addColumnText('price', 'objectsGrid.pricePerPcs')
             ->setRenderer(function ($row): String {

@@ -21,6 +21,21 @@ final class HomepagePresenter extends BasePresenter
         $this->template->categoryName = $this->em->getCategoryRepository()->find($categoryId)->getName();
     }
 
+    /** Zobrazeni detailu produktu
+     * @param $id
+     */
+    public function renderDetail($id)
+    {
+        $prodObj = $this->em->getProductRepository()->find($id);
+        if($prodObj) {
+            $this->template->categoryName = $prodObj->getCategory()->getName();
+            $this->template->categoryId = $prodObj->getCategory()->getId();
+            $this->template->productId = $prodObj->getId();
+            $this->template->productName = $prodObj->getName();
+            $this->template->productDescription = $prodObj->getDescription();
+        }
+    }
+
     /**
      *  Zobrazeni seznamu kategorii
      */
@@ -55,7 +70,8 @@ final class HomepagePresenter extends BasePresenter
         $grid = new DataGrid($this,$name);
 
         $grid->setDataSource($prodArr);
-        $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
+        //$grid->addColumnText('name', 'objectsGrid.name')->setSortable();
+        $grid->addColumnLink('name', 'objectsGrid.name','detail')->setSortable();
         $grid->addColumnText('description', 'objectsGrid.description');
         $grid->addColumnText('price', 'objectsGrid.price')
             ->setRenderer(function ($row):String{return "$row[price] Kč";})
@@ -82,6 +98,17 @@ final class HomepagePresenter extends BasePresenter
             $basketObj->addToBasket($id);
             $basketObj->calculateBasketPrice();
 
+    }
+
+    /** Pridani produktu do kosiku
+     * @param int $id
+     */
+    public function actionToBasket(int $id)
+    {
+        $basketObj = new \Basket($this, $this->em);
+        $basketObj->addToBasket($id);
+        $basketObj->calculateBasketPrice();
+        $this->redirect("Homepage:detail",$id);
     }
 
 }
