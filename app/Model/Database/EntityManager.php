@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace App\Model\Database;
 
 use App\Model\Database\Entity\Category;
+use App\Model\Database\Entity\Image;
 use App\Model\Database\Entity\Ord;
 use App\Model\Database\Entity\OrdProduct;
 use App\Model\Database\Entity\Product;
 use App\Model\Database\Entity\User;
-use App\Model\Database\Repository\CategoryRepository;
 use Nettrine\ORM\EntityManagerDecorator as NettrineEntityManagerDecorator;
 
 
@@ -263,6 +263,20 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
             return $orderObjArr[0];
         }
     }
+
+    /////////////////////////////
+    /// Image part
+    /////////////////////////////
+
+    /**
+     * @return \Doctrine\Common\Persistence\ObjectRepository
+     */
+    public function getImageRepository()
+    {
+        return $this->getRepository(Image::class);
+    }
+
+
 }
 
 ?>

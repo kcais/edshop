@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Model\Database\Entity\Category;
+use App\Model\Database\Entity\Image;
 use App\Model\Database\Entity\Product;
 use Nette;
 use Nette\Application\UI\Form;
@@ -57,6 +58,8 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setHtmlType('number')
             ->setRequired('Zadejte cenu produktu');
 
+        $form->addUpload('imageFile','Obrázek');
+
         $form->addSubmit('add', 'Přidat');
 
         $form->onSuccess[] = [$this, 'adminProdnewFormSucceeded'];
@@ -75,6 +78,31 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             $category = $this->em->getCategoryRepository()->find($values['category_id']);
             $product = new Product($category, $values['name'], $values['description'], $values['price']);
             $this->em->persist($product);
+
+            $imageFile = $values['imageFile'];
+
+            //nahrani obrazku pokud byl pridan
+            if (filesize ($imageFile) > 0 && $imageFile->isOk()) { //kdyz je obrazek skutecne poslan z formulare
+
+                $imageFile = $values['imageFile'];
+
+                $imageObj = \Nette\Utils\Image::fromFile($imageFile);
+                $imageIconObj = clone $imageObj;
+                $imageIconObj->resize(120,null);
+
+                $imageMiniObj = clone $imageObj;
+                $imageMiniObj->resize(320,null);
+
+                $imageDbObj = new Image();
+                $imageDbObj->setImageIcon((string)$imageIconObj);
+                $imageDbObj->setImageMini((string)$imageMiniObj);
+                $imageDbObj->setImageNormal((string)$imageObj);
+
+                $imageDbObj->setProduct($product);
+
+                $this->em->persist($imageDbObj);
+            }
+
             $this->em->flush();
             $this->redirect("Admin:newsuccess");
         } catch (\Exception $e) {

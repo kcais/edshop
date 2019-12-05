@@ -19,13 +19,13 @@ Kategorie a produkty
 * určení pořadí zobrazení kategorií - **in progress**
 * zobrazení kategorií v nezávislém menu - **in progress**
 * zobrazení a manipulace s produkty v nezávislém gridu (bez nutnosti obnovovat celou stránku) - **done**
-* zobrazení detailu produktu - **in progress**
+* zobrazení detailu produktu - **done**
 * možnost přidání produktu do košíku  - **done**
 * dokončení objednávky z košíku - **done**
 * možnost administrátorké úpravy odeslané objednávky - **in progress** 
 
 Ostatní
 * podpora multijazykového zobrazení (CZ/ENG) - **in progress**
-* vyhledávání v názvech produktů pomocí našeptávání (AJAX) - **in progress** 
+* vyhledávání v názvech produktů pomocí našeptávání (AJAX) - **done** 
 * objednávkový košík - v případě nepřihlášení pomocí SESSIONS/COOKIES, v případě přihlášení ukládáním do DB - **done**
 * možnost přidání ilustračních obrázků k produktům - **in progress**

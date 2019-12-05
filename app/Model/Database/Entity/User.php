@@ -99,6 +99,10 @@ class User
      */
     private $deleted_on;
 
+    ///////////////////////////////////
+    /// getters and setters
+    ///////////////////////////////////
+
     /**
      * @return int
      */
