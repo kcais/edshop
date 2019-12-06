@@ -16,7 +16,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->basketPrice = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->basketPrice;
 
         $categoryRepository = $this->em->getCategoryRepository();
-        $catObjArr = $categoryRepository->findby([],['name' => 'ASC']);
+        $catObjArr = $categoryRepository->findby(['deleted_on' => null],['name' => 'ASC']);
         $category2 = null;
         foreach ($catObjArr as $catObj){
             $category2[]=['id' => $catObj->getId(), 'name' => $catObj->getName(), 'description' => $catObj->getDescription()];

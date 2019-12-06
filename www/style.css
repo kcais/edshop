@@ -110,3 +110,6 @@ li a:hover:not(.active) {
     width : 200px;
 }
 
+.col-image{
+    width : 150px;
+}

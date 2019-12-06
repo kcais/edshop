@@ -70,7 +70,12 @@ final class HomepagePresenter extends BasePresenter
         $grid = new DataGrid($this,$name);
 
         $grid->setDataSource($prodArr);
-        //$grid->addColumnText('name', 'objectsGrid.name')->setSortable();
+
+        $grid->addColumnText('image', '')
+            ->setTemplate(__DIR__ . '/templates/components/datagrid/grid.img.latte')
+            ->setAlign('center')
+        ;
+
         $grid->addColumnLink('name', 'objectsGrid.name','detail')->setSortable();
         $grid->addColumnText('description', 'objectsGrid.description');
         $grid->addColumnText('price', 'objectsGrid.price')

@@ -205,7 +205,12 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         ;
 
         $grid->addColumnText('description', 'objectsGrid.description')
-            ->setEditableCallback([$this, 'columnNameEdited']);
+            ->setEditableCallback(function($id, $value): void {
+                $catObj = $this->em->getCategoryRepository()->find($id);
+                $catObj->setDescription($value);
+                $this->em->merge($catObj);
+                $this->em->flush();
+            });
         ;
 
 
@@ -218,6 +223,9 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
 
         $grid->addAction('delCat','Del DB','DelCat!')
             ->setClass('btn btn-primary')
+            ->setConfirmation(
+                new StringConfirmation('Skutečně smazat kategorii %s z DB ?', 'name') // Second parameter is optional
+            );
         ;
 
 
