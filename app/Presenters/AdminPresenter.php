@@ -8,6 +8,7 @@ use App\Model\Database\Entity\Product;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\ComponentModel\IComponent;
+use RuntimeException;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
 
@@ -79,35 +80,15 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             $category = $this->em->getCategoryRepository()->find($values['category_id']);
             $product = new Product($category, $values['name'], $values['description'], $values['price']);
             $this->em->persist($product);
+            $this->em->flush();
 
             $imageFile = $values['imageFile'];
 
             //nahrani obrazku pokud byl pridan
             if ($imageFile->isOk() && filesize ($imageFile) > 0) { //kdyz je obrazek skutecne poslan z formulare
-
-                $imageFile = $values['imageFile'];
-
-                $imageObj = \Nette\Utils\Image::fromFile($imageFile);
-                //vytvoreni ikony z normal velikosti
-                $imageIconObj = clone $imageObj;
-                $imageIconObj->resize(120,null);
-
-                //vytvoreni mini z normal velikosti
-                $imageMiniObj = clone $imageObj;
-                $imageMiniObj->resize(320,null);
-
-                //ulozeni dat obrazku do db
-                $imageDbObj = new Image();
-                $imageDbObj->setImageIcon((string)$imageIconObj);
-                $imageDbObj->setImageMini((string)$imageMiniObj);
-                $imageDbObj->setImageNormal((string)$imageObj);
-
-                $imageDbObj->setProduct($product);
-
-                $this->em->persist($imageDbObj);
+                $this->em->saveImageFromFile($product, $imageFile);
             }
 
-            $this->em->flush();
             $this->redirect("Admin:newsuccess");
         } catch (\Exception $e) {
             throw $e;
@@ -240,7 +221,7 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $grid->setDataSource($prodArr);
 
         $grid->addColumnText('image', '')
-            ->setTemplate(__DIR__ . '/templates/components/datagrid/grid.img.latte')
+            ->setTemplate(__DIR__ . '/templates/components/datagrid/grid.img-new.latte')
             ->setAlign('center')
         ;
 
@@ -329,6 +310,47 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
     public function handleMarkDelCat(int $id)
     {
         $this->em->deleteCategory($id,false);
+    }
+
+    /** Nahrani noveho obrazku pro produkt
+     * @throws Nette\Utils\UnknownImageFileException
+     */
+    public function actionUpload(){
+        if (
+            !isset($_FILES['new_image_file']['error']) ||
+            is_array($_FILES['new_image_file']['error'])
+        ) {
+            throw new RuntimeException('Invalid parameters.');
+        }
+
+        switch ($_FILES['new_image_file']['error']) {
+            case UPLOAD_ERR_OK:
+                break;
+            case UPLOAD_ERR_NO_FILE:
+                throw new RuntimeException('No file sent.');
+            case UPLOAD_ERR_INI_SIZE:
+            case UPLOAD_ERR_FORM_SIZE:
+                throw new RuntimeException('Exceeded filesize limit.');
+            default:
+                throw new RuntimeException('Unknown errors.');
+        }
+
+        if ($_FILES['new_image_file']['size'] > 1000000) {
+            throw new RuntimeException('Exceeded filesize limit.');
+        }
+
+        $imageName = $_FILES['new_image_file']['tmp_name'];
+
+        $idProd = $_POST['id'];
+
+        $prodObj = $this->em->getProductRepository()->find($idProd);
+
+        //produkt s id existuje
+        if($prodObj){
+            $this->em->saveImageFromFile($prodObj, $imageName);
+        }
+
+        die();
     }
 
 }

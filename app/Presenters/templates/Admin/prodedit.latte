@@ -2,4 +2,31 @@
 
 <h1 n:block=title><a n:href="Admin:main"  style="color : #333333">Administrátorské rozhraní</a> / Editace kategorií</h1>
 
+<script>
+    function uploadFile(idProd){
+        console.log('idProd = ' + idProd);
+        console.log($('#file_input_id' + idProd));
+        var data = new FormData();
+        data.append('new_image_file', $('#file_input_id' + idProd).prop('files')[0]);
+        data.append('id',idProd);
+
+
+        $.ajax({
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            async: false,
+            data: data,
+            url: {link Admin:upload},
+            dataType : 'json',
+            success: function(jsonData){
+
+            }
+        });
+
+        location.reload();
+    }
+
+</script>
+
 {control adminProductGrid}

@@ -330,7 +330,48 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
         return $this->getRepository(Image::class);
     }
 
+    /**
+     * @param Product $product Produkt
+     * @param String $imageFile Cesta a nazev souboru
+     * @throws \Nette\Utils\UnknownImageFileException
+     */
+    public function saveImageFromFile(Product $product, String $imageFile)
+    {
 
+        $imageObj = \Nette\Utils\Image::fromFile($imageFile);
+        //vytvoreni ikony z normal velikosti
+        $imageIconObj = clone $imageObj;
+        $imageIconObj->resize(120, null);
+
+        //vytvoreni mini z normal velikosti
+        $imageMiniObj = clone $imageObj;
+        $imageMiniObj->resize(320, null);
+
+        //ulozeni dat obrazku
+        $imageObjArr = $this->getImageRepository()->findBy(['product' => $product]);
+
+        if(sizeof($imageObjArr) > 0 ) { //obrazek jiz existuje, bude se updatovat
+            $imageDbObj = $imageObjArr[0];
+        }
+        else{ //obrazek neexistuje, vytvori se novy
+            $imageDbObj = new Image();
+         }
+
+        $imageDbObj->setImageIcon((string)$imageIconObj);
+        $imageDbObj->setImageMini((string)$imageMiniObj);
+        $imageDbObj->setImageNormal((string)$imageObj);
+
+        $imageDbObj->setProduct($product);
+
+        if(sizeof($imageObjArr) > 0 ){
+            $this->merge($imageDbObj);
+        }
+        else{
+            $this->persist($imageDbObj);
+        }
+
+        $this->flush();
+    }
 }
 
 ?>
