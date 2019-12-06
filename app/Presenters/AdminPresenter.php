@@ -214,7 +214,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             );
         ;
 
-
         $grid->setTranslator(new \TranslatorCz('CZ'));
 
         return $grid;
@@ -227,13 +226,23 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $prodObjArr = $this->em->getProductRepository()->findBy(['deleted_on' => null]);
 
         foreach($prodObjArr as $prodObj){
-            $prodArr[] = ['id' => $prodObj->getId(),'category' => $prodObj->getCategory()->getName(),'name' => $prodObj->getName(), 'description' => $prodObj->getDescription()];
+            $prodArr[] = [
+                'id' => $prodObj->getId(),
+                'category' => $prodObj->getCategory()->getName(),
+                'name' => $prodObj->getName(),
+                'description' => $prodObj->getDescription(),
+                'price' => $prodObj->getPrice(),
+            ];
         }
 
         $grid = new DataGrid($this, $name);
 
-
         $grid->setDataSource($prodArr);
+
+        $grid->addColumnText('image', '')
+            ->setTemplate(__DIR__ . '/templates/components/datagrid/grid.img.latte')
+            ->setAlign('center')
+        ;
 
         $grid->addColumnText('category', 'objectsGrid.category')
             ->setSortable()
@@ -242,13 +251,28 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $grid->addColumnText('name', 'objectsGrid.name')
             ->setSortable()
             ->setEditableCallback(function($id, $value): void {
-
+                $prodObj = $this->em->getProductRepository()->find($id);
+                $prodObj->setName($value);
+                $this->em->merge($prodObj);
+                $this->em->flush();
             });
         ;
 
         $grid->addColumnText('description', 'objectsGrid.description')
             ->setEditableCallback(function($id, $value): void {
+                $prodObj = $this->em->getProductRepository()->find($id);
+                $prodObj->setDescription($value);
+                $this->em->merge($prodObj);
+                $this->em->flush();
+            });
+        ;
 
+        $grid->addColumnText('price', 'objectsGrid.price')
+            ->setEditableCallback(function($id, $value): void {
+                $prodObj = $this->em->getProductRepository()->find($id);
+                $prodObj->setPrice($value);
+                $this->em->merge($prodObj);
+                $this->em->flush();
             });
         ;
 

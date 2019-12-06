@@ -41,6 +41,9 @@ class TranslatorCz implements \Nette\Localization\ITranslator
             case 'objectsGrid.description':
                 if($this->language == 'CZ') return 'Popis';
                 break;
+            case 'objectsGrid.category':
+                if($this->language == 'CZ') return 'Kategorie';
+                break;
             case 'objectsGrid.name':
                 if($this->language == 'CZ') return 'Název';
                 break;
