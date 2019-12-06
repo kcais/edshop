@@ -80,7 +80,7 @@ final class HomepagePresenter extends BasePresenter
         ;
 
         $grid->addAction('toBasket','Do košíku','ToBasket!')
-            ->setClass('btn btn-primary')
+            ->setClass('ajax btn btn-primary')
         ;
 
         $grid->addFilterText('name', 'objectsGrid.name')->setSplitWordsSearch(FALSE);
@@ -98,6 +98,7 @@ final class HomepagePresenter extends BasePresenter
             $basketObj->addToBasket($id);
             $basketObj->calculateBasketPrice();
 
+            $this->redirect('this');
     }
 
     /** Pridani produktu do kosiku

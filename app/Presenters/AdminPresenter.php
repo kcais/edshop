@@ -8,6 +8,7 @@ use App\Model\Database\Entity\Product;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\ComponentModel\IComponent;
+use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
 
 
@@ -87,12 +88,15 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
                 $imageFile = $values['imageFile'];
 
                 $imageObj = \Nette\Utils\Image::fromFile($imageFile);
+                //vytvoreni ikony z normal velikosti
                 $imageIconObj = clone $imageObj;
                 $imageIconObj->resize(120,null);
 
+                //vytvoreni mini z normal velikosti
                 $imageMiniObj = clone $imageObj;
                 $imageMiniObj->resize(320,null);
 
+                //ulozeni dat obrazku do db
                 $imageDbObj = new Image();
                 $imageDbObj->setImageIcon((string)$imageIconObj);
                 $imageDbObj->setImageMini((string)$imageMiniObj);
@@ -186,12 +190,30 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         }
 
         $grid = new DataGrid($this, $name);
+
+
         $grid->setDataSource($catArr);
-        $grid->addColumnText('name', 'objectsGrid.name')->setSortable();
-        $grid->addColumnText('description', 'objectsGrid.description');
+
+        $grid->addColumnText('name', 'objectsGrid.name')
+            ->setSortable()
+            ->setEditableCallback(function($id, $value): void {
+                $catObj = $this->em->getCategoryRepository()->find($id);
+                $catObj->setName($value);
+                $this->em->merge($catObj);
+                $this->em->flush();
+            });
+        ;
+
+        $grid->addColumnText('description', 'objectsGrid.description')
+            ->setEditableCallback([$this, 'columnNameEdited']);
+        ;
+
 
         $grid->addAction('markDelCat','Set deleted','MarkDelCat!')
             ->setClass('btn btn-primary')
+            ->setConfirmation(
+                new StringConfirmation('Skutečně označit kategorii %s jako deleted_on ?', 'name') // Second parameter is optional
+            );
         ;
 
         $grid->addAction('delCat','Del DB','DelCat!')
