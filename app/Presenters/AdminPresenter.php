@@ -83,7 +83,7 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             $imageFile = $values['imageFile'];
 
             //nahrani obrazku pokud byl pridan
-            if (filesize ($imageFile) > 0 && $imageFile->isOk()) { //kdyz je obrazek skutecne poslan z formulare
+            if ($imageFile->isOk() && filesize ($imageFile) > 0) { //kdyz je obrazek skutecne poslan z formulare
 
                 $imageFile = $values['imageFile'];
 
@@ -111,20 +111,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             $this->redirect("Admin:newsuccess");
         } catch (\Exception $e) {
             throw $e;
-        }
-    }
-
-    /** Ulozeni noveho produktu - old
-     * @param Form $form
-     * @param array $values
-     * @throws Nette\Application\AbortException
-     */
-    public function adminProdnewFormSucceededOld(Form $form, array $values): void
-    {
-        if ($this->objectManager->createNewObject($values['category_id'], $values['name'], $values['description'], $values['price'])) {
-            $this->redirect("Admin:newsuccess");
-        } else {
-            $this->redirect("Admin:newerror");
         }
     }
 
@@ -234,14 +220,83 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         return $grid;
     }
 
+    protected function createComponentAdminProductGrid($name) : DataGrid
+    {
+        $prodArr = null;
+
+        $prodObjArr = $this->em->getProductRepository()->findBy(['deleted_on' => null]);
+
+        foreach($prodObjArr as $prodObj){
+            $prodArr[] = ['id' => $prodObj->getId(),'category' => $prodObj->getCategory()->getName(),'name' => $prodObj->getName(), 'description' => $prodObj->getDescription()];
+        }
+
+        $grid = new DataGrid($this, $name);
+
+
+        $grid->setDataSource($prodArr);
+
+        $grid->addColumnText('category', 'objectsGrid.category')
+            ->setSortable()
+        ;
+
+        $grid->addColumnText('name', 'objectsGrid.name')
+            ->setSortable()
+            ->setEditableCallback(function($id, $value): void {
+
+            });
+        ;
+
+        $grid->addColumnText('description', 'objectsGrid.description')
+            ->setEditableCallback(function($id, $value): void {
+
+            });
+        ;
+
+        $grid->addAction('markDelCat','Set deleted','MarkDelProd!')
+            ->setClass('btn btn-primary')
+            ->setConfirmation(
+                new StringConfirmation('Skutečně označit product %s jako deleted_on ?', 'name') // Second parameter is optional
+            );
+        ;
+
+        $grid->addAction('delCat','Del DB','DelProd!')
+            ->setClass('btn btn-primary')
+            ->setConfirmation(
+                new StringConfirmation('Skutečně smazat product %s z DB ?', 'name') // Second parameter is optional
+            );
+        ;
+
+        $grid->addFilterText('category', 'objectsGrid.category');
+        $grid->addFilterText('name', 'objectsGrid.name')->setSplitWordsSearch(FALSE);
+        $grid->addFilterText('description', 'objectsGrid.description');
+
+        $grid->setTranslator(new \TranslatorCz('CZ'));
+
+        return $grid;
+    }
+
+    /** Handle udalosti smazani produktu
+     * @param int $id
+     */
+    public function handleDelProd(int $id)
+    {
+        $this->em->deleteProduct($id, true);
+    }
+
+    /** Handle udalosti oznaceni produktu jako smazany
+     * @param int $id Id kategorie
+     */
+    public function handleMarkDelProd(int $id)
+    {
+        $this->em->deleteProduct($id, false);
+    }
+
     /** Handle udalosti smazani kategorie
      * @param int $id
      */
     public function handleDelCat(int $id)
     {
-        $catObj = $this->em->getCategoryRepository()->find($id);
-        $this->em->remove($catObj);
-        $this->em->flush();
+        $this->em->deleteCategory($id, true);
     }
 
     /** Handle udalosti oznaceni kategorie jako smazane
@@ -249,10 +304,7 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
      */
     public function handleMarkDelCat(int $id)
     {
-        $catObj = $this->em->getCategoryRepository()->find($id);
-        $catObj->setDeletedOn(new \DateTime('now'));
-        $this->em->merge($catObj);
-        $this->em->flush();
+        $this->em->deleteCategory($id,false);
     }
 
 }

@@ -26,6 +26,24 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
         return $this->getRepository(Category::class);
     }
 
+
+    public function deleteCategory(int $id, bool $deleteFromDb=false)
+    {
+        $catObj = $this->getCategoryRepository()->find($id);
+
+        if ($catObj) { //test ze kategorie existuje
+            //oznaci kategorii jako deleted_on
+            if (!$deleteFromDb) {
+                $catObj->setDeletedOn(new \DateTime('now'));
+                $this->merge($catObj);
+            } else { //smaze kategorii z DB
+                $this->remove($catObj);
+            }
+
+            $this->flush();
+
+        }
+    }
     ////////////////////////////
     ///  Product part
     ////////////////////////////
@@ -36,6 +54,42 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
     public function getProductRepository()
     {
         return $this->getRepository(Product::class);
+    }
+
+    /** Smazani produktu - oznaceni jako deleted_on pripadne smazani z db
+     * @param int $id Id produktu
+     * @param bool $deleteFromDb 0-oznaci jako deleted_on, 1-smaze z DB
+     */
+    public function deleteProduct(int $id, bool $deleteFromDb=false)
+    {
+        $prodObj = $this->getProductRepository()->find($id);
+
+        if($prodObj) {
+
+            $imageObjArr = $this->getImageRepository()->findby(['product' => $id]);
+
+            if (!$deleteFromDb) { //oznacuju jako deleted_on
+                //obrazek pokud existuje
+                if (sizeof($imageObjArr) == 1) {
+                    $imageObjArr[0]->setDeletedOn(new \DateTime('now'));
+                    $this->merge($imageObjArr[0]);
+                }
+                //produkt
+                $prodObj->setDeletedOn(new \DateTime('now'));
+                $this->merge($prodObj);
+
+            } else { //mazu z db
+                //obrazek, pokud existuje
+                if (sizeof($imageObjArr) == 1) {
+                    $this->remove($imageObjArr[0]);
+                }
+                //produkt
+                $this->remove($prodObj);
+            }
+
+            $this->flush();
+
+        }
     }
 
     ////////////////////////////
