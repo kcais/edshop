@@ -24,23 +24,46 @@ final class ImagePresenter extends BasePresenter
 
         if(isset($id)){
             $imageObj = $this->em->getImageRepository()->findby(['product' => $id, 'deleted_on' => null]);
+
+            //nacti obrazek z db pokud existuje
             if(isset($imageObj[0])){
                 switch($type){
                     case 'mini':
-                        $imageData = $imageObj[0]->getImageMini();
+                        $imageRes = $imageObj[0]->getImageMini();
                         break;
                     case 'normal':
-                        $imageData = $imageObj[0]->getImageNormal();
+                        $imageRes = $imageObj[0]->getImageNormal();
                         break;
                     case 'icon':
-                        $imageData = $imageObj[0]->getImageIcon();
+                        $imageRes = $imageObj[0]->getImageIcon();
                         break;
                 }
 
                 header("Content-type: image/jpeg");
-                echo stream_get_contents($imageData);
-
+                echo stream_get_contents($imageRes);
             }
+            else{ //obrazek neni ulozen v db, pouzij NA image
+
+                switch($type) {
+                    case 'mini':
+                        $imageFile = './img/na-mini.jpg';
+                        break;
+                    case 'normal':
+                        $imageFile = './img/na-normal.jpg';
+                        break;
+                    case 'icon':
+                        $imageFile = './img/na-icon.jpg';
+                        break;
+                }
+
+                $fh = fopen($imageFile, "rb");
+                $imageData = fread($fh, filesize($imageFile));
+                fclose($fh);
+
+                header("Content-type: image/jpeg");
+                echo $imageData;
+            }
+
         }
         die();
     }
