@@ -353,6 +353,24 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         die();
     }
 
+    /** Smazani obrazku produktu
+     * @param int $id Product id
+     * @throws Nette\Application\AbortException
+     */
+    public function actionImagedel(int $id){
+
+        if(!isset($id) && isset($_GET['id']))$id=$_GET['id'];
+
+        $imageObjArr = $this->em->getImageRepository()->findBy(['product'=>$id]);
+
+        if(sizeof($imageObjArr) > 0){
+            $this->em->remove($imageObjArr[0]);
+            $this->em->flush();
+        }
+
+        $this->redirect('Admin:prodedit');
+    }
+
 }
 
 ?>
