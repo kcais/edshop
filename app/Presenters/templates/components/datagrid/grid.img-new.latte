@@ -22,7 +22,7 @@
     <tr>
         <td>
             <label for="file_input_id{$item[id]}">New</label> | <a href="#" onClick="if(confirm('Skutečně smazat obrázek produktu ?')){ location.href = 'imagedel/{$item[id]}'}">Del</a>
-                <input type="file" id="file_input_id{$item[id]}" onchange="console.log({$item[id]});uploadFile({$item[id]})">
+                <input type="file" id="file_input_id{$item[id]}" onchange="uploadFile({$item[id]})">
         </td>
     </tr>
 </table>
