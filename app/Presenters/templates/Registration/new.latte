@@ -11,6 +11,9 @@
          data.append('username',this.value);
 
         if(this.value.length>2) {
+            label.text('Zjišťuji dostupnost uživatelského jména ...');
+            label.css('color','black');
+
             $.ajax({
                 type: 'POST',
                 processData: false,
@@ -28,6 +31,10 @@
                         label.css('color','red');
                     }
                 },
+                error: function (jqXHR, textStatus, errorThrown){
+                    label.text('Při zjišťování dostupnosti uživatelského jména došlo k chybě');
+                    label.css('color','red');
+                }
             });
         }
         else{

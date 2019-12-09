@@ -122,6 +122,9 @@ final class RegistrationPresenter extends BasePresenter
 
     }
 
+    /**
+     * Kontrola existence jmena uzivatelskeho uctu
+     */
     public function actionCheckusername(){
         $username = $_POST['username'];
 
