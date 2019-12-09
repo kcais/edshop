@@ -11,12 +11,12 @@ table {
     padding: 20px;
 }
 </style>
-
+<div id="overlay" onclick="offOverlay()"><img src="#" id="overlay-image"></div>
 <h2><a n:href="Homepage:" style="color : #333333">Kategorie</a> / {ifset $categoryName}<a n:href="Homepage:products?categoryId=$categoryId" style="color : #333333">{$categoryName}</a>{/ifset} / {$productName}</h2>
 <table style="border : 1px solid black;background-color: #949492;"><tr><td>
     <table class="table-in">
         <tr>
-            <td style="width: 360px"><img src="{$basePath}/image/show/{$productId}?type=mini" width="300" alt="Image"></td><td>{$productName}</td><td style="width: 140px"><a n:href="Homepage:toBasket $productId" class="btn btn-primary">Do košíku</a></td>
+            <td style="width: 360px"><img src="{$basePath}/image/show/{$productId}?type=mini" width="300" alt="Image" onclick="onOverlay({$productId})"></td><td>{$productName}</td><td style="width: 140px"><a n:href="Homepage:toBasket $productId" class="btn btn-primary">Do košíku</a></td>
         </tr>
         <tr>
             <td colspan="3">{$productDescription}</td>

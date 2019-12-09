@@ -21,6 +21,16 @@
 	<link rel="shortcut icon" href="#">
 
 	<script>
+		function onOverlay(id) { //display image over full page
+			document.getElementById("overlay").style.display = "block";
+			document.getElementById("overlay-image").src = {$basePath} + "/image/show/"+ id + "?type=normal"
+
+		};
+
+		function offOverlay() { //hide image
+			document.getElementById("overlay").style.display = "none";
+		};
+
 		$(document).ready(function() {
 			$('.select2-find').select2({
                 width: '220px',

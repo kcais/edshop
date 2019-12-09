@@ -28,4 +28,4 @@ Ostatní
 * podpora multijazykového zobrazení (CZ/ENG) - **in progress**
 * vyhledávání v názvech produktů pomocí našeptávání (AJAX) - **done** 
 * objednávkový košík - v případě nepřihlášení pomocí SESSIONS/COOKIES, v případě přihlášení ukládáním do DB - **done**
-* možnost přidání ilustračních obrázků k produktům - **in progress**
+* možnost přidání ilustračních obrázků k produktům - **done**
