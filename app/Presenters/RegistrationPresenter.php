@@ -29,7 +29,9 @@ final class RegistrationPresenter extends BasePresenter
         $form = new Form;
         $form->addText('username','Uživatelské jméno :')
             ->setMaxLength(255)
-            ->setRequired("Zadejte uživatelské jméno");
+            ->setRequired("Zadejte uživatelské jméno")
+            ->addRule(Form::MIN_LENGTH,'Uživatelské jméno musí mít minimálně 3 znaky',3)
+        ;
 
         $form->addText('firstname','Vaše jméno :')
             ->setMaxLength(255)
@@ -118,6 +120,21 @@ final class RegistrationPresenter extends BasePresenter
                     break;
             }
 
+    }
+
+    public function actionCheckusername(){
+        $username = $_POST['username'];
+
+        if(strlen($username) > 2){
+            $userObjArr = $this->em->getUserRepository()->findBy(['username' => $username]);
+            if(sizeof($userObjArr) > 0){//uzivatelske jmeno jiz existuje
+                echo '{"userNameExist" : 1}';
+            }
+            else{ //uzivatelske jmeno neexistuje
+                echo '{"userNameExist" : 0}';
+            }
+        }
+        die();
     }
 
 

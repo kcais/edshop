@@ -4,8 +4,6 @@
 
 <script>
     function uploadFile(idProd){
-        console.log('idProd = ' + idProd);
-        console.log($('#file_input_id' + idProd));
         var data = new FormData();
         data.append('new_image_file', $('#file_input_id' + idProd).prop('files')[0]);
         data.append('id',idProd);

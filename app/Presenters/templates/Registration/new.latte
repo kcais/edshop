@@ -1,4 +1,53 @@
 {block content}
 <h1 n:block=title>Registrace nového uživatele</h1>
 
-{control registrationNewForm}
+<script>
+
+ $(document).ready(function() {
+
+     $("#frm-registrationNewForm-username").on('input', function (e) {
+         var label = $('#username-already-exist');
+         var data = new FormData();
+         data.append('username',this.value);
+
+        if(this.value.length>2) {
+            $.ajax({
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                data: data,
+                url: {link Registration:checkusername},
+                dataType: 'JSON',
+                success: function (response) {
+                    if(response.userNameExist === 0) {
+                        label.text('Uživatelské jméno je volné');
+                        label.css('color','green');
+                    }
+                    else{
+                        label.text('Uživatelské jméno je již použito, zvolte prosím jiné');
+                        label.css('color','red');
+                    }
+                },
+            });
+        }
+        else{
+            label.text('Uživatelské jméno musí mít alespoň tři znaky.');
+            label.css('color','red');
+        }
+
+
+     });
+
+ });
+</script>
+
+<table>
+    <tr>
+        <td>
+        {control registrationNewForm}
+        </td>
+        <td style="vertical-align: top">
+            <label id="username-already-exist" style="color: red"></label>
+        </td>
+    </tr>
+</table>

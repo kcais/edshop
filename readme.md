@@ -11,7 +11,7 @@ Uživatelské účty
 * vytvoření nového uživatelského účtu s ověřením zadaného emailu - **done**
 * administrátorská úroveň - editace kategorií, uživatelů, produktů - **in progress**
 * možnost přihlášení přes login / heslo - **done**
-* test již existujícího loginu / mailu ještě před odesláním registračního formuláře - **in progress**
+* test již existujícího loginu ještě před odesláním registračního formuláře - **done**
 * vygenerování nového hesla v případě jeho ztráty - **done**
 
 Kategorie a produkty
