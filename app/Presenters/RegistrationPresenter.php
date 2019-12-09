@@ -31,6 +31,7 @@ final class RegistrationPresenter extends BasePresenter
             ->setMaxLength(255)
             ->setRequired("Zadejte uživatelské jméno")
             ->addRule(Form::MIN_LENGTH,'Uživatelské jméno musí mít minimálně 3 znaky',3)
+            ->addRule(Form::PATTERN, 'Uživatelské jméno může obsahovat jen písmena, čísla a znaky "-", "_".', '^[a-zA-Z0-9_-]*$');
         ;
 
         $form->addText('firstname','Vaše jméno :')
