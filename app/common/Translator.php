@@ -122,7 +122,25 @@ class TranslatorCz implements \Nette\Localization\ITranslator
             case 'orderGrid.orderPriceWithoutDeleted':
                 if($lang == 'CZ') return 'Celková cena(bez smazaných)';
                 break;
-
+            //datagrid s editaci objednavky
+            case 'orderEditGrid.name':
+                if($lang == 'CZ') return 'Jméno';
+                break;
+            case 'orderEditGrid.description':
+                if($lang == 'CZ') return 'Popis';
+                break;
+            case 'orderEditGrid.pcs':
+                if($lang == 'CZ') return 'Kusů';
+                break;
+            case 'orderEditGrid.createdOn':
+                if($lang == 'CZ') return 'Vytvořeno';
+                break;
+            case 'orderEditGrid.updatedOn':
+                if($lang == 'CZ') return 'Naposledy upraveno';
+                break;
+            case 'orderEditGrid.deletedOn':
+                if($lang == 'CZ') return 'Smazáno';
+                break;
         }
         return $message;
     }

@@ -392,13 +392,13 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             });
         ;
 
-        $grid->addColumnText('createdOn', 'orderGrid.createdOn')
+        $grid->addColumnText('createdOn', 'orderEditGrid.createdOn')
             ->setSortable()
         ;
-        $grid->addColumnText('updatedOn', 'orderGrid.updatedOn')
+        $grid->addColumnText('updatedOn', 'orderEditGrid.updatedOn')
             ->setSortable()
         ;
-        $grid->addColumnText('deletedOn', 'orderGrid.deletedOn')
+        $grid->addColumnText('deletedOn', 'orderEditGrid.deletedOn')
             ->setSortable()
         ;
 
