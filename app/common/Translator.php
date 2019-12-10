@@ -116,10 +116,12 @@ class TranslatorCz implements \Nette\Localization\ITranslator
             case 'orderGrid.deletedOn':
                 if($lang == 'CZ') return 'Smazána';
                 break;
-            case 'orderGrid.orderPrice':
-                if($lang == 'CZ') return 'Celková cena';
+            case 'orderGrid.orderPriceWithDeleted':
+                if($lang == 'CZ') return 'Celková cena(včetně smazaných)';
                 break;
-
+            case 'orderGrid.orderPriceWithoutDeleted':
+                if($lang == 'CZ') return 'Celková cena(bez smazaných)';
+                break;
 
         }
         return $message;

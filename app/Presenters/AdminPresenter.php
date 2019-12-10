@@ -337,7 +337,92 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         return $grid;
     }
 
-    /** Datagrid objednavek
+    public function renderOrderedit($id){
+        if(!isset($_GET['do'])) {
+            $this->template->id = $id;
+            $this->session->getSection(\App\Common\Common::getSelectionName())->orderEditId = $id;
+        }
+        else{
+            $this->template->id = $this->session->getSection(\App\Common\Common::getSelectionName())->orderEditId;
+        }
+    }
+
+    protected function createComponentAdminOrderEditGrid($name) : DataGrid
+    {
+        $id = $this->session->getSection(\App\Common\Common::getSelectionName())->orderEditId;
+
+        $ordProdArr = null;
+
+        $ordProdObjArr = $this->em->getOrderProductRepository()->findBy(['ord' => $id]);
+
+        foreach($ordProdObjArr as $ordProdObj){
+            $ordProdObj->getCreatedOn() ? $createdOn = $ordProdObj->getCreatedOn()->format('Y-m-d H:i:s') : $createdOn = null;
+            $ordProdObj->getUpdatedOn() ? $updatedOn = $ordProdObj->getUpdatedOn()->format('Y-m-d H:i:s') : $updatedOn = null;
+            $ordProdObj->getDeletedOn() ? $deletedOn = $ordProdObj->getDeletedOn()->format('Y-m-d H:i:s') : $deletedOn = null;
+
+            $ordProdArr[] = [
+                'id' => $ordProdObj->getId(),
+                'name' => $ordProdObj->getProduct()->getName(),
+                'description' => $ordProdObj->getProduct()->getDescription(),
+                'pcs' => $ordProdObj->getPcs(),
+                'createdOn' => $createdOn,
+                'updatedOn' => $updatedOn,
+                'deletedOn' => $deletedOn,
+            ];
+
+        }
+
+        $grid = new DataGrid($this, $name);
+
+        $grid->setDataSource($ordProdArr);
+
+        $grid->addColumnText('name', 'orderEditGrid.name')
+            ->setSortable()
+        ;
+
+        $grid->addColumnText('description', 'orderEditGrid.description');
+
+        $grid->addColumnText('pcs', 'orderEditGrid.pcs')
+            ->setSortable()
+            ->setEditableCallback(function($id, $value): void {
+                $ordProdObj = $this->em->getOrderProductRepository()->find($id);
+                $ordProdObj->setPcs($value);
+                $this->em->merge($ordProdObj);
+                $this->em->flush();
+            });
+        ;
+
+        $grid->addColumnText('createdOn', 'orderGrid.createdOn')
+            ->setSortable()
+        ;
+        $grid->addColumnText('updatedOn', 'orderGrid.updatedOn')
+            ->setSortable()
+        ;
+        $grid->addColumnText('deletedOn', 'orderGrid.deletedOn')
+            ->setSortable()
+        ;
+
+        $grid->addAction('markDelOrdProd','Set deleted','MarkDelOrdProd!')
+            ->setClass('btn btn-primary')
+            ->setConfirmation(
+                new StringConfirmation('Skutečně označit produkt v objednávce %s jako deleted_on ?', 'name')
+            );
+        ;
+
+        $grid->addAction('delOrdProd','Del DB','DelOrdProd!')
+            ->setClass('btn btn-primary')
+            ->setConfirmation(
+                new StringConfirmation('Skutečně smazat product v objednávce %s z DB ?', 'name')
+            );
+        ;
+
+        $grid->setTranslator(new \TranslatorCz('CZ'));
+
+        return $grid;
+
+    }
+
+        /** Datagrid objednavek
      * @param $name
      * @return DataGrid
      */
@@ -352,7 +437,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             $ordObj->getUpdatedOn() ? $updatedOn = $ordObj->getUpdatedOn()->format('Y-m-d H:i:s') : $updatedOn = null;
             $ordObj->getDeletedOn() ? $deletedOn = $ordObj->getDeletedOn()->format('Y-m-d H:i:s') : $deletedOn = null;
 
-
             $userArr[] = [
                 'id' => $ordObj->getId(),
                 'username' => $ordObj->getUser()->getUsername(),
@@ -360,7 +444,8 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
                 'createdOn' => $createdOn,
                 'updatedOn' => $updatedOn,
                 'deletedOn' => $deletedOn,
-                'orderPrice' => $this->em->getOrderPrice($ordObj->getId(),true),
+                'orderPriceWithDeleted' => $this->em->getOrderPrice($ordObj->getId(),true),
+                'orderPriceWithoutDeleted' => $this->em->getOrderPrice($ordObj->getId(),false),
             ];
         }
 
@@ -386,9 +471,17 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $grid->addColumnText('deletedOn', 'orderGrid.deletedOn')
             ->setSortable()
         ;
-        $grid->addColumnText('orderPrice', 'orderGrid.orderPrice')
-            ->setRenderer(function ($row):String{return "$row[orderPrice] Kč";})
+        $grid->addColumnText('orderPriceWithDeleted', 'orderGrid.orderPriceWithDeleted')
+            ->setRenderer(function ($row):String{return "$row[orderPriceWithDeleted] Kč";})
             ->setSortable()
+        ;
+        $grid->addColumnText('orderPriceWithoutDeleted', 'orderGrid.orderPriceWithoutDeleted')
+            ->setRenderer(function ($row):String{return "$row[orderPriceWithoutDeleted] Kč";})
+            ->setSortable()
+        ;
+
+        $grid->addAction('editOrd','Edit','EditOrd!')
+            ->setClass('btn btn-primary')
         ;
 
         $grid->addAction('markDelOrd','Set deleted','MarkDelOrd!')
@@ -398,12 +491,12 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             );
         ;
 
-        $grid->addAction('delOrd','Del DB','DelOrd!')
+        /*$grid->addAction('delOrd','Del DB','DelOrd!')
             ->setClass('btn btn-primary')
             ->setConfirmation(
                 new StringConfirmation('Skutečně smazat objednávku %s z DB ?', 'id')
             );
-        ;
+        ;*/
 
 
         $grid->setTranslator(new \TranslatorCz('CZ'));
@@ -494,6 +587,32 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $grid->setTranslator(new \TranslatorCz('CZ'));
 
         return $grid;
+    }
+
+    /** Handle smazani produktu z objednavky - oznaceni deleted_on
+     * @param int $id
+     * @throws \Exception
+     */
+    public function handleDelOrdProd(int $id)
+    {
+        $this->em->deleteOrdProd($id, true);
+    }
+
+    /** Handle smazani produktu z objednavky - smazani z db
+     * @param int $id
+     * @throws \Exception
+     */
+    public function handleMarkDelOrdProd(int $id)
+    {
+        $this->em->deleteOrdProd($id, false);
+    }
+
+    /** Handle udalosti editace objednavky
+     * @param int $id
+     * @throws Nette\Application\AbortException
+     */
+    public function handleEditOrd(int $id){
+        $this->redirect("Admin:orderedit?id=$id");
     }
 
     /** Handle udalosti smazani produktu

@@ -201,6 +201,29 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
     /// OrderProduct part
     ///////////////////////////
 
+    /** Smazani produktu z objednavky - oznaceni jako deleted_on pripadne smazani z db
+     * @param int $id
+     * @param bool $deleteFromDb
+     * @throws \Exception
+     */
+    public function deleteOrdProd(int $id, bool $deleteFromDb=false)
+    {
+        $ordProdObj = $this->getOrderProductRepository()->find($id);
+
+        if($ordProdObj) {
+
+            if (!$deleteFromDb) { //oznacuju jako deleted_on
+                $ordProdObj->setDeletedOn(new \DateTime('now'));
+                $this->merge($ordProdObj);
+
+            } else { //mazu z db
+                $this->remove($ordProdObj);
+            }
+
+            $this->flush();
+        }
+    }
+
     /** Odebrani produktu z objednavky
      * @param Ord $orderObj
      * @param Product $productObj
