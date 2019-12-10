@@ -236,7 +236,7 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
     {
         $orderNew = new Ord();
         $orderNew->setUser($user);
-        $orderNew->setIsClosed($isClosed);
+        $orderNew->setIsClosed((int)$isClosed);
 
         $this->persist($orderNew);
         $this->flush();
@@ -317,11 +317,17 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
 
     /** Vrati celkovou hodnotu objednavky
      * @param $order Ord
+     * @param bool $includeDeleted 1-pocitat i oznacene jako deleted_on
      * @return float Celkova hodnota objednavky
      */
-    public function getOrderPrice($order)
+    public function getOrderPrice($order, bool $includeDeleted = false)
     {
-        $orderProductObjArr = $this->getRepository(OrdProduct::class)->findBy(['ord' => $order, 'deleted_on' => null]);
+        if($includeDeleted){
+            $orderProductObjArr = $this->getRepository(OrdProduct::class)->findBy(['ord' => $order]);
+        }
+        else {
+            $orderProductObjArr = $this->getRepository(OrdProduct::class)->findBy(['ord' => $order, 'deleted_on' => null]);
+        }
 
         $totalPrice = 0.0;
         $priceList = null;

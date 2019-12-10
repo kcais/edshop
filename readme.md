@@ -9,7 +9,7 @@ Vlastnosti:
 -----------
 Uživatelské účty
 * vytvoření nového uživatelského účtu s ověřením zadaného emailu - **done**
-* administrátorská úroveň - editace kategorií, uživatelů, produktů - **in progress**
+* administrátorská úroveň - editace kategorií, uživatelů, produktů - **done**
 * možnost přihlášení přes login / heslo - **done**
 * test již existujícího loginu ještě před odesláním registračního formuláře - **done**
 * vygenerování nového hesla v případě jeho ztráty - **done**

@@ -337,6 +337,80 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         return $grid;
     }
 
+    /** Datagrid objednavek
+     * @param $name
+     * @return DataGrid
+     */
+    protected function createComponentAdminOrderGrid($name) : DataGrid
+    {
+        $ordArr = null;
+
+        $ordObjArr = $this->em->getOrderRepository()->findAll();
+
+        foreach ($ordObjArr as $ordObj) {
+            $ordObj->getCreatedOn() ? $createdOn = $ordObj->getCreatedOn()->format('Y-m-d H:i:s') : $createdOn = null;
+            $ordObj->getUpdatedOn() ? $updatedOn = $ordObj->getUpdatedOn()->format('Y-m-d H:i:s') : $updatedOn = null;
+            $ordObj->getDeletedOn() ? $deletedOn = $ordObj->getDeletedOn()->format('Y-m-d H:i:s') : $deletedOn = null;
+
+
+            $userArr[] = [
+                'id' => $ordObj->getId(),
+                'username' => $ordObj->getUser()->getUsername(),
+                'isClosed' => $ordObj->isClosed(),
+                'createdOn' => $createdOn,
+                'updatedOn' => $updatedOn,
+                'deletedOn' => $deletedOn,
+                'orderPrice' => $this->em->getOrderPrice($ordObj->getId(),true),
+            ];
+        }
+
+        $grid = new DataGrid($this, $name);
+
+        $grid->setDataSource($userArr);
+
+        $grid->addColumnText('id', 'orderGrid.orderId')
+            ->setSortable()
+        ;
+        $grid->addColumnText('username', 'orderGrid.username')
+            ->setSortable()
+        ;
+        $grid->addColumnText('isClosed', 'orderGrid.isClosed')
+            ->setSortable()
+        ;
+        $grid->addColumnText('createdOn', 'orderGrid.createdOn')
+            ->setSortable()
+        ;
+        $grid->addColumnText('updatedOn', 'orderGrid.updatedOn')
+            ->setSortable()
+        ;
+        $grid->addColumnText('deletedOn', 'orderGrid.deletedOn')
+            ->setSortable()
+        ;
+        $grid->addColumnText('orderPrice', 'orderGrid.orderPrice')
+            ->setRenderer(function ($row):String{return "$row[orderPrice] Kč";})
+            ->setSortable()
+        ;
+
+        $grid->addAction('markDelOrd','Set deleted','MarkDelOrd!')
+            ->setClass('btn btn-primary')
+            ->setConfirmation(
+                new StringConfirmation('Skutečně označit objednávku %s jako deleted_on ?', 'id')
+            );
+        ;
+
+        $grid->addAction('delOrd','Del DB','DelOrd!')
+            ->setClass('btn btn-primary')
+            ->setConfirmation(
+                new StringConfirmation('Skutečně smazat objednávku %s z DB ?', 'id')
+            );
+        ;
+
+
+        $grid->setTranslator(new \TranslatorCz('CZ'));
+
+        return $grid;
+    }
+
     /** datagrid s produkty
      * @param $name
      * @return DataGrid
@@ -436,6 +510,22 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
     public function handleMarkDelProd(int $id)
     {
         $this->em->deleteProduct($id, false);
+    }
+
+    /** Handle udalosti smazani objednávky
+     * @param int $id
+     */
+    public function handleDelOrd(int $id)
+    {
+        $this->em->deleteOrder($id, true);
+    }
+
+    /** Handle udalosti oznaceni objednávky jako smazané
+     * @param int $id Id kategorie
+     */
+    public function handleMarkDelOrd(int $id)
+    {
+        $this->em->deleteOrder($id, false);
     }
 
     /** Handle udalosti smazani kategorie

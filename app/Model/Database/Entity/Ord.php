@@ -26,8 +26,8 @@ class Ord
     private $user;
 
     /**
-     * @ORM\Column(type="boolean")
-     * @var bool
+     * @ORM\Column(type="integer")
+     * @var int
      */
     private $is_closed;
 
@@ -83,17 +83,17 @@ class Ord
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function isIsClosed(): bool
+    public function isClosed(): int
     {
         return $this->is_closed;
     }
 
     /**
-     * @param bool $is_closed
+     * @param int $is_closed
      */
-    public function setIsClosed(bool $is_closed): void
+    public function setIsClosed(int $is_closed): void
     {
         $this->is_closed = $is_closed;
     }
