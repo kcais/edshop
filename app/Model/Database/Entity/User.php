@@ -67,20 +67,20 @@ class User
     private $uuid_lost_password;
 
     /**
-     * @ORM\Column(type="boolean")
-     * @var bool
+     * @ORM\Column(type="integer")
+     * @var int
      */
     private $is_active;
 
     /**
-     * @ORM\Column(type="boolean")
-     * @var bool
+     * @ORM\Column(type="integer")
+     * @var int
      */
     private $is_admin;
 
     /**
-     * @ORM\Column(type="boolean")
-     * @var bool
+     * @ORM\Column(type="integer")
+     * @var int
      */
     private $registration_mail_sended;
 
@@ -248,9 +248,9 @@ class User
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function isActive(): bool
+    public function isActive(): int
     {
         return $this->is_active;
     }
@@ -264,9 +264,9 @@ class User
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function isAdmin(): bool
+    public function isAdmin(): int
     {
         return $this->is_admin;
     }
@@ -280,9 +280,9 @@ class User
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function isRegistrationMailSended(): bool
+    public function isRegistrationMailSended(): int
     {
         return $this->registration_mail_sended;
     }

@@ -95,6 +95,35 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
     ////////////////////////////
     /// User part
     ////////////////////////////
+    /** Smazani uzivatele - oznaceni jako deleted_on pripadne smazani z db
+     * @param int $id Id uzivatele
+     * @param bool $deleteFromDb 0-oznaci jako deleted_on, 1-smaze z DB
+     */
+    public function deleteUser(int $id, bool $deleteFromDb=false)
+    {
+        $userObj = $this->getUserRepository()->find($id);
+
+        if($userObj) {
+
+            if (!$deleteFromDb) { //oznacuju jako deleted_on
+                //objednavky uzivatele
+                $ordObjArr = $this->getOrderRepository()->findBy(['user' => $id, 'deleted_on' => null]);
+
+                foreach($ordObjArr as $ordObj){
+                    $this->deleteOrder($ordObj->getId(),false);
+                }
+
+                $userObj->setDeletedOn(new \DateTime('now'));
+                $this->merge($userObj);
+
+            } else { //mazu z db
+                //TODO smazat nejdrive objednavky
+                //$this->remove($userObj);
+            }
+
+            $this->flush();
+        }
+    }
 
     /**
      * @return \Doctrine\Common\Persistence\ObjectRepository
@@ -278,6 +307,13 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
     ///////////////////////////
     /// Order part
     ///////////////////////////
+    /**
+     * @return \Doctrine\Common\Persistence\ObjectRepository
+     */
+    public function getOrderRepository()
+    {
+        return $this->getRepository(Ord::class);
+    }
 
     /** Vrati celkovou hodnotu objednavky
      * @param $order Ord
@@ -315,6 +351,38 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
         }
         else{
             return $orderObjArr[0];
+        }
+    }
+
+    /** Smazani objednavky z db pripadne oznaceni jako deleted_on vcetne orderProductu na ne navazane
+     * @param int $id
+     * @param bool $deleteFromDb
+     * @throws \Exception
+     */
+    public function deleteOrder(int $id, bool $deleteFromDb=false)
+    {
+        $ordObj = $this->getOrderRepository()->find($id);
+
+        if ($ordObj) { //test ze objednavka existuje
+            //oznaci objednavku jako deleted_on
+            if (!$deleteFromDb) {
+                //nacteni orderProduct objednavky
+                $ordProdObjArr = $this->getOrderProductRepository()->findBy(['ord' => $id, 'deleted_on' => null]);
+
+                foreach($ordProdObjArr as $ordProdObj){ //oznacit vsechny orderProduct jako deleted_on pokud existuji
+                    $ordProdObj->setDeletedOn(new \DateTime('now'));
+                    $this->merge($ordProdObj);
+                }
+
+                $ordObj->setDeletedOn(new \DateTime('now'));
+                $this->merge($ordObj);
+            } else { //smaze objednavku z DB
+                //TODO smazat i orderProduct
+                //$this->remove($ordObj);
+            }
+
+            $this->flush();
+
         }
     }
 

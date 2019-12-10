@@ -5,6 +5,7 @@ namespace App\Presenters;
 use App\Model\Database\Entity\Category;
 use App\Model\Database\Entity\Image;
 use App\Model\Database\Entity\Product;
+use App\Model\Database\Entity\User;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\ComponentModel\IComponent;
@@ -31,7 +32,7 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         }
     }
 
-    /** Formular ro zadani noveho produktu
+    /** Formular pro zadani noveho produktu
      * @return Form
      */
     protected function createComponentAdminProdnewForm(): Form
@@ -200,6 +201,147 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         return $grid;
     }
 
+    /** Datagrid s uzivateli
+     * @param $name
+     * @return DataGrid
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     */
+    protected function createComponentAdminUserGrid($name) : DataGrid
+    {
+        $userArr = null;
+
+        $userObjArr = $this->em->getUserRepository()->findAll();
+
+        foreach($userObjArr as $userObj){
+
+            $userObj->getCreatedOn()?$createdOn = $userObj->getCreatedOn()->format('Y-m-d H:i:s'):$createdOn = null;
+            $userObj->getUpdatedOn()?$updatedOn = $userObj->getUpdatedOn()->format('Y-m-d H:i:s'):$updatedOn = null;
+            $userObj->getDeletedOn()?$deletedOn = $userObj->getDeletedOn()->format('Y-m-d H:i:s'):$deletedOn = null;
+
+
+            $userArr[] = [
+                'id' => $userObj->getId(),
+                'username' => $userObj->getUsername(),
+                'firstname' => $userObj->getFirstname(),
+                'surname' => $userObj->getSurname(),
+                'email' => $userObj->getEmail(),
+                'language' => $userObj->getLanguage(),
+                'isAdmin' => $userObj->isAdmin(),
+                'isActive' => $userObj->isActive(),
+                'registrationMailSended' => $userObj->isRegistrationMailSended(),
+                'createdOn' => $createdOn,
+                'updatedOn' => $updatedOn,
+                'deletedOn' => $deletedOn,
+            ];
+        }
+
+        $grid = new DataGrid($this, $name);
+
+        $grid->setDataSource($userArr);
+
+        $grid->addColumnText('username', 'userGrid.username')
+            ->setSortable()
+        ;
+
+        $grid->addColumnText('firstname', 'userGrid.firstname')
+            ->setSortable()
+            ->setEditableCallback(function($id, $value): void {
+                $userObj = $this->em->getUserRepository()->find($id);
+                $userObj->setFirstname($value);
+                $this->em->merge($userObj);
+                $this->em->flush();
+            })
+        ;
+
+        $grid->addColumnText('surname', 'userGrid.surname')
+            ->setSortable()
+            ->setEditableCallback(function($id, $value): void {
+                $userObj = $this->em->getUserRepository()->find($id);
+                $userObj->setSurname($value);
+                $this->em->merge($userObj);
+                $this->em->flush();
+            })
+        ;
+
+        $grid->addColumnText('email', 'userGrid.email')
+            ->setSortable()
+            ->setEditableCallback(function($id, $value): void {
+                $userObj = $this->em->getUserRepository()->find($id);
+                $userObj->setEmail($value);
+                $this->em->merge($userObj);
+                $this->em->flush();
+            })
+        ;
+
+        $grid->addColumnText('language', 'userGrid.language')
+        ;
+
+        $grid->addColumnText('isAdmin', 'userGrid.isAdmin')
+            ->setSortable()
+            ->setEditableCallback(function($id, $value): void {
+                $userObj = $this->em->getUserRepository()->find($id);
+                $userObj->setIsAdmin($value);
+                $this->em->merge($userObj);
+                $this->em->flush();
+            })
+        ;
+
+        $grid->addColumnText('isActive', 'userGrid.isActive')
+            ->setSortable()
+            ->setEditableCallback(function($id, $value): void {
+                $userObj = $this->em->getUserRepository()->find($id);
+                $userObj->setIsActive($value);
+                $this->em->merge($userObj);
+                $this->em->flush();
+            })
+        ;
+
+        $grid->addColumnText('registrationMailSended', 'userGrid.registrationMailSended')
+            ->setSortable()
+            ->setEditableCallback(function($id, $value): void {
+                $userObj = $this->em->getUserRepository()->find($id);
+                $userObj->setRegistrationMailSended($value);
+                $this->em->merge($userObj);
+                $this->em->flush();
+            })
+        ;
+
+        $grid->addColumnText('createdOn', 'userGrid.createdOn')
+            ->setSortable()
+        ;
+
+        $grid->addColumnText('updatedOn', 'userGrid.updatedOn')
+            ->setSortable()
+        ;
+
+        $grid->addColumnText('deletedOn', 'userGrid.deletedOn')
+            ->setSortable()
+        ;
+
+        $grid->addAction('markDelUser','Set deleted','MarkDelUser!')
+            ->setClass('btn btn-primary')
+            ->setConfirmation(
+                new StringConfirmation('Skutečně označit uživatele %s jako deleted_on ?', 'username')
+            );
+        ;
+
+        $grid->addAction('delUser','Del DB','DelUser!')
+            ->setClass('btn btn-primary')
+            ->setConfirmation(
+                new StringConfirmation('Skutečně smazat product %s z DB ?', 'username')
+            );
+        ;
+
+        $grid->setTranslator(new \TranslatorCz('CZ'));
+
+        return $grid;
+    }
+
+    /** datagrid s produkty
+     * @param $name
+     * @return DataGrid
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     */
     protected function createComponentAdminProductGrid($name) : DataGrid
     {
         $prodArr = null;
@@ -260,14 +402,14 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $grid->addAction('markDelCat','Set deleted','MarkDelProd!')
             ->setClass('btn btn-primary')
             ->setConfirmation(
-                new StringConfirmation('Skutečně označit product %s jako deleted_on ?', 'name') // Second parameter is optional
+                new StringConfirmation('Skutečně označit product %s jako deleted_on ?', 'name')
             );
         ;
 
         $grid->addAction('delCat','Del DB','DelProd!')
             ->setClass('btn btn-primary')
             ->setConfirmation(
-                new StringConfirmation('Skutečně smazat product %s z DB ?', 'name') // Second parameter is optional
+                new StringConfirmation('Skutečně smazat product %s z DB ?', 'name')
             );
         ;
 
@@ -310,6 +452,22 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
     public function handleMarkDelCat(int $id)
     {
         $this->em->deleteCategory($id,false);
+    }
+
+    /** Handle udalosti smazani uzivatele
+     * @param int $id
+     */
+    public function handleDelUser(int $id)
+    {
+        $this->em->deleteUser($id, true);
+    }
+
+    /** Handle udalosti oznaceni uzivatele jako smazane
+     * @param int $id Id kategorie
+     */
+    public function handleMarkDelUser(int $id)
+    {
+        $this->em->deleteUser($id,false);
     }
 
     /** Nahrani noveho obrazku pro produkt
@@ -369,6 +527,74 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         }
 
         $this->redirect('Admin:prodedit');
+    }
+
+    /** Pridani noveho uzivatele z admin sekce
+     * @return Form
+     */
+    public function createComponentAdminUsernewForm() : Form
+    {
+        $form = new Form;
+        $form->addText('username','Uživatelské jméno :')
+            ->setMaxLength(255)
+            ->setRequired("Zadejte uživatelské jméno")
+            ->addRule(Form::MIN_LENGTH,'Uživatelské jméno musí mít minimálně 3 znaky',3)
+            ->addRule(Form::PATTERN, 'Uživatelské jméno může obsahovat jen písmena, čísla a znaky "-", "_".', '^[a-zA-Z0-9_-]*$');
+        ;
+
+        $form->addText('firstname','Vaše jméno :')
+            ->setMaxLength(255)
+            ->setRequired("Zadejte Vaše jméno");
+
+        $form->addText('lastname','Vaše příjmení :')
+            ->setMaxLength(255)
+            ->setRequired("Zadejte Vaše příjmení");
+
+        $form->addText('email','E-mail :')
+            ->setMaxLength(1024)
+            ->addRule(Form::EMAIL,'Zadaný email nemá validní tvar')
+            ->setRequired("Zadejte registrační email");
+
+        $form->addPassword('pass1','Heslo :')
+            ->setMaxLength(255)
+            ->setRequired("Zadejte heslo")
+            ->addRule(Form::MIN_LENGTH,'Heslo musí obsahovat minimálně 3 znaky',3)
+        ;
+
+        $form->addPassword('pass2','Heslo znovu :')
+            ->setMaxLength(255)
+            ->setRequired("Zadejte heslo pro potvrzení")
+            ->addRule(Form::EQUAL,'Zadaná hesla se neshodují',$form['pass1'])
+        ;
+
+        $form->addSubmit('add','Přidat');
+
+        $form->onSuccess[] = [$this, 'userNewFormSucceeded'];
+
+        return $form;
+    }
+
+    /** Ulozeni noveho uzivatele pres admin sekci
+     * @param Form $form
+     * @param array $values
+     */
+    public function userNewFormSucceeded(Form $form, array $values): void
+    {
+        $newUserObj = new User();
+        $newUserObj->setUsername($values['username']);
+        $newUserObj->setFirstname($values['firstname']);
+        $newUserObj->setSurname($values['lastname']);
+        $newUserObj->setEmail($values['email']);
+        $newUserObj->setPasswordHash(hash('sha256',$values['pass1']));
+        $newUserObj->setIsAdmin(0);
+        $newUserObj->setIsActive(1);
+        $newUserObj->setLanguage('CZ');
+        $newUserObj->setRegistrationMailSended(0);
+
+        $this->em->persist($newUserObj);
+        $this->em->flush();
+
+        $this->redirect('Admin:newsuccess');
     }
 
 }

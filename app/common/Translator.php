@@ -11,56 +11,91 @@ class TranslatorCz implements \Nette\Localization\ITranslator
 
     public function translate($message, ...$parameters): string
     {
+        $lang =  $this->language;
         switch($message){
             //ublaboo datagrid
             case 'ublaboo_datagrid.perPage_submit':
-                if($this->language == 'CZ') return 'Nastavit počet položek na stránku';
+                if($lang == 'CZ') return 'Nastavit počet položek na stránku';
                 break;
             case 'ublaboo_datagrid.items':
-                if($this->language == 'CZ') return 'Zobrazené prodejní položky';
+                if($lang == 'CZ') return 'Zobrazené prodejní položky';
                 break;
             case 'ublaboo_datagrid.from':
-                if($this->language == 'CZ') return 'z celkových';
+                if($lang == 'CZ') return 'z celkových';
                 break;
             case 'ublaboo_datagrid.reset_filter':
-                if($this->language == 'CZ') return 'Reset filtru';
+                if($lang == 'CZ') return 'Reset filtru';
                 break;
             case 'ublaboo_datagrid.all':
-                if($this->language == 'CZ') return 'Všechny';
+                if($lang == 'CZ') return 'Všechny';
                 break;
             case 'ublaboo_datagrid.no_item_found':
-                if($this->language == 'CZ') return 'Žádná položka nenalezena';
+                if($lang == 'CZ') return 'Žádná položka nenalezena';
                 break;
             case 'ublaboo_datagrid.next':
-                if($this->language == 'CZ') return 'Další';
+                if($lang == 'CZ') return 'Další';
                 break;
             case 'ublaboo_datagrid.previous':
-                if($this->language == 'CZ') return 'Předchozí';
+                if($lang == 'CZ') return 'Předchozí';
                 break;
             // datagrid s prodejnimi polozkami
             case 'objectsGrid.description':
-                if($this->language == 'CZ') return 'Popis';
+                if($lang == 'CZ') return 'Popis';
                 break;
             case 'objectsGrid.category':
-                if($this->language == 'CZ') return 'Kategorie';
+                if($lang == 'CZ') return 'Kategorie';
                 break;
             case 'objectsGrid.name':
-                if($this->language == 'CZ') return 'Název';
+                if($lang == 'CZ') return 'Název';
                 break;
             case 'objectsGrid.price':
-                if($this->language == 'CZ') return 'Cena';
+                if($lang == 'CZ') return 'Cena';
                 break;
             case 'ublaboo_datagrid.action':
-                if($this->language == 'CZ') return '';
+                if($lang == 'CZ') return '';
                 break;
             case 'objectsGrid.pricePerPcs':
-                if($this->language == 'CZ') return 'Cena / ks';
+                if($lang == 'CZ') return 'Cena / ks';
                 break;
             case 'objectsGrid.pcs':
-                if($this->language == 'CZ') return 'Ks';
+                if($lang == 'CZ') return 'Ks';
                 break;
             case 'objectsGrid.totalPrice':
-                if($this->language == 'CZ') return 'Cena celkem';
+                if($lang == 'CZ') return 'Cena celkem';
+                break;
+            //datagrid s uzivateli
+            case 'userGrid.username':
+                if($lang == 'CZ') return 'Uživatelské jméno';
+                break;
+            case 'userGrid.firstname':
+                if($lang == 'CZ') return 'Jméno';
+                break;
+            case 'userGrid.surname':
+                if($lang == 'CZ') return 'Příjmení';
+                break;
+            case 'userGrid.email':
+                if($lang == 'CZ') return 'E-mail';
+                break;
+            case 'userGrid.language':
+                if($lang == 'CZ') return 'Jazyk';
+                break;
+            case 'userGrid.isAdmin':
+                if($lang == 'CZ') return 'Je admin';
+                break;
+            case 'userGrid.isActive':
+                if($lang == 'CZ') return 'Je aktivní';
+                break;
+            case 'userGrid.registrationMailSended':
+                if($lang == 'CZ') return 'Registrační email odeslán';
+                break;
+            case 'userGrid.createdOn':
+                if($lang == 'CZ') return 'Vytvořen';
+                break;
+            case 'userGrid.updatedOn':
+                if($lang == 'CZ') return 'Naposledy upraven';
+                break;
+            case 'userGrid.deletedOn':
+                if($lang == 'CZ') return 'Smazán';
                 break;
         }
         return $message;
