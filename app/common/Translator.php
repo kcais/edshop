@@ -141,6 +141,12 @@ class TranslatorCz implements \Nette\Localization\ITranslator
             case 'orderEditGrid.deletedOn':
                 if($lang == 'CZ') return 'Smazáno';
                 break;
+            case 'ublaboo_datagrid.no_item_found_reset':
+                if($lang == 'CZ') return 'Žádná položka nenalezna';
+                break;
+            case 'ublaboo_datagrid.here':
+                if($lang == 'CZ') return 'Smazat filtr';
+                break;
         }
         return $message;
     }

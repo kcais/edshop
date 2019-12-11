@@ -77,6 +77,22 @@ class Category
     }
 
     /**
+     * @return Category|null
+     */
+    public function getParentCat() : ?Category
+    {
+        return $this->parent_cat;
+    }
+
+    /**
+     * @param Category $parentCat
+     */
+    public function setParentCat(Category $parentCat) : void
+    {
+        $this->parent_cat = $parentCat;
+    }
+
+    /**
      * @return int Id kategorie
      */
     public function getId() : int

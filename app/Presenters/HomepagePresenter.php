@@ -18,7 +18,24 @@ final class HomepagePresenter extends BasePresenter
         $session = $this->getSession();
         $section = $session->getSection(\App\Common\Common::getSelectionName());
         $section->categoryId = $categoryId;
-        $this->template->categoryName = $this->em->getCategoryRepository()->find($categoryId)->getName();
+
+        $catObj = $this->em->getCategoryRepository()->find($categoryId);
+
+        $this->template->categoryName = $catObj->getName();
+
+        $this->template->childCategory = $this->em->getCategoryRepository()->findBy(['parent_cat' => $categoryId]);
+
+        //pokud je nadrazena kategorie
+        $parCatObj = $catObj->getParentCat();
+        if($parCatObj){
+            $this->template->parCategoryName = $parCatObj->getName();
+            $this->template->parCategoryId = $parCatObj->getId();
+        }
+        else{
+            unset($this->template->parCategoryName);
+            unset($this->template->parCategoryId);
+        }
+
     }
 
     /** Zobrazeni detailu produktu
@@ -41,10 +58,10 @@ final class HomepagePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        foreach($this->template->categories as $category)
+        foreach($this->em->getCategoryRepository()->findAll() as $catObj)
         {
-            $objCount = sizeof($this->em->getProductRepository()->findBy(['category' => $category['id']]));
-            $objectsInCategoryCount["$category[id]"]=$objCount;
+            $objCount = sizeof($this->em->getProductRepository()->findBy(['category' => $catObj->getId()]));
+            $objectsInCategoryCount[$catObj->getId()]=$objCount;
         }
 
         $this->template->objectsInCategoryCount = $objectsInCategoryCount;

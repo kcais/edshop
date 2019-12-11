@@ -17,6 +17,21 @@
                     ({$objectsInCategoryCount[$category[id]]})
                 </td>
             </tr>
+            {if isset($par_category[$category[id]])}
+                {foreach $par_category[$category[id]] as $catObj}
+                    <tr><td class="cat_td">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a n:href="Homepage:products?categoryId={$catObj->getId()}" style="color : black">{$catObj->getName()}</a>
+                        </td>
+                        <td class="cat_td_com">
+                            {$catObj->getDescription()}
+                        </td>
+                        <td>
+                            ({$objectsInCategoryCount[$catObj->getId()]})
+                        </td>
+                    </tr>
+                {/foreach}
+            {/if}
         {/foreach}
     </table>
 

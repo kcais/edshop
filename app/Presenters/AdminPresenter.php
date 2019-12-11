@@ -654,6 +654,7 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
     public function handleDelCat(int $id)
     {
         $this->em->deleteCategory($id, true);
+        $this->redirect('this');
     }
 
     /** Handle udalosti oznaceni kategorie jako smazane
@@ -662,6 +663,7 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
     public function handleMarkDelCat(int $id)
     {
         $this->em->deleteCategory($id,false);
+        $this->redirect('this');
     }
 
     /** Handle udalosti smazani uzivatele

@@ -17,13 +17,23 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
         $categoryRepository = $this->em->getCategoryRepository();
         $catObjArr = $categoryRepository->findby(['deleted_on' => null],['name' => 'ASC']);
-        $category2 = null;
+        $category = null;
+        $parCategory = null;
         foreach ($catObjArr as $catObj){
-            $category2[]=['id' => $catObj->getId(), 'name' => $catObj->getName(), 'description' => $catObj->getDescription()];
+            $catObj->getParentCat()?$parCatId = $catObj->getParentCat()->getId():$parCatId = null;
+
+            if($parCatId){
+                $parCategory[$parCatId][] = $this->em->getCategoryRepository()->find($catObj->getId());
+            }
+            else {
+                $category[] = ['id' => $catObj->getId(), 'name' => $catObj->getName(), 'description' => $catObj->getDescription(), 'parent_cat_id' => $parCatId];
+            }
+
         }
 
-        $this->template->category2 = $category2;
-        $this->template->categories = $category2;
+        $this->template->category2 = $category;
+        $this->template->categories = $category;
+        $this->template->par_category = $parCategory;
     }
 
 }
