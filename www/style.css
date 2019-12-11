@@ -141,7 +141,7 @@ li a:hover:not(.active) {
 
 .popup-menu{
     display: none;
-    position : absolute;
+    position : fixed;
     left : 200px;
     top : 300px; /*+41*/
     list-style-type: none;
