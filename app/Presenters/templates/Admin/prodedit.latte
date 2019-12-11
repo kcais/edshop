@@ -25,6 +25,30 @@
         location.reload();
     }
 
+    function changeCategory(idProd, idCat) {
+        //alert('nastavuji kategorii = ' + idCat + ' pro produkt id = ' + idProd);
+        var data = new FormData();
+        data.append('idProd',idProd);
+        data.append('idCat',idCat);
+
+
+        $.ajax({
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            async: false,
+            data: data,
+            url: {link Admin:changecat},
+            dataType : 'json',
+            success: function(jsonData){
+
+            }
+        });
+
+        location.reload();
+
+    }
+
 </script>
 
 {control adminProductGrid}

@@ -520,6 +520,7 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             $prodArr[] = [
                 'id' => $prodObj->getId(),
                 'category' => $prodObj->getCategory()->getName(),
+                'category_id' => $prodObj->getCategory()->getId(),
                 'name' => $prodObj->getName(),
                 'description' => $prodObj->getDescription(),
                 'price' => $prodObj->getPrice(),
@@ -536,6 +537,23 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         ;
 
         $grid->addColumnText('category', 'objectsGrid.category')
+            ->setSortable()
+        ;
+
+        $catParObjArr = $this->em->getCategoryRepository()->findBy(['deleted_on' => null, 'parent_cat' => null]);
+
+        $catArr = null;
+
+        foreach ($catParObjArr as $catParObj){
+            $catArr[] = ['id' => $catParObj->getId(), 'name' => $catParObj->getName()];
+            $catChildrenObjArr = $this->em->getCategoryRepository()->findby(['deleted_on' => null, 'parent_cat' => $catParObj->getId()]);
+            foreach($catChildrenObjArr as $catChildrenObj){
+                $catArr[] = [ 'id' => $catChildrenObj->getId(), 'name' => $catParObj->getName().' / '.$catChildrenObj->getName()];
+            }
+        }
+
+        $grid->addColumnText('category_change', 'objectsGrid.category_change')
+            ->setTemplate(__DIR__ . '/templates/components/datagrid/grid.category.latte',['catArr' => $catArr])
             ->setSortable()
         ;
 
@@ -739,6 +757,28 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         }
 
         $this->redirect('Admin:prodedit');
+    }
+
+    /**
+     * Akce zmeny kategorie u produktu
+     */
+    public function actionChangecat(){
+        if(!isset($_POST['idProd']) || !isset($_POST['idCat']))die('Chybné parametry !');
+
+        $idProd = $_POST['idProd'];
+        $idCat = $_POST['idCat'];
+
+        $prodObj = $this->em->getProductRepository()->find($idProd);
+        if(!$prodObj){header("HTTP/1.0 404 Not Found");die("Produkt s id $idProd neexistuje !");};
+
+        $catObj = $this->em->getCategoryRepository()->find($idCat);
+        if(!$catObj){header("HTTP/1.0 404 Not Found");die("Kategorie s id $idCat neexistuje !");};
+
+        $prodObj->setCategory($catObj);
+        $this->em->merge($prodObj);
+        $this->em->flush();
+
+        die();
     }
 
     /** Pridani noveho uzivatele z admin sekce

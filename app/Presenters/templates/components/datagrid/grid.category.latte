@@ -1,0 +1,11 @@
+<select id="select-category{$item['id']}" onchange="changeCategory({$item['id']}, this.value)">
+    {foreach $catArr as $catValues}
+        {if $item['category_id'] == $catValues['id']}
+            <option value="{$catValues['id']}" selected>{$catValues['name']}</option>
+        {else}
+            <option value="{$catValues['id']}">{$catValues['name']}</option>
+        {/if}
+
+    {/foreach}
+</select>
+
