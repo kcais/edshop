@@ -21,6 +21,42 @@
 	<link rel="shortcut icon" href="#">
 
 	<script>
+		function showPopupMenu(elementNum, categoryId){
+			var showMenu = 0;
+			if(typeof elementNum != 'undefined' && typeof categoryId != 'undefined') {
+
+				var menuContent = '';
+
+				switch (categoryId) {
+					{foreach $categories as $category}
+					{ifset $par_category[$category[id]]}
+					case {$category[id]}:
+						showMenu = 1;
+					{foreach $par_category[$category[id]] as $parCatObj}
+						menuContent+='<li><a href="' + {$basePath} + '/homepage/products?categoryId=' + {$parCatObj->getId()} + '">{php echo $parCatObj->getName()}</a></li>';
+					{/foreach}
+						break;
+					{/ifset}
+						{/foreach}
+				}
+
+				var newTopPosition = 70 + elementNum * 41;
+				document.getElementById("popup-menu").style.top = 70 + elementNum * 41 + 'px';
+				document.getElementById("popup-menu").innerHTML = menuContent;
+			}
+			else{
+				showMenu = 1;
+			}
+
+			if(showMenu) {
+				document.getElementById("popup-menu").style.display = 'block';
+			}
+		}
+
+		function hidePopupMenu(){
+			document.getElementById("popup-menu").style.display = 'none';
+		}
+
 		function onOverlay(id) { //display image over full page
 			document.getElementById("overlay").style.display = "block";
 			document.getElementById("overlay-image").src = {$basePath} + "/image/show/"+ id + "?type=normal"
@@ -32,6 +68,7 @@
 		};
 
 		$(document).ready(function() {
+
 			$('.select2-find').select2({
                 width: '220px',
 
@@ -99,22 +136,28 @@
 	</header>
 
 	<nav>
+		<div class="popup-menu" id="popup-menu" onmouseover="showPopupMenu()" onmouseout="hidePopupMenu()">
+			<li><a n:href="Homepage:products 1">Link 1</a></li>
+			<li><a n:href="Homepage:products 2">Link 2</a></li>
+		</div>
 		<div style="float:left; width: 200px;background-color: #f0f0f0;">
 		<ul class="left-menu">
+			{php $elementNum = 0 }
 			{foreach $category2 as $category}
 				{if !$category['parent_cat_id']}
 					{php $categoryObjId = $category['id']; $categotyObjName = $category['name']}
+
 					{if isset($categoryId) && $categoryObjId== $categoryId}
-						<li class="actualChoice"><a class="actualChoice" n:href="Homepage:products $categoryObjId">{$categotyObjName}</a></li>
+						<li class="actualChoice"><a class="actualChoice" n:href="Homepage:products $categoryObjId" onmouseover="showPopupMenu({$elementNum},{$categoryObjId})" onmouseout="hidePopupMenu()">{$categotyObjName}</a></li>
 					{else}
-						<li><a n:href="Homepage:products $categoryObjId">{$categotyObjName}</a></li>
+						<li><a n:href="Homepage:products $categoryObjId" onmouseover="showPopupMenu({$elementNum},{$categoryObjId})" onmouseout="hidePopupMenu()">{$categotyObjName}</a></li>
 					{/if}
+					{php $elementNum++}
 				{/if}
 			{/foreach}
-
-
 		</ul>
 		</div>
+
 	</nav>
 
 	<div style="margin-left:210px">

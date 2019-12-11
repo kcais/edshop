@@ -15,14 +15,14 @@ Uživatelské účty
 * vygenerování nového hesla v případě jeho ztráty - **done**
 
 Kategorie a produkty
-* možnost vytváření stromové struktury kategorií - **in progress**
+* možnost vytváření stromové struktury kategorií - **done**
 * určení pořadí zobrazení kategorií - **in progress**
-* zobrazení kategorií v nezávislém menu - **in progress**
+* zobrazení kategorií v nezávislém menu - **done**
 * zobrazení a manipulace s produkty v nezávislém gridu (bez nutnosti obnovovat celou stránku) - **done**
 * zobrazení detailu produktu - **done**
 * možnost přidání produktu do košíku  - **done**
 * dokončení objednávky z košíku - **done**
-* možnost administrátorké úpravy odeslané objednávky - **in progress** 
+* možnost administrátorké úpravy odeslané objednávky - **done** 
 
 Ostatní
 * podpora multijazykového zobrazení (CZ/ENG) - **in progress**
