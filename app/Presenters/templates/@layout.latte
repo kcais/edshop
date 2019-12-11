@@ -33,7 +33,11 @@
 					case {$category[id]}:
 						showMenu = 1;
 					{foreach $par_category[$category[id]] as $parCatObj}
-						menuContent+='<li><a href="' + {$basePath} + '/homepage/products?categoryId=' + {$parCatObj->getId()} + '">{php echo $parCatObj->getName()}</a></li>';
+						{if isset($categoryId) && $parCatObj->getId() == $categoryId}
+							menuContent+='<li><a class="actualChoice" href="' + {$basePath} + '/homepage/products?categoryId=' + {$parCatObj->getId()} + '">{php echo $parCatObj->getName()}</a></li>';
+						{else}
+							menuContent+='<li><a href="' + {$basePath} + '/homepage/products?categoryId=' + {$parCatObj->getId()} + '">{php echo $parCatObj->getName()}</a></li>';
+						{/if}
 					{/foreach}
 						break;
 					{/ifset}
@@ -147,7 +151,7 @@
 				{if !$category['parent_cat_id']}
 					{php $categoryObjId = $category['id']; $categotyObjName = $category['name']}
 
-					{if isset($categoryId) && $categoryObjId== $categoryId}
+					{if isset($categoryId) && $categoryObjId== $categoryId || isset($categoryId) && isset($child_par_category[$categoryId]) && $child_par_category[$categoryId]->getId() == $categoryObjId}
 						<li class="actualChoice"><a class="actualChoice" n:href="Homepage:products $categoryObjId" onmouseover="showPopupMenu({$elementNum},{$categoryObjId})" onmouseout="hidePopupMenu()">{$categotyObjName}</a></li>
 					{else}
 						<li><a n:href="Homepage:products $categoryObjId" onmouseover="showPopupMenu({$elementNum},{$categoryObjId})" onmouseout="hidePopupMenu()">{$categotyObjName}</a></li>
