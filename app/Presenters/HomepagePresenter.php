@@ -58,9 +58,17 @@ final class HomepagePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        foreach($this->em->getCategoryRepository()->findAll() as $catObj)
+        foreach($this->em->getCategoryRepository()->findby(['deleted_on' => null]) as $catObj)
         {
-            $objCount = sizeof($this->em->getProductRepository()->findBy(['category' => $catObj->getId()]));
+            $prodObjArr = $this->em->getProductRepository()->findBy(['category' => $catObj->getId(), 'deleted_on' => null]);
+            $objCount = sizeof($prodObjArr);
+
+            foreach($this->em->getCategoryRepository()->findBy(['deleted_on' => null, 'parent_cat' => $catObj]) as $parCatObj){
+                $prodObjArr = $this->em->getProductRepository()->findBy(['category' => $parCatObj->getId(), 'deleted_on' => null]);
+                $objCount += sizeof($prodObjArr);
+            }
+
+
             $objectsInCategoryCount[$catObj->getId()]=$objCount;
         }
 
@@ -70,12 +78,19 @@ final class HomepagePresenter extends BasePresenter
     /** Komponenta datagridu pro kategorie
      * @return DataGrid
      */
-    protected function createComponentObjectsGrid($name) : DataGrid
+    protected function createComponentProductsGrid($name) : DataGrid
     {
         $session = $this->getSession();
         $section = $session->getSection(\App\Common\Common::getSelectionName());
 
-        $prodObjArr = $this->em->getProductRepository()->findBy(['category' => $section->categoryId]);
+        $query = $this->em->createQuery(
+            "
+            select prod from \App\Model\Database\Entity\Product prod where prod.deleted_on is null 
+            and prod.category = $section->categoryId 
+            or prod.category in (select cat from \App\Model\Database\Entity\Category cat where cat.parent_cat = $section->categoryId
+            and cat.deleted_on is null)");
+        $prodObjArr = $query->getResult();
+
         $prodArr = null;
 
         foreach($prodObjArr as $prodObj){
