@@ -36,9 +36,13 @@ class Category
     private $order_id;
 
     /**
-     * @var Category
-     * @ORM\OneToOne(targetEntity="Category", inversedBy="category")
-     * @ORM\JoinColumn(nullable=FALSE)
+     * @ORM\OneToMany(targetEntity="Category", mappedBy="parent_cat_id")
+     */
+    protected $children;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Category")
+     * @ORM\JoinColumn(name="parent_cat_id", referencedColumnName="id")
      */
     private $parent_cat;
 
@@ -62,12 +66,14 @@ class Category
      * @param String $name
      * @param String|null $description
      */
-    public function __construct(String $name = null, String $description = null, int $order = null, int $parentCatId = null)
+    public function __construct(String $name = null, String $description = null, int $order = null, Category $parentCatObj = null)
     {
         $this->name = $name;
         $this->description = $description;
         $this->order_id = $order;
-        $this->parent_cat = $parentCatId;
+        if(isset($parentCatObj)) {
+            $this->parent_cat = $parentCatObj;
+        }
     }
 
     /**

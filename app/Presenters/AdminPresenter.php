@@ -134,7 +134,8 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         if (!$values['parent_cat_id']) $values['parent_cat_id'] = null;
 
         try {
-            $category = new Category($values["name"], $values["description"], $values["order"], $values["parent_cat_id"]);
+            $parCatObj = $this->em->getCategoryRepository()->find($values["parent_cat_id"]);
+            $category = new Category($values["name"], $values["description"], $values["order"], $parCatObj);
             $this->em->persist($category);
             $this->em->flush();
             $this->redirect("Admin:newsuccess");
