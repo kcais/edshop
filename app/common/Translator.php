@@ -63,6 +63,9 @@ class TranslatorCz implements \Nette\Localization\ITranslator
             case 'objectsGrid.totalPrice':
                 if($lang == 'CZ') return 'Cena celkem';
                 break;
+            case 'objectsGrid.category_change':
+                if($lang == 'CZ') return 'Změna kategorie';
+                break;
             //datagrid s uzivateli
             case 'userGrid.username':
                 if($lang == 'CZ') return 'Uživatelské jméno';

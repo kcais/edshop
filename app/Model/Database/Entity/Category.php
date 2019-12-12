@@ -85,9 +85,9 @@ class Category
     }
 
     /**
-     * @param Category $parentCat
+     * @param Category|null $parentCat
      */
-    public function setParentCat(Category $parentCat) : void
+    public function setParentCat(?Category $parentCat) : void
     {
         $this->parent_cat = $parentCat;
     }

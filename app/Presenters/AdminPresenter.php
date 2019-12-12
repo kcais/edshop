@@ -114,7 +114,14 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
 
         $form->addText('order', 'Pořadí kategorie')->setMaxLength(3);
 
-        $form->addText('parent_cat_id', 'ID nadřazené kategorie');
+        $catObjArr = $this->em->getCategoryRepository()->findBy(['deleted_on' => null, 'parent_cat' => null ]);
+        $parCatArr = ['' => '---'];
+        foreach ($catObjArr as $catObj){
+            $parCatArr[$catObj->getId()] = $catObj->getName();
+        }
+
+        //$form->addText('parent_cat_id', 'ID nadřazené kategorie');
+        $form->addSelect('parent_cat_id', 'ID nadřazené kategorie', $parCatArr);
 
         $form->addSubmit('create', 'Vytvořit');
 
@@ -131,10 +138,13 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
     public function adminCatnewFormSucceeded(Form $form, array $values): void
     {
         if (!$values['order']) $values['order'] = 1;
-        if (!$values['parent_cat_id']) $values['parent_cat_id'] = null;
+        if (!$values['parent_cat_id'] || $values['parent_cat_id']=='') $values['parent_cat_id'] = null;
 
         try {
-            $parCatObj = $this->em->getCategoryRepository()->find($values["parent_cat_id"]);
+            $parCatObj = null;
+            if($values['parent_cat_id'] != null) {
+                $parCatObj = $this->em->getCategoryRepository()->find($values["parent_cat_id"]);
+            }
             $category = new Category($values["name"], $values["description"], $values["order"], $parCatObj);
             $this->em->persist($category);
             $this->em->flush();
@@ -155,7 +165,8 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $catObjArr = $this->em->getCategoryRepository()->findBy(['deleted_on' => null]);
 
         foreach($catObjArr as $catObj){
-            $catArr[] = ['id' => $catObj->getId(),'name' => $catObj->getName(), 'description' => $catObj->getDescription()];
+            $parentCatId=$catObj->getParentCat()?$catObj->getParentCat()->getId():null;
+            $catArr[] = ['id' => $catObj->getId(),'name' => $catObj->getName(), 'description' => $catObj->getDescription(), 'parent_cat_id' => $parentCatId];
         }
 
         $grid = new DataGrid($this, $name);
@@ -171,6 +182,23 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
                 $this->em->merge($catObj);
                 $this->em->flush();
             });
+        ;
+
+        $catParObjArr = $this->em->getCategoryRepository()->findBy(['deleted_on' => null, 'parent_cat' => null]);
+
+        $catArr = null;
+
+        foreach ($catParObjArr as $catParObj){
+            $catArr[] = ['id' => $catParObj->getId(), 'name' => $catParObj->getName(), 'parent_cat_id' => null];
+            $catChildrenObjArr = $this->em->getCategoryRepository()->findby(['deleted_on' => null, 'parent_cat' => $catParObj->getId()]);
+            foreach($catChildrenObjArr as $catChildrenObj){
+                $catArr[] = [ 'id' => $catChildrenObj->getId(), 'name' => $catParObj->getName().' / '.$catChildrenObj->getName() , 'parent_cat_id' => $catChildrenObj->getParentCat()->getId()];
+            }
+        }
+
+        $grid->addColumnText('category_change', 'objectsGrid.category_change')
+            ->setTemplate(__DIR__ . '/templates/components/datagrid/grid.subcategory.latte',['catArr' => $catArr])
+            ->setSortable()
         ;
 
         $grid->addColumnText('description', 'objectsGrid.description')
@@ -779,6 +807,49 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $this->em->flush();
 
         die();
+    }
+
+    /**
+     * Akce zmeny nadrazene(rodicovske) kategorie
+     */
+    public function actionChangeparcat(){
+        //chybejici pozadovane promenne
+        if(!isset($_POST['idParCat']) || !isset($_POST['idCat'])) {
+            header('HTTP/1.1 400 Bad Request');
+            die(json_encode(['error' => 'Chybné parametry']));
+        }
+
+        //chybne parametry
+        if(!is_numeric($_POST['idParCat']) || !is_numeric($_POST['idParCat'])) {
+            header('HTTP/1.1 400 Bad Request');
+            die(json_encode(['error' => 'Chybné parametry']));
+        }
+
+        if($_POST['idParCat'] == $_POST['idCat']){
+            header('HTTP/1.1 400 Bad Request');
+            die(json_encode(['error' => 'Zadané parametry se nesmějí rovnat']));
+        }
+
+        $idParCat = $_POST['idParCat'];
+        $idCat = $_POST['idCat'];
+
+        $catObj = $this->em->getCategoryRepository()->find($idCat);
+        if(!$catObj){header("HTTP/1.0 404 Not Found");die(json_encode(['error' => "Kategorie s id $idCat neexistuje"]));};
+
+        if($idParCat != 0) {
+            $parCatObjArr = $this->em->getCategoryRepository()->findby(['id' => $idParCat, 'parent_cat' => null]);
+            if (sizeof($parCatObjArr) == 0){header("HTTP/1.0 404 Not Found");die(json_encode(['error' => "Rodičovská kategorie s id $idParCat neexistuje"]));};
+            $parCatObj = $parCatObjArr[0];
+        }
+        else{
+            $parCatObj = null;
+        }
+
+        $catObj->setParentCat($parCatObj);
+        $this->em->merge($catObj);
+        $this->em->flush();
+
+        die('{}');
     }
 
     /** Pridani noveho uzivatele z admin sekce

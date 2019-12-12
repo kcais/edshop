@@ -1,0 +1,16 @@
+<select id="select-subcategory{$item['id']}" onchange="changeSubcategory({$item['id']}, this.value)">
+    {if $item['parent_cat_id'] == null}
+        <option value="0" selected>---</option>
+    {else}
+        <option value="0">---</option>
+    {/if}
+    {foreach $catArr as $catValues}
+        {if $item['id'] != $catValues['id'] && !$catValues['parent_cat_id']}
+            {if $item['parent_cat_id']!= null && $item['parent_cat_id'] == $catValues['id']}
+                <option value="{$catValues['id']}" selected>{$catValues['name']}</option>
+            {else}
+                <option value="{$catValues['id']}">{$catValues['name']}</option>
+            {/if}
+        {/if}
+    {/foreach}
+</select>
