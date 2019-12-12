@@ -35,7 +35,6 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
             //oznaci kategorii jako deleted_on
             if (!$deleteFromDb) {
                 $catObj->setDeletedOn(new \DateTime('now'));
-                $this->merge($catObj);
             } else { //smaze kategorii z DB
                 $this->remove($catObj);
             }
@@ -72,11 +71,9 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
                 //obrazek pokud existuje
                 if (sizeof($imageObjArr) == 1) {
                     $imageObjArr[0]->setDeletedOn(new \DateTime('now'));
-                    $this->merge($imageObjArr[0]);
                 }
                 //produkt
                 $prodObj->setDeletedOn(new \DateTime('now'));
-                $this->merge($prodObj);
 
             } else { //mazu z db
                 //obrazek, pokud existuje
@@ -114,7 +111,6 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
                 }
 
                 $userObj->setDeletedOn(new \DateTime('now'));
-                $this->merge($userObj);
 
             } else { //mazu z db
                 //TODO smazat nejdrive objednavky
@@ -214,7 +210,6 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
 
             if (!$deleteFromDb) { //oznacuju jako deleted_on
                 $ordProdObj->setDeletedOn(new \DateTime('now'));
-                $this->merge($ordProdObj);
 
             } else { //mazu z db
                 $this->remove($ordProdObj);
@@ -292,7 +287,6 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
         }
         else{ //updatuju stavajici zaznam
             $ordProductObjArr[0]->setPcs($ordProductObjArr[0]->getPcs() + $pcs);
-            $this->merge($ordProductObjArr[0]);
             $this->flush();
 
             return 0;
@@ -400,11 +394,9 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
 
                 foreach($ordProdObjArr as $ordProdObj){ //oznacit vsechny orderProduct jako deleted_on pokud existuji
                     $ordProdObj->setDeletedOn(new \DateTime('now'));
-                    $this->merge($ordProdObj);
                 }
 
                 $ordObj->setDeletedOn(new \DateTime('now'));
-                $this->merge($ordObj);
             } else { //smaze objednavku z DB
                 //TODO smazat i orderProduct
                 //$this->remove($ordObj);
@@ -461,7 +453,7 @@ final class EntityManagerDecorator extends NettrineEntityManagerDecorator
         $imageDbObj->setProduct($product);
 
         if(sizeof($imageObjArr) > 0 ){
-            $this->merge($imageDbObj);
+            ;
         }
         else{
             $this->persist($imageDbObj);

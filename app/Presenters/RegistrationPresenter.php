@@ -108,7 +108,6 @@ final class RegistrationPresenter extends BasePresenter
                     $userObjArr = $this->em->getUserRepository()->findby(['username' => $values['username']]);
                     if(sizeof($userObjArr)==1){
                         $userObjArr[0]->setRegistrationMailSended(true);
-                        $this->em->merge($userObjArr[0]);
                         $this->em->flush();
                     }
 

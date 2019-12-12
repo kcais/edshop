@@ -206,7 +206,6 @@ class Basket{
             $openOrdObj = $this->em->getOrderOpen($this->user->getId());
             if(!is_numeric($openOrdObj)){
                 $openOrdObj->setIsClosed(true);
-                $this->em->merge($openOrdObj);
                 $this->em->flush();
             }
 

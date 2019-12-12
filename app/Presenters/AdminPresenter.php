@@ -179,7 +179,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $catObj = $this->em->getCategoryRepository()->find($id);
                 $catObj->setName($value);
-                $this->em->merge($catObj);
                 $this->em->flush();
             });
         ;
@@ -205,7 +204,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $catObj = $this->em->getCategoryRepository()->find($id);
                 $catObj->setDescription($value);
-                $this->em->merge($catObj);
                 $this->em->flush();
             });
         ;
@@ -280,7 +278,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $userObj = $this->em->getUserRepository()->find($id);
                 $userObj->setFirstname($value);
-                $this->em->merge($userObj);
                 $this->em->flush();
             })
         ;
@@ -290,7 +287,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $userObj = $this->em->getUserRepository()->find($id);
                 $userObj->setSurname($value);
-                $this->em->merge($userObj);
                 $this->em->flush();
             })
         ;
@@ -300,7 +296,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $userObj = $this->em->getUserRepository()->find($id);
                 $userObj->setEmail($value);
-                $this->em->merge($userObj);
                 $this->em->flush();
             })
         ;
@@ -313,7 +308,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $userObj = $this->em->getUserRepository()->find($id);
                 $userObj->setIsAdmin($value);
-                $this->em->merge($userObj);
                 $this->em->flush();
             })
         ;
@@ -323,7 +317,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $userObj = $this->em->getUserRepository()->find($id);
                 $userObj->setIsActive($value);
-                $this->em->merge($userObj);
                 $this->em->flush();
             })
         ;
@@ -333,7 +326,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $userObj = $this->em->getUserRepository()->find($id);
                 $userObj->setRegistrationMailSended($value);
-                $this->em->merge($userObj);
                 $this->em->flush();
             })
         ;
@@ -422,7 +414,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $ordProdObj = $this->em->getOrderProductRepository()->find($id);
                 $ordProdObj->setPcs($value);
-                $this->em->merge($ordProdObj);
                 $this->em->flush();
             });
         ;
@@ -601,7 +592,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $prodObj = $this->em->getProductRepository()->find($id);
                 $prodObj->setName($value);
-                $this->em->merge($prodObj);
                 $this->em->flush();
             });
         ;
@@ -610,7 +600,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $prodObj = $this->em->getProductRepository()->find($id);
                 $prodObj->setDescription($value);
-                $this->em->merge($prodObj);
                 $this->em->flush();
             });
         ;
@@ -619,7 +608,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->setEditableCallback(function($id, $value): void {
                 $prodObj = $this->em->getProductRepository()->find($id);
                 $prodObj->setPrice($value);
-                $this->em->merge($prodObj);
                 $this->em->flush();
             });
         ;
@@ -817,7 +805,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         if(!$catObj){header("HTTP/1.0 404 Not Found");die("Kategorie s id $idCat neexistuje !");};
 
         $prodObj->setCategory($catObj);
-        $this->em->merge($prodObj);
         $this->em->flush();
 
         die();
@@ -860,7 +847,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         }
 
         $catObj->setParentCat($parCatObj);
-        $this->em->merge($catObj);
         $this->em->flush();
 
         die('{}');

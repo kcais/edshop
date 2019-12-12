@@ -111,7 +111,6 @@ final class LoginPresenter extends BasePresenter
         $userObjArr[0]->setUuidLostPassword(null);
         $userObjArr[0]->setPasswordHash(hash('sha256',$values['pass1']));
 
-        $this->em->merge($userObjArr[0]);
         $this->em->flush();
 
         //nastaveni noveho hesla a smazani uuid pro ztracene heslo
@@ -157,7 +156,6 @@ final class LoginPresenter extends BasePresenter
 
             //nastaveni noveho uuid pro obnovu hesla
             $userObjArr[0]->setUuidLostPassword($uuid);
-            $this->em->merge($userObjArr[0]);
             $this->em->flush();
 
             //sestaveni a odeslani mailu pro obnovu hesla
