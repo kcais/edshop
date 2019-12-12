@@ -1,6 +1,6 @@
 {block content}
 
-<h1 n:block=title>Administrátorské rozhraní</h1>
+<h1 n:block=title>{_'Administrátorské rozhraní'}</h1>
 
 <style>
     table{
@@ -32,7 +32,7 @@
         genImgTxt.css('color','blue');
         genImgTxt.css('animation','blinker 1s linear infinite');
 
-        genImgTxt.text('Probíhá generování statických obrázků produktů ...');
+        genImgTxt.text({_'Probíhá generování statických obrázků produktů ...'});
 
         $.ajax({
             type: 'POST',
@@ -44,14 +44,14 @@
             success: function(jsonData){
                 genImgTxt.css('animation','none');
                 genImgTxt.css('color','green');
-                genImgTxt.text('Generování statických obrázků produktů bylo dokončeno. (Celkem vygenerovano '+ jsonData.total + ' obrázků)');
+                genImgTxt.text({_'Generování statických obrázků produktů bylo dokončeno. (Celkem vygenerováno'} + ' ' + jsonData.total + ' ' + {_'obrázků'} +')');
                 genImgTxtBtn.attr('disabled', false);
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 genImgTxt.css('animation','none');
                 genImgTxt.css('color','red');
-                genImgTxt.text('Při generování statických obrázků produktů došlo k chybě.'); //obecna chyba, zobrazena pokud spadne na dalsim radku
-                genImgTxt.text('Při generování statických obrázků produktů došlo k chybě. (' + $.parseJSON(xhr.responseText).error + ')');
+                genImgTxt.text('{_'Při generování statických obrázků produktů došlo k chybě.'}'); //obecna chyba, zobrazena pokud spadne na dalsim radku
+                genImgTxt.text('{_'Při generování statických obrázků produktů došlo k chybě.'} (' + $.parseJSON(xhr.responseText).error + ')');
                 genImgTxtBtn.attr('disabled', false);
             }
         });
@@ -61,17 +61,17 @@
 </script>
 
 <table>
-    <tr><td class="cat_td">Kategorie</td><td class="cat_td_com"><a n:href="Admin:catnew">Nová</a></td><td class="cat_td_com"><a n:href="Admin:catedit">Editovat</a></td><td></td></tr>
-    <tr><td class="cat_td">Prodejní položky</td><td class="cat_td_com"><a n:href="Admin:prodnew">Nová</a></td><td class="cat_td_com"><a n:href="Admin:prodedit">Editovat</a></td>
+    <tr><td class="cat_td">{_'Kategorie'}</td><td class="cat_td_com"><a n:href="Admin:catnew">{_'Nová'}</a></td><td class="cat_td_com"><a n:href="Admin:catedit">{_'Editovat'}</a></td><td></td></tr>
+    <tr><td class="cat_td">{_'Prodejní položky'}</td><td class="cat_td_com"><a n:href="Admin:prodnew">{_'Nová'}</a></td><td class="cat_td_com"><a n:href="Admin:prodedit">{_'Editovat'}</a></td>
         <td>
-            <input type="button" id="generate-image-text-button" value="Přegenerovat statické obrázky produktů" style="font-size: 12px" onclick="generateProductImages()">
-            <div id="generate-image-text">Zvolte pro přegenerování statických obrázku všech produktů</div>
+            <input type="button" id="generate-image-text-button" value="{_'Přegenerovat statické obrázky produktů'}" style="font-size: 12px" onclick="generateProductImages()">
+            <div id="generate-image-text">{_'Zvolte pro přegenerování statických obrázku všech produktů'}</div>
 
         </td></tr>
-    <tr><td class="cat_td">Uživatelé</td><td class="cat_td_com"><a n:href="Admin:usernew">Nový</a></td><td class="cat_td_com"><a n:href="Admin:useredit">Editovat</a></td><td></td></tr>
-    <tr><td class="cat_td">Objednávky</td><td colspan=2 class="cat_td_com"><a n:href="Admin:orderlist">Seznam / Editace</a></td><td></td></tr>
+    <tr><td class="cat_td">{_'Uživatelé'}</td><td class="cat_td_com"><a n:href="Admin:usernew">{_'Nový'}</a></td><td class="cat_td_com"><a n:href="Admin:useredit">{_'Editovat'}</a></td><td></td></tr>
+    <tr><td class="cat_td">{_'Objednávky'}</td><td colspan=2 class="cat_td_com"><a n:href="Admin:orderlist">{_'Seznam'} / {_'Editace'}</a></td><td></td></tr>
 </table>
 
 <br><br>
 
-<a n:href="Logout:logout">Odhlásit se</a>
+<a n:href="Logout:logout">{_'Odhlásit se'}</a>

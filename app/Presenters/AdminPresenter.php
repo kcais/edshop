@@ -225,7 +225,10 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             );
         ;
 
-        $grid->setTranslator(new \TranslatorCz('CZ'));
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $grid->setTranslator(new \Translator($lang));
 
         return $grid;
     }
@@ -361,7 +364,10 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             );
         ;
 
-        $grid->setTranslator(new \TranslatorCz('CZ'));
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $grid->setTranslator(new \Translator($lang));
 
         return $grid;
     }
@@ -445,7 +451,10 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             );
         ;
 
-        $grid->setTranslator(new \TranslatorCz('CZ'));
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $grid->setTranslator(new \Translator($lang));
 
         return $grid;
 
@@ -527,8 +536,10 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             );
         ;*/
 
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
 
-        $grid->setTranslator(new \TranslatorCz('CZ'));
+        $grid->setTranslator(new \Translator($lang));
 
         return $grid;
     }
@@ -631,7 +642,10 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $grid->addFilterText('name', 'objectsGrid.name')->setSplitWordsSearch(FALSE);
         $grid->addFilterText('description', 'objectsGrid.description');
 
-        $grid->setTranslator(new \TranslatorCz('CZ'));
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $grid->setTranslator(new \Translator($lang));
 
         return $grid;
     }

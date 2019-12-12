@@ -2,6 +2,7 @@
 
 namespace App\Presenters;
 
+use App\Common\Common;
 use App\Model\Database\EntityManagerDecorator;
 use Nette;
 
@@ -9,6 +10,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
     /** @var EntityManagerDecorator @inject */
     public $em;
+
+    protected function beforeRender(): void
+    {
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+        $translator = new \Translator($lang);
+        $this->template->setTranslator($translator);
+    }
 
     protected function startup()
     {

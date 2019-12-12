@@ -122,7 +122,11 @@ final class HomepagePresenter extends BasePresenter
 
         $grid->addFilterText('name', 'objectsGrid.name')->setSplitWordsSearch(FALSE);
         $grid->addFilterText('description', 'objectsGrid.description');
-        $grid->setTranslator(new \TranslatorCz('CZ'));
+
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $grid->setTranslator(new \Translator($lang));
         return $grid;
     }
 
@@ -149,4 +153,12 @@ final class HomepagePresenter extends BasePresenter
         $this->redirect("Homepage:detail",$id);
     }
 
+    /** Nastaveni jazyka
+     * @param $language
+     */
+    public function actionSetLanguage($language)
+    {
+        $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language = $language;
+        $this->redirect('Homepage:');
+    }
 }

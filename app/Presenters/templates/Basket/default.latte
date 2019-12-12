@@ -1,9 +1,9 @@
 {block content}
 
 <p style="text-align: left;">
-    <h2>Objednávkový košík</h2>
+    <h2>{_'Objednávkový košík'}</h2>
     <span style="float:right;color: red;">
-        <a onclick="return confirm('Opravdu si přejete vyprázdnit košík ?');" n:href="Basket:empty" style="color: red">Vyprázdnit košík</a>
+        <a onclick="return confirm('{_'Opravdu si přejete vyprázdnit košík ?'}');" n:href="Basket:empty" style="color: red">{_'Vyprázdnit košík'}</a>
 	</span>
 </p>
 
@@ -13,6 +13,6 @@
 <br>
 <span style="float:right;color: blue;">
     {if $basketPrice}
-        <a n:href="Basket:orderconfirm" class="btn btn-primary">Pokračovat v objednávce ></a>&nbsp;
+        <a n:href="Basket:orderconfirm" class="btn btn-primary">{_'Pokračovat v objednávce'} ></a>&nbsp;
     {/if}
 </span>

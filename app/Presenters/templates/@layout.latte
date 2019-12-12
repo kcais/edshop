@@ -114,26 +114,26 @@
 
 		{/if}
 		{if $user->loggedIn}
-			<span style="float:right;font-size: 14px;text-shadow:none ">Přihlášen : {php echo $user->getIdentity()->username} (<a n:href="Logout:logout">Odhlásit</a>)
+			<span style="float:right;font-size: 14px;text-shadow:none ">{_'Přihlášen'} : {php echo $user->getIdentity()->username} (<a n:href="Logout:logout">{_'Odhlásit'}</a>)
 			<br>
 				{php $isAdminUserRole = $user->isInRole("admin")}
-				{if $isAdminUserRole}<a n:href="Admin:main">Administrátorské rozhraní</a>{/if}
+				{if $isAdminUserRole}<a n:href="Admin:main">{_'Administrátorské rozhraní'}</a>{/if}
 
 		{/if}
 		</span>
 		<br>
 				<span style="text-align:right;float:right;font-size: 14px;text-shadow:none; width: 100%; background: #dadada">
-                Vyhledat :
+                {_'Vyhledat'} :
 
 				<select class="select2-find" name="find" style="width: 220px;height: 28px">
                 </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-					<a n:href="Basket:">Košík</a> (
+					<a n:href="Basket:">{_'Košík'}</a> (
 					{ifset $basketPrice}
 						{$basketPrice}
 					{else}
 						0
-					{/ifset} Kč) &nbsp;&nbsp;<a n:href="Homepage:?language=cz"><img src="{$basePath}/cz-flag-mini.jpg" style="vertical-align: text-top"></a> <a n:href="Homepage:?language=eng"><img src="{$basePath}/uk-flag-mini.jpg" style="vertical-align: text-top"></a>&nbsp;
+					{/ifset} Kč) &nbsp;&nbsp;<a n:href="Homepage:setLanguage cz"><img src="{$basePath}/cz-flag-mini.jpg" style="vertical-align: text-top"></a> <a n:href="Homepage:setLanguage eng"><img src="{$basePath}/uk-flag-mini.jpg" style="vertical-align: text-top"></a>&nbsp;
 				</span>
 
 		</p>

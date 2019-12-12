@@ -1,10 +1,10 @@
 {block content}
 
-<h2 n:block=title ><a n:href='Basket:' style="color : #333333">Košík</a> / Dokončení objednávky</h2>
-<h3>Objednané zboží</h3>
+<h2 n:block=title ><a n:href='Basket:' style="color : #333333">{_'Košík'}</a> / {_'Dokončení objednávky'}</h2>
+<h3>{_'Objednané zboží'}</h3>
 <table class="table table-bordered">
     {php $totalPrice=0.0;}
-    <tr><td class="cat_td">Název</td><td class="cat_td">Popis</td><td class="col-price cat_td">Cena/ks</td><td class="cat_td">Ks</td><td class="col-totalPrice cat_td">Cena celkem</td></tr>
+    <tr><td class="cat_td">{_'Název'}</td><td class="cat_td">{_'Popis'}</td><td class="col-price cat_td">{_'Cena/ks'}</td><td class="cat_td">{_'Ks'}</td><td class="col-totalPrice cat_td">{_'Cena celkem'}</td></tr>
     {foreach $basketOrderList as $basketOrderRowArr}
     <tr><td>{$basketOrderRowArr['name']}</td>
         <td>{$basketOrderRowArr['description']}</td>
@@ -12,15 +12,15 @@
         <td>{$basketOrderRowArr['pcs']}</td>
         <td>{php $price=$basketOrderRowArr['price'] * $basketOrderRowArr['pcs'];$totalPrice += $price;echo $price;} Kč</td></tr>
     {/foreach}
-    <tr><td colspan="5" align="right"><strong>Celková cena : {$totalPrice} Kč&nbsp;&nbsp;</strong></td>
+    <tr><td colspan="5" align="right"><strong>{_'Celková cena'} : {$totalPrice} Kč&nbsp;&nbsp;</strong></td>
 </table>
 
 <br>
-<h3>Doručovací údaje</h3>
+<h3>{_'Doručovací údaje'}</h3>
 
 {control orderData}
 
 <br>
 <table style="width: 100%">
-    <tr><td style="width: 50%"><a n:href="Basket:" class="btn btn-primary">< Zpět na košík</a></td><td align="right"><a <a href="#" onclick="document.getElementById('frm-orderData').submit();" class="btn btn-primary">Dokončit objednávku ></a></td></tr>
+    <tr><td style="width: 50%"><a n:href="Basket:" class="btn btn-primary">< {_'Zpět na košík'}</a></td><td align="right"><a <a href="#" onclick="document.getElementById('frm-orderData').submit();" class="btn btn-primary">{_'Dokončit objednávku'} ></a></td></tr>
 </table>

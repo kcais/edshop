@@ -125,6 +125,11 @@ final class BasketPresenter extends BasePresenter
 
         $form->onSuccess[] = [$this, 'orderDataSucceeded'];
 
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $form->setTranslator(new \Translator($lang));
+
         return $form;
     }
 
@@ -173,7 +178,10 @@ final class BasketPresenter extends BasePresenter
             ->setAlign('center')
         ;
 
-        $grid->setTranslator(new \TranslatorCz('CZ'));
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $grid->setTranslator(new \Translator($lang));
 
         return $grid;
     }
