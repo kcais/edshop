@@ -6,18 +6,70 @@
     table{
         border-collapse: collapse;
     }
-     table,th,td{
-         border: 3px solid white;
-         padding: 10px;
-     }
+    table,th,td{
+        border: 3px solid white;
+        padding: 10px;
+    }
+
+    @keyframes blinker {
+        50% {
+            opacity: 0.0;
+        }
+
+    }
 
 </style>
 
+<script>
+    function generateProductImages(){
+
+        var genImgTxt = $('#generate-image-text');
+        var genImgTxtBtn = $('#generate-image-text-button');
+
+        genImgTxtBtn.attr('disabled', true);
+
+        genImgTxt.css('display','block');
+        genImgTxt.css('color','blue');
+        genImgTxt.css('animation','blinker 1s linear infinite');
+
+        genImgTxt.text('Probíhá generování statických obrázků produktů ...');
+
+        $.ajax({
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            async: true,
+            url: {link Admin:generateImages},
+            dataType : 'json',
+            success: function(jsonData){
+                genImgTxt.css('animation','none');
+                genImgTxt.css('color','green');
+                genImgTxt.text('Generování statických obrázků produktů bylo dokončeno. (Celkem vygenerovano '+ jsonData.total + ' obrázků)');
+                genImgTxtBtn.attr('disabled', false);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                genImgTxt.css('animation','none');
+                genImgTxt.css('color','red');
+                genImgTxt.text('Při generování statických obrázků produktů došlo k chybě.'); //obecna chyba, zobrazena pokud spadne na dalsim radku
+                genImgTxt.text('Při generování statických obrázků produktů došlo k chybě. (' + $.parseJSON(xhr.responseText).error + ')');
+                genImgTxtBtn.attr('disabled', false);
+            }
+        });
+    }
+
+
+</script>
+
 <table>
-    <tr><td class="cat_td">Kategorie</td><td class="cat_td_com"><a n:href="Admin:catnew">Nová</a></td><td class="cat_td_com"><a n:href="Admin:catedit">Editovat</a></td></tr>
-    <tr><td class="cat_td">Prodejní položky</td><td class="cat_td_com"><a n:href="Admin:prodnew">Nová</a></td><td class="cat_td_com"><a n:href="Admin:prodedit">Editovat</a></td></tr>
-    <tr><td class="cat_td">Uživatelé</td><td class="cat_td_com"><a n:href="Admin:usernew">Nový</a></td><td class="cat_td_com"><a n:href="Admin:useredit">Editovat</a></td></tr>
-    <tr><td class="cat_td">Objednávky</td><td colspan=2 class="cat_td_com"><a n:href="Admin:orderlist">Seznam / Editace</a></td></tr>
+    <tr><td class="cat_td">Kategorie</td><td class="cat_td_com"><a n:href="Admin:catnew">Nová</a></td><td class="cat_td_com"><a n:href="Admin:catedit">Editovat</a></td><td></td></tr>
+    <tr><td class="cat_td">Prodejní položky</td><td class="cat_td_com"><a n:href="Admin:prodnew">Nová</a></td><td class="cat_td_com"><a n:href="Admin:prodedit">Editovat</a></td>
+        <td>
+            <input type="button" id="generate-image-text-button" value="Přegenerovat statické obrázky produktů" style="font-size: 12px" onclick="generateProductImages()">
+            <div id="generate-image-text">Zvolte pro přegenerování statických obrázku všech produktů</div>
+
+        </td></tr>
+    <tr><td class="cat_td">Uživatelé</td><td class="cat_td_com"><a n:href="Admin:usernew">Nový</a></td><td class="cat_td_com"><a n:href="Admin:useredit">Editovat</a></td><td></td></tr>
+    <tr><td class="cat_td">Objednávky</td><td colspan=2 class="cat_td_com"><a n:href="Admin:orderlist">Seznam / Editace</a></td><td></td></tr>
 </table>
 
 <br><br>

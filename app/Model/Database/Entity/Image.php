@@ -190,6 +190,24 @@ class Image
     /// functions
     ///////////////////////////////////
 
+    /** Vytvoreni souboru obrazku
+     * @param int $id
+     */
+    public function createImageFile()
+    {
+        if($this->image_icon) {
+            $fp = fopen("./img/".$this->product->getId().".jpg", 'wb');
+            if(is_resource($this->image_icon)){
+                $imageData = stream_get_contents($this->image_icon);
+            }
+            else{
+                $imageData = $this->image_icon;
+            }
+            fwrite($fp, $imageData);
+            fclose($fp);
+        }
+    }
+
     /**
      * @ORM\PrePersist
      */
@@ -203,6 +221,24 @@ class Image
         if ($this->id !== NULL) {
             throw new LogicException("Entity id field should be null during prePersistEvent");
         }
+    }
+
+    /**
+     * @ORM\PostPersist
+     */
+    public function onPostPersist()
+    {
+        //vytvoreni souboru s daty ikony obrazku do ./img/$id.jpg
+        $this->createImageFile();
+    }
+
+    /**
+     * @ORM\PostUpdate
+     */
+    public function onPostUpdate()
+    {
+        //vytvoreni souboru s daty ikony obrazku do ./img/$id.jpg
+        $this->createImageFile();
     }
 
     /**

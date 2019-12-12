@@ -920,6 +920,28 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $this->redirect('Admin:newsuccess');
     }
 
+    /**
+     * Akce pregenerovani statickych obrazku produktu
+     */
+    public function actionGenerateImages(){
+        //header('HTTP/1.1 400 Bad Request');
+        //die(json_encode(['error' => 'obecna chyba']));
+
+        $qb = $this->em->createQueryBuilder();
+        $imageObjArr = $qb->select("img")
+            ->from('\App\Model\Database\Entity\Image','img')
+            ->where($qb->expr()->isNotNull("img.image_icon"))
+            ->andWhere('img.deleted_on IS NULL')
+            ->getQuery()->getResult();
+
+        foreach($imageObjArr as $imageObj){
+            $imageObj->createImageFile();
+        }
+
+
+        die(json_encode(['total' => sizeof($imageObjArr)]));
+    }
+
 }
 
 ?>
