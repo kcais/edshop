@@ -27,7 +27,8 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
 
         //overeni , zda je prihlaseny uzivatel prislusny roli admin
         if (!$this->user->isInRole("admin")) {
-            $this->flashMessage("Přihlášený uživatel nemá roli admin !", 'warning');
+            $translator = new \Translator($this->getSession()->getSection(\App\Common\Common::getSelectionName())->language);
+            $this->flashMessage($translator->translate("Přihlášený uživatel nemá roli admin !"), 'warning');
             $this->redirect("Homepage:");
         }
     }
@@ -362,7 +363,7 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $grid->addAction('delUser','Del DB','DelUser!')
             ->setClass('btn btn-primary')
             ->setConfirmation(
-                new StringConfirmation('Skutečně smazat product %s z DB ?', 'username')
+                new StringConfirmation('Skutečně smazat uživatele %s z DB ?', 'username')
             );
         ;
 

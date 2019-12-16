@@ -69,14 +69,17 @@ final class LoginPresenter extends BasePresenter
                 $this->redirect("Homepage:");
             }
             elseif($existUsername){
-                $this->flashMessage('Uživatelský účet ještě nebyl přes email s odkazem aktivován.','warning');
+                $translator = new \Translator($this->getSession()->getSection(\App\Common\Common::getSelectionName())->language);
+                $this->flashMessage($translator->translate('Uživatelský účet ještě nebyl přes email s odkazem aktivován.'),'warning');
             }
             else{
-                $this->flashMessage('Uživatelský účet neexistuje nebo bylo zadáno chybné heslo.','warning');
+                $translator = new \Translator($this->getSession()->getSection(\App\Common\Common::getSelectionName())->language);
+                $this->flashMessage($translator->translate('Uživatelský účet neexistuje nebo bylo zadáno chybné heslo.'),'warning');
             }
         }
         catch(Nette\Security\AuthenticationException $exception){
-            $this->flashMessage("Uživatelský účet neexistuje nebo bylo zadáno chybné heslo.",'warning');
+            $translator = new \Translator($this->getSession()->getSection(\App\Common\Common::getSelectionName())->language);
+            $this->flashMessage($translator->translate("Uživatelský účet neexistuje nebo bylo zadáno chybné heslo."),'warning');
         }
 
     }
@@ -128,8 +131,8 @@ final class LoginPresenter extends BasePresenter
         $this->em->flush();
 
         //nastaveni noveho hesla a smazani uuid pro ztracene heslo
-
-        $this->flashMessage('Heslo bylo změněno. Nyní se můžete přihlásit pomocí nového hesla.');
+        $translator = new \Translator($this->getSession()->getSection(\App\Common\Common::getSelectionName())->language);
+        $this->flashMessage($translator->translate('Heslo bylo změněno. Nyní se můžete přihlásit pomocí nového hesla.'));
         $this->redirect("Login:login");
     }
 
@@ -189,12 +192,14 @@ final class LoginPresenter extends BasePresenter
             $mailer = new SendmailMailer;
             $mailer->send($mail);
 
-            $this->flashMessage('Na Vaší emailovou adresu byly odeslány instrukce pro obnovu hesla.');
+            $translator = new \Translator($this->getSession()->getSection(\App\Common\Common::getSelectionName())->language);
+            $this->flashMessage($translator->translate('Na Vaší emailovou adresu byly odeslány instrukce pro obnovu hesla.'));
             $this->redirect("Homepage:");
 
         }
         else{
-            $this->flashMessage('Vámi zadaný registrační email neexistuje. Zkuste to prosím znovu.','warning');
+            $translator = new \Translator($this->getSession()->getSection(\App\Common\Common::getSelectionName())->language);
+            $this->flashMessage($translator->translate('Vámi zadaný registrační email neexistuje. Zkuste to prosím znovu.'),'warning');
             $this->redirect("Login:forgotten");
         }
     }

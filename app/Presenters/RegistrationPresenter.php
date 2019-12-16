@@ -11,6 +11,9 @@ use Nette\Mail\SendmailMailer;
 final class RegistrationPresenter extends BasePresenter
 {
 
+    /**
+     * @throws Nette\Application\AbortException
+     */
     public function renderVerification(){
         $validation = $this->em->activateUser($_GET['uuid']);
         if($validation) {
@@ -121,7 +124,9 @@ final class RegistrationPresenter extends BasePresenter
 
                     break;
                 case 1:
-                    $this->flashMessage('Zadané uživatelské jméno nebo email již existují ! Zadejte prosím jiné','error');
+                    $translator = new \Translator($this->getSession()->getSection(\App\Common\Common::getSelectionName())->language);
+                    $this->flashMessage(
+                        $translator->translate('Zadané uživatelské jméno nebo email již existují ! Zadejte prosím jiné'),'error');
                     break;
             }
 

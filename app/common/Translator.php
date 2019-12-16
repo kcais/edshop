@@ -4,9 +4,19 @@ class Translator implements \Nette\Localization\ITranslator
 {
     private $language='CZ';
 
-    public function __construct(String $language)
+    /**
+     * Translator constructor.
+     * @param String|null $language
+     */
+    public function __construct(?String $language)
     {
-        $this->language = strtoupper($language);
+        if(isset($language)) {
+            $this->language = strtoupper($language);
+        }
+        else{
+            $this->language ='CZ';
+        }
+        return $this;
     }
 
     public function translate($message, ...$parameters): string
@@ -19,8 +29,8 @@ class Translator implements \Nette\Localization\ITranslator
                 if($lang == 'ENG') return 'Set the number of items per page';
                 break;
             case 'ublaboo_datagrid.items':
-                if($lang == 'CZ') return 'Zobrazené prodejní položky';
-                if($lang == 'ENG') return 'Displayed sales items';
+                if($lang == 'CZ') return 'Zobrazené položky';
+                if($lang == 'ENG') return 'Displayed items';
                 break;
             case 'ublaboo_datagrid.from':
                 if($lang == 'CZ') return 'z celkových';
@@ -472,9 +482,87 @@ class Translator implements \Nette\Localization\ITranslator
             case 'Odeslat':
                 if($lang == 'ENG') return 'Send';
                 break;
+            case 'Zadané uživatelské jméno nebo email již existují ! Zadejte prosím jiné':
+                if($lang == 'ENG') return 'The username or email you entered already exists! Please enter a different one';
+                break;
+            case 'Přihlášený uživatel nemá roli admin !':
+                if($lang == 'ENG') return 'The logged in user has no role admin!';
+                break;
+            case 'Uživatelský účet ještě nebyl přes email s odkazem aktivován.':
+                if($lang == 'ENG') return 'Uživatelský účet ještě nebyl přes email s odkazem aktivován.';
+                break;
+            case 'Uživatelský účet neexistuje nebo bylo zadáno chybné heslo.':
+                if($lang == 'ENG') return 'The user account does not exist or an incorrect password was entered.';
+                break;
+            case 'Heslo bylo změněno. Nyní se můžete přihlásit pomocí nového hesla.':
+                if($lang == 'ENG') return 'The password has been changed. You can now sign in with your new password.';
+                break;
+            case 'Na Vaší emailovou adresu byly odeslány instrukce pro obnovu hesla.':
+                if($lang == 'ENG') return 'Password recovery instructions have been sent to your email address.';
+                break;
+            case 'Vámi zadaný registrační email neexistuje. Zkuste to prosím znovu.':
+                if($lang == 'ENG') return 'The registration email you entered does not exist. Please try again.';
+                break;
+            case 'Zadejte jméno kategorie':
+                if($lang == 'ENG') return 'Enter a category name';
+                break;
+            case 'Zadejte popis kategorie':
+                if($lang == 'ENG') return 'Enter a category description';
+                break;
+            case 'Skutečně označit kategorii %s jako deleted_on ?':
+                if($lang == 'ENG') return 'Really mark category %s as deleted_on?';
+                break;
+            case 'Skutečně smazat kategorii %s z DB ?':
+                if($lang == 'ENG') return 'Really delete category %s from DB?';
+                break;
+            case 'Zadejte jméno produktu':
+                if($lang == 'ENG') return 'Enter product name';
+                break;
+            case 'Zadejte popis produktu':
+                if($lang == 'ENG') return 'Enter product description';
+                break;
+            case 'Zadejte cenu produktu':
+                if($lang == 'ENG') return 'Enter product price';
+                break;
+            case 'Skutečně označit product %s jako deleted_on ?':
+                if($lang == 'ENG') return 'Really mark product %s as deleted_on?';
+                break;
+            case 'Skutečně smazat product %s z DB ?':
+                if($lang == 'ENG') return 'Really delete product %s from DB?';
+                break;
+            case 'Skutečně označit uživatele %s jako deleted_on ?':
+                if($lang == 'ENG') return 'Really mark user %s as deleted_on?';
+                break;
+            case 'Skutečně smazat uživatele %s z DB ?':
+                if($lang == 'ENG') return 'Really delete user %s from DB?';
+                break;
+            case 'Skutečně označit objednávku %s jako deleted_on ?':
+                if($lang == 'ENG') return 'Really mark order %s as deleted_on?';
+                break;
+            case 'Skutečně označit produkt v objednávce %s jako deleted_on ?':
+                if($lang == 'ENG') return 'Really mark product in order %s as deleted_on?';
+                break;
+            case 'Skutečně smazat product v objednávce %s z DB ?':
+                if($lang == 'ENG') return 'Really delete product in order %s from DB?';
+                break;
+            case 'Odhlášení uživatele proběhlo úspěšně':
+                if($lang == 'ENG') return 'User logout succeeded';
+                break;
+            case 'Pro nové přihlášení klikněte':
+                if($lang == 'ENG') return 'Click for new login';
+                break;
+            case 'zde':
+                if($lang == 'ENG') return 'here';
+                break;
+            case 'Zadejte doručovací adresu':
+                if($lang == 'ENG') return 'Enter your shipping address';
+                break;
         }
+
         return $message;
     }
 }
+
+
 
 ?>
