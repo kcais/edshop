@@ -96,7 +96,7 @@ final class LoginPresenter extends BasePresenter
             ->addRule(Form::MIN_LENGTH,'Heslo musí obsahovat minimálně 3 znaky',3)
         ;
 
-        $form->addPassword('pass2','Nové heslo znovu:')
+        $form->addPassword('pass2','Nové heslo znovu :')
             ->setRequired('Zadejte znovu nové heslo')
             ->addRule(Form::EQUAL,'Zadaná hesla se neshodují',$form['pass1'])
         ;
@@ -181,18 +181,16 @@ final class LoginPresenter extends BasePresenter
             $this->em->flush();
 
             //sestaveni a odeslani mailu pro obnovu hesla
+            $translator = new \Translator($this->getSession()->getSection(\App\Common\Common::getSelectionName())->language);
             $mail = new Message;
             $mail->setFrom("edshop@edshop.cz")
                 ->addTo($values['email'])
-                ->setSubject('Zapomenuté heslo - EdShop')
-                ->setHtmlBody("Dobrý den,<br><br>posíláme odkaz pro obnovu zapomenutého hesla.
-                        Pro změnu hesla klikněte zde : <a href='https://edshop.php5.cz/www/login/forgottengen?uuid=$uuid'>Změna hesla</a>
-                        <br><br>");
+                ->setSubject($translator->translate('Zapomenuté heslo - EdShop'))
+                ->setHtmlBody($translator->translate('forgotten_password.mail_body')."<a href='https://edshop.php5.cz/www/login/forgottengen?uuid=$uuid'>".$translator->translate('Změna hesla').'</a>');
 
             $mailer = new SendmailMailer;
             $mailer->send($mail);
 
-            $translator = new \Translator($this->getSession()->getSection(\App\Common\Common::getSelectionName())->language);
             $this->flashMessage($translator->translate('Na Vaší emailovou adresu byly odeslány instrukce pro obnovu hesla.'));
             $this->redirect("Homepage:");
 

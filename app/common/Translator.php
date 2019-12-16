@@ -583,9 +583,39 @@ class Translator implements \Nette\Localization\ITranslator
             case 'Aktivace':
                 if($lang == 'ENG') return 'Activate';
                 break;
-
-
+            case 'Generování nového hesla uživatele':
+                if($lang == 'ENG') return 'Generate a new user password';
+                break;
+            case 'Zapomenuté heslo - EdShop':
+                if($lang == 'ENG') return 'Forgotten password - EdShop';
+                break;
+            case 'forgotten_password.mail_body':
+                if($lang == 'CZ') return 'Dobrý den,<br><br>posíláme odkaz pro obnovu zapomenutého hesla.
+                        Pro změnu hesla klikněte zde :';
+                if($lang == 'ENG') return 'Hello,<br><br>we are sending a link to recover your forgotten password.
+                        To change your password click here:';
+                break;
+            case 'Změna hesla':
+                if($lang == 'ENG') return 'Change password';
+                break;
+            case 'Nové heslo :':
+                if($lang == 'ENG') return 'New password :';
+                break;
+            case 'Nové heslo znovu :':
+                if($lang == 'ENG') return 'New password again :';
+                break;
+            case 'Nastavit nové heslo':
+                if($lang == 'ENG') return 'Set new password';
+                break;
+            case 'Zadejte nové heslo':
+                if($lang == 'ENG') return 'Set new password';
+                break;
+            case 'Zadejte znovu nové heslo':
+                if($lang == 'ENG') return 'Set new password again';
+                break;
         }
+
+
 
         return $message;
     }
