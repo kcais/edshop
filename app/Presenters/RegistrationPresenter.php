@@ -101,12 +101,14 @@ final class RegistrationPresenter extends BasePresenter
             switch($ret_val){
                 case 0:
                     //sestaveni a odeslani mailu pro dokonceni registrace
+                    $translator = new \Translator($this->getSession()->getSection(\App\Common\Common::getSelectionName())->language);
+
                     $mail = new Message;
                     $mail->setFrom(\App\Common\Common::getEmailFrom())
                         ->addTo($values['email'])
-                        ->setSubject('Dokončení registrace - EdShop')
-                        ->setHtmlBody("Dobrý den,<br><br>Vaše registrace na stránky EdShop byla dokončena.
-                        Pro aktivaci účtu klikněte zde : <a href=\"".\App\Common\Common::getEshopUrl()."registration/verification?uuid=$uuid\">Aktivace</a>
+                        ->setSubject($translator->translate('Dokončení registrace - EdShop'))
+                        ->setHtmlBody($translator->translate('Dobrý den,<br><br>Vaše registrace na stránky EdShop byla dokončena.
+                        Pro aktivaci účtu klikněte zde : <a href="').\App\Common\Common::getEshopUrl()."registration/verification?uuid=$uuid\">".$translator->translate('Aktivace')."</a>
                         <br><br>");
 
                     $mailer = new SendmailMailer;

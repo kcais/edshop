@@ -389,7 +389,7 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
     {
         $id = $this->session->getSection(\App\Common\Common::getSelectionName())->orderEditId;
 
-        $ordProdArr = null;
+        $ordProdArr = [];
 
         $ordProdObjArr = $this->em->getOrderProductRepository()->findBy(['ord' => $id]);
 

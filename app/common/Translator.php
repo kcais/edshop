@@ -557,6 +557,34 @@ class Translator implements \Nette\Localization\ITranslator
             case 'Zadejte doručovací adresu':
                 if($lang == 'ENG') return 'Enter your shipping address';
                 break;
+            case 'Objednávka byla dokončena.':
+                if($lang == 'ENG') return 'Order completed.';
+                break;
+            case 'Pro další nákup klikněte zde':
+                if($lang == 'ENG') return 'For next purchase click here';
+                break;
+            case 'Ověření emailu a dokončení registrace proběhlo v pořádku':
+                if($lang == 'ENG') return 'Email verification and registration complete';
+                break;
+            case 'Nyní se můžete':
+                if($lang == 'ENG') return 'You can now';
+                break;
+            case 'přihlásit':
+                if($lang == 'ENG') return 'login';
+                break;
+            case 'Dokončení registrace - EdShop':
+                if($lang == 'ENG') return 'Complete registration - EdShop';
+                break;
+            case 'Dobrý den,<br><br>Vaše registrace na stránky EdShop byla dokončena.
+            Pro aktivaci účtu klikněte zde : <a href="':
+                if($lang == 'ENG') return 'Hello, <br><br>Your registration to EdShop has been completed.
+             Click here to activate your account: <a href="';
+                break;
+            case 'Aktivace':
+                if($lang == 'ENG') return 'Activate';
+                break;
+
+
         }
 
         return $message;
