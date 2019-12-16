@@ -25,7 +25,7 @@ Kategorie a produkty
 * možnost administrátorké úpravy odeslané objednávky - **done** 
 
 Ostatní
-* podpora multijazykového zobrazení (CZ/ENG) - **in progress**
+* podpora multijazykového zobrazení (CZ/ENG) - **done**
 * vyhledávání v názvech produktů pomocí našeptávání (AJAX) - **done** 
 * objednávkový košík - v případě nepřihlášení pomocí SESSIONS/COOKIES, v případě přihlášení ukládáním do DB - **done**
 * možnost přidání ilustračních obrázků k produktům - **done**
