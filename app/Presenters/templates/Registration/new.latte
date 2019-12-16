@@ -1,5 +1,5 @@
 {block content}
-<h1 n:block=title>Registrace nového uživatele</h1>
+<h1 n:block=title>{_'Registrace nového uživatele'}</h1>
 
 <script>
 
@@ -11,7 +11,7 @@
          data.append('username',this.value);
 
         if(this.value.length>2) {
-            label.text('Zjišťuji dostupnost uživatelského jména ...');
+            label.text({_'Zjišťuji dostupnost uživatelského jména ...'});
             label.css('color','black');
 
             $.ajax({
@@ -23,22 +23,22 @@
                 dataType: 'JSON',
                 success: function (response) {
                     if(response.userNameExist === 0) {
-                        label.text('Uživatelské jméno je volné');
+                        label.text({_'Uživatelské jméno je volné'});
                         label.css('color','green');
                     }
                     else{
-                        label.text('Uživatelské jméno je již použito, zvolte prosím jiné');
+                        label.text({_'Uživatelské jméno je již použito, zvolte prosím jiné'});
                         label.css('color','red');
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown){
-                    label.text('Při zjišťování dostupnosti uživatelského jména došlo k chybě');
+                    label.text({_'Při zjišťování dostupnosti uživatelského jména došlo k chybě'});
                     label.css('color','red');
                 }
             });
         }
         else{
-            label.text('Uživatelské jméno musí mít alespoň tři znaky.');
+            label.text({_'Uživatelské jméno musí mít alespoň tři znaky.'});
             label.css('color','red');
         }
 

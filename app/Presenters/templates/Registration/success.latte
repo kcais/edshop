@@ -1,8 +1,8 @@
 {block content}
-<h2 style="color: darkslateblue" n:block=title>Registrace nového uživatele proběhla v pořádku.</h2>
+<h2 style="color: darkslateblue" n:block=title>{_'Registrace nového uživatele proběhla v pořádku.'}</h2>
 <br>
 {ifset $_GET["uuid"]}
-<del>{/ifset}Na Vámi zadanou emailovou adresu byl odeslán potvrzovací email pro dokončení registrace.{ifset $_GET["uuid"] }</del>{/ifset}
+<del>{/ifset}{_'Na Vámi zadanou emailovou adresu byl odeslán potvrzovací email pro dokončení registrace.'}{ifset $_GET["uuid"] }</del>{/ifset}
 {ifset $_GET["uuid"]}
 <br><br>
 Vzhledem k tomu, ze aktuální hosting neumožňuje odesílat emaily, klikněte pro dokončení registrace zde :

@@ -108,9 +108,9 @@
 		<p style="text-align: left;font-size: 28px;text-shadow: 3px 3px darkgray">&nbsp;<a style="text-decoration: none;color : black" n:href="Homepage:">EdShop</a>
 
 		{if !$user->loggedIn}
-			<span style="float:right;font-size: 14px;text-shadow:none "><a n:href="Login:login">Login</a>/<a n:href="Registration:new">Registrace</a>
+			<span style="float:right;font-size: 14px;text-shadow:none "><a n:href="Login:login">Login</a>/<a n:href="Registration:new">{_'Registrace'}</a>
 			<br>
-			Uživatel není přihlášen
+			{_'Uživatel není přihlášen'}
 
 		{/if}
 		{if $user->loggedIn}

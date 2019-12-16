@@ -11,6 +11,10 @@ use Nette\Mail\SendmailMailer;
 
 final class LoginPresenter extends BasePresenter
 {
+
+    /**
+     * @throws Nette\Application\AbortException
+     */
     public function renderForgottengen()
     {
         if(!isset($_GET["uuid"]) || sizeof($this->em->getUserRepository()->findBy(['uuid_lost_password' => $_GET["uuid"]])) == 0 ){
@@ -34,6 +38,11 @@ final class LoginPresenter extends BasePresenter
         $form->addSubmit('login','Přihlásit');
 
         $form->onSuccess[] = [$this, 'loginFormSucceeded'];
+
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $form->setTranslator(new \Translator($lang));
 
         return $form;
     }
@@ -99,6 +108,11 @@ final class LoginPresenter extends BasePresenter
 
         $form->onSuccess[] = [$this, 'forgottenNewFormSucceeded'];
 
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $form->setTranslator(new \Translator($lang));
+
         return $form;
     }
 
@@ -132,6 +146,11 @@ final class LoginPresenter extends BasePresenter
         $form->addSubmit('sendForgotten','Odeslat');
 
         $form->onSuccess[] = [$this, 'forgottenFormSucceeded'];
+
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $form->setTranslator(new \Translator($lang));
 
         return $form;
     }

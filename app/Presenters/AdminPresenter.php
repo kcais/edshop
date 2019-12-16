@@ -45,27 +45,32 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         foreach ($catObjArr as $catObj) {
             $categories[$catObj->getId()] = $catObj->getName();
         }
-        $form->addSelect('category_id', 'Kategorie', $categories);
+        $form->addSelect('category_id', 'Kategorie :', $categories);
 
-        $form->addText('name', 'Název')
+        $form->addText('name', 'Název :')
             ->setRequired('Zadejte jméno produktu')
             ->setMaxLength(1024)
             ->addRule(Form::MIN_LENGTH, 'Název musí obsahovat nejméně 3 znaky', 3);
 
-        $form->addTextArea('description', 'Popis')
+        $form->addTextArea('description', 'Popis :')
             ->setRequired('Zadejte popis produktu')
             ->setMaxLength(1024);
 
-        $form->addText('price', 'Cena(Kč)')
+        $form->addText('price', 'Cena(Kč) :')
             ->setEmptyValue('0.00')
             ->setHtmlType('number')
             ->setRequired('Zadejte cenu produktu');
 
-        $form->addUpload('imageFile','Obrázek');
+        $form->addUpload('imageFile','Obrázek :');
 
         $form->addSubmit('add', 'Přidat');
 
         $form->onSuccess[] = [$this, 'adminProdnewFormSucceeded'];
+
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $form->setTranslator(new \Translator($lang));
 
         return $form;
     }
@@ -108,11 +113,11 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->addRule(Form::MIN_LENGTH, 'Název musí obsahovat nejméně 3 znaky', 3)
             ->setRequired("Zadejte jméno kategorie");
 
-        $form->addText('description', 'Popis kategorie')
+        $form->addText('description', 'Popis kategorie :')
             ->setRequired('Zadejte popis kategorie')
             ->setMaxLength(255);
 
-        $form->addText('order', 'Pořadí kategorie')->setMaxLength(3);
+        $form->addText('order', 'Pořadí kategorie :')->setMaxLength(3);
 
         $catObjArr = $this->em->getCategoryRepository()->findBy(['deleted_on' => null, 'parent_cat' => null ]);
         $parCatArr = ['' => '---'];
@@ -121,11 +126,16 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         }
 
         //$form->addText('parent_cat_id', 'ID nadřazené kategorie');
-        $form->addSelect('parent_cat_id', 'ID nadřazené kategorie', $parCatArr);
+        $form->addSelect('parent_cat_id', 'Nadřazená kategorie :', $parCatArr);
 
         $form->addSubmit('create', 'Vytvořit');
 
         $form->onSuccess[] = [$this, 'adminCatnewFormSucceeded'];
+
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $form->setTranslator(new \Translator($lang));
 
         return $form;
     }
@@ -865,11 +875,11 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             ->addRule(Form::PATTERN, 'Uživatelské jméno může obsahovat jen písmena, čísla a znaky "-", "_".', '^[a-zA-Z0-9_-]*$');
         ;
 
-        $form->addText('firstname','Vaše jméno :')
+        $form->addText('firstname','Jméno :')
             ->setMaxLength(255)
             ->setRequired("Zadejte Vaše jméno");
 
-        $form->addText('lastname','Vaše příjmení :')
+        $form->addText('lastname','Příjmení :')
             ->setMaxLength(255)
             ->setRequired("Zadejte Vaše příjmení");
 
@@ -893,6 +903,11 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
         $form->addSubmit('add','Přidat');
 
         $form->onSuccess[] = [$this, 'userNewFormSucceeded'];
+
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $form->setTranslator(new \Translator($lang));
 
         return $form;
     }

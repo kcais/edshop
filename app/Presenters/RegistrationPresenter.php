@@ -63,6 +63,11 @@ final class RegistrationPresenter extends BasePresenter
 
         $form->onSuccess[] = [$this, 'registrationFormSucceeded'];
 
+        $lang = $this->getSession()->getSection(\App\Common\Common::getSelectionName())->language;
+        if(!isset($lang))$lang='CZ';
+
+        $form->setTranslator(new \Translator($lang));
+
         return $form;
     }
 

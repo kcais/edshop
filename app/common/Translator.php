@@ -171,7 +171,7 @@ class Translator implements \Nette\Localization\ITranslator
                 break;
             case 'orderEditGrid.description':
                 if($lang == 'CZ') return 'Popis';
-                if($lang == 'ENG') return 'Popis';
+                if($lang == 'ENG') return 'Description';
                 break;
             case 'orderEditGrid.pcs':
                 if($lang == 'CZ') return 'Kusů';
@@ -315,6 +315,162 @@ class Translator implements \Nette\Localization\ITranslator
                 break;
             case 'Objednávky':
                 if($lang == 'ENG') return 'Orders';
+                break;
+            case 'Vytvoření nové kategorie':
+                if($lang == 'ENG') return 'Create a new category';
+                break;
+            case 'Jméno kategorie :':
+                if($lang == 'ENG') return 'Category name :';
+                break;
+            case 'Popis kategorie :':
+                if($lang == 'ENG') return 'Category description :';
+                break;
+            case 'Pořadí kategorie :':
+                if($lang == 'ENG') return 'Category order :';
+                break;
+            case 'Nadřazená kategorie :':
+                if($lang == 'ENG') return 'Parent category :';
+                break;
+            case 'Vytvořit':
+                if($lang == 'ENG') return 'Create';
+                break;
+            case 'Vytvoření proběhlo v pořádku.':
+                if($lang == 'ENG') return 'Creation was OK.';
+                break;
+            case 'Pokračovat zde':
+                if($lang == 'ENG') return 'Continue here';
+                break;
+            case 'Editace kategorií':
+                if($lang == 'ENG') return 'Editing categories';
+                break;
+            case 'Vytvoření nového produktu':
+                if($lang == 'ENG') return 'Create a new product';
+                break;
+            case 'Kategorie :':
+                if($lang == 'ENG') return 'Category :';
+                break;
+            case 'Název :':
+                if($lang == 'ENG') return 'Name :';
+                break;
+            case 'Popis :':
+                if($lang == 'ENG') return 'Description :';
+                break;
+            case 'Cena(Kč) :':
+                if($lang == 'ENG') return 'Price(Kč) :';
+                break;
+            case 'Obrázek :':
+                if($lang == 'ENG') return 'Image :';
+                break;
+            case 'Editace produktů':
+                if($lang == 'ENG') return 'Products edit';
+                break;
+            case 'Nový uživatel':
+                if($lang == 'ENG') return 'New user';
+                break;
+            case 'Uživatelské jméno :':
+                if($lang == 'ENG') return 'Username :';
+                break;
+            case 'Heslo :':
+                if($lang == 'ENG') return 'Password :';
+                break;
+            case 'Heslo znovu :':
+                if($lang == 'ENG') return 'Password again :';
+                break;
+            case 'Přidat':
+                if($lang == 'ENG') return 'Add';
+                break;
+            case 'Editace uživatelů':
+                if($lang == 'ENG') return 'Users edit';
+                break;
+            case 'Editace objednávek':
+                if($lang == 'ENG') return 'Orders edit';
+                break;
+            case 'Při vytvoření došlo k chybě !':
+                if($lang == 'ENG') return 'Error creating!';
+                break;
+            case 'Registrace':
+                if($lang == 'ENG') return 'Registration';
+                break;
+            case 'Uživatel není přihlášen':
+                if($lang == 'ENG') return 'User is not logged in';
+                break;
+            case 'Registrace nového uživatele':
+                if($lang == 'ENG') return 'New user registration';
+                break;
+            case 'Vaše jméno :':
+                if($lang == 'ENG') return 'Your name :';
+                break;
+            case 'Vaše příjmení :':
+                if($lang == 'ENG') return 'Your surname :';
+                break;
+            case 'Registrovat':
+                if($lang == 'ENG') return 'Register';
+                break;
+            case 'Zapomenuté heslo':
+                if($lang == 'ENG') return 'Forgotten password';
+                break;
+            case 'Přihlášení uživatele':
+                if($lang == 'ENG') return 'User login';
+                break;
+            case 'Přihlásit':
+                if($lang == 'ENG') return 'Login';
+                break;
+            case 'Zadejte přihlašovací jméno':
+                if($lang == 'ENG') return 'Enter your login name';
+                break;
+            case 'Zadejte přihlašovací heslo':
+                if($lang == 'ENG') return 'Enter your login password';
+                break;
+            case 'Zadejte uživatelské jméno':
+                if($lang == 'ENG') return 'Enter your username';
+                break;
+            case 'Zadejte Vaše jméno':
+                if($lang == 'ENG') return 'Enter your name';
+                break;
+            case 'Zadejte Vaše příjmení':
+                if($lang == 'ENG') return 'Enter your surname';
+                break;
+            case 'Zadejte registrační email':
+                if($lang == 'ENG') return 'Enter your registration email';
+                break;
+            case 'Zadejte heslo':
+                if($lang == 'ENG') return 'Enter your password';
+                break;
+            case 'Zadejte heslo pro potvrzení':
+                if($lang == 'ENG') return 'Enter your password to confirm';
+                break;
+            case 'Registrace nového uživatele proběhla v pořádku.':
+                if($lang == 'ENG') return 'New user registration was OK.';
+                break;
+            case 'Na Vámi zadanou emailovou adresu byl odeslán potvrzovací email pro dokončení registrace.':
+                if($lang == 'ENG') return 'A confirmation email has been sent to the email address you entered to complete the registration.';
+                break;
+            case 'Uživatelské jméno musí mít alespoň tři znaky.':
+                if($lang == 'ENG') return 'Username must have at least three characters.';
+                break;
+            case 'Uživatelské jméno je volné':
+                if($lang == 'ENG') return 'Username is free';
+                break;
+            case 'Uživatelské jméno je již použito, zvolte prosím jiné':
+                if($lang == 'ENG') return 'Username already in use, please choose another';
+                break;
+            case 'Při zjišťování dostupnosti uživatelského jména došlo k chybě':
+                if($lang == 'ENG') return 'Error checking username availability';
+                break;
+            case 'Zjišťuji dostupnost uživatelského jména ...':
+                if($lang == 'ENG') return 'Checking for username availability ...';
+                break;
+            case 'Zapomenuté heslo uživatele':
+                if($lang == 'ENG') return 'Forgotten user password';
+                break;
+            case 'Email použitý při registraci :':
+                if($lang == 'ENG') return 'Email used for registration:';
+                break;
+            case 'Zadejte email použitý při registraci':
+                if($lang == 'ENG') return 'Enter the email used to register';
+                break;
+            case 'Odeslat':
+                if($lang == 'ENG') return 'Send';
                 break;
         }
         return $message;
