@@ -1,0 +1,2 @@
+# Apache configuration file (see https://httpd.apache.org/docs/current/mod/quickreference.html)
+Require all granted
