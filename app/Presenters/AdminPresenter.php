@@ -126,7 +126,6 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             $parCatArr[$catObj->getId()] = $catObj->getName();
         }
 
-        //$form->addText('parent_cat_id', 'ID nadřazené kategorie');
         $form->addSelect('parent_cat_id', 'Nadřazená kategorie :', $parCatArr);
 
         $form->addSubmit('create', 'Vytvořit');
@@ -177,7 +176,7 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
 
         foreach($catObjArr as $catObj){
             $parentCatId=$catObj->getParentCat()?$catObj->getParentCat()->getId():null;
-            $catArr[] = ['id' => $catObj->getId(),'name' => $catObj->getName(), 'description' => $catObj->getDescription(), 'parent_cat_id' => $parentCatId];
+            $catArr[] = ['id' => $catObj->getId(),'name' => $catObj->getName(), 'description' => $catObj->getDescription(), 'parent_cat_id' => $parentCatId, 'order_id' => $catObj->getOrderId()];
         }
 
         $grid = new DataGrid($this, $name);
@@ -219,6 +218,13 @@ final class AdminPresenter extends BasePresenter//Nette\Application\UI\Presenter
             });
         ;
 
+        $grid->addColumnText('order_id', 'objectsGrid.order_id')
+            ->setEditableCallback(function($id, $value): void {
+                $catObj = $this->em->getCategoryRepository()->find($id);
+                $catObj->setOrderId($value);
+                $this->em->flush();
+            });
+        ;
 
         $grid->addAction('markDelCat','Set deleted','MarkDelCat!')
             ->setClass('btn btn-primary')

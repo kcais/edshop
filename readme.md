@@ -16,7 +16,7 @@ Uživatelské účty
 
 Kategorie a produkty
 * možnost vytváření stromové struktury kategorií - **done**
-* určení pořadí zobrazení kategorií - **in progress**
+* určení pořadí zobrazení kategorií - **done**
 * zobrazení kategorií v nezávislém menu - **done**
 * zobrazení a manipulace s produkty v nezávislém gridu (bez nutnosti obnovovat celou stránku) - **done**
 * zobrazení detailu produktu - **done**

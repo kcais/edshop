@@ -141,6 +141,22 @@ class Category
     }
 
     /**
+     * @return int Vraci order_id
+     */
+    public function getOrderId(): int
+    {
+        return $this->order_id;
+    }
+
+    /** Nastavuje order_id
+     * @param int $orderId
+     */
+    public function setOrderId(int $orderId) : void
+    {
+        $this->order_id = $orderId;
+    }
+
+    /**
      * @return String Created_on date
      */
     public function getCreatedOn() : String
