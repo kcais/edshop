@@ -2,29 +2,6 @@
 
 <h1 n:block=title><a n:href="Admin:main"  style="color : #333333">{_'Administrátorské rozhraní'}</a> / {_'Editace kategorií'}</h1>
 
-<script>
-    function changeSubcategory(idCat, idParCat) {
-        var data = new FormData();
-        data.append('idCat',idCat);
-        data.append('idParCat',idParCat);
-
-        $.ajax({
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            async: false,
-            data: data,
-            url: {link Admin:changeparcat},
-            dataType : 'json',
-            error: function(xhr, status, error){
-                alert('Při změně rodičovské kategorie došlo k chybě ! (' + $.parseJSON(xhr.responseText).error + ')');
-            }
-        });
-
-        location.reload();
-
-    }
-
-</script>
+<script src="{$basePath}/js/common.js"></script>
 
 {control adminCategoryGrid}

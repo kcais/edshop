@@ -2,52 +2,6 @@
 <div id="overlay" onclick="offOverlay()"><img src="#" id="overlay-image"></div>
 <h1 n:block=title><a n:href="Admin:main"  style="color : #333333">{_'Administrátorské rozhraní'}</a> / {_'Editace produktů'}</h1>
 
-<script>
-    function uploadFile(idProd){
-        var data = new FormData();
-        data.append('new_image_file', $('#file_input_id' + idProd).prop('files')[0]);
-        data.append('id',idProd);
-
-
-        $.ajax({
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            async: false,
-            data: data,
-            url: {link Admin:upload},
-            dataType : 'json',
-            success: function(jsonData){
-
-            }
-        });
-
-        location.reload();
-    }
-
-    function changeCategory(idProd, idCat) {
-        var data = new FormData();
-        data.append('idProd',idProd);
-        data.append('idCat',idCat);
-
-
-        $.ajax({
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            async: false,
-            data: data,
-            url: {link Admin:changecat},
-            dataType : 'json',
-            success: function(jsonData){
-
-            }
-        });
-
-        location.reload();
-
-    }
-
-</script>
+<script src="{$basePath}/js/common.js"></script>
 
 {control adminProductGrid}
